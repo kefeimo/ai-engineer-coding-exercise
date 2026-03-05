@@ -91,14 +91,27 @@ async def query_rag(request: QueryRequest):
     logger.info(f"Query received: {request.query}")
     
     try:
-        # Use hybrid retriever if available, fallback to semantic-only
-        if hybrid_retriever is not None:
-            logger.info("Using hybrid search (semantic + BM25)")
-            retrieval_result = hybrid_retriever.search(request.query, top_k=request.top_k)
+        # Strategy: Try semantic-only first (handles most queries well)
+        # If confidence is low, try hybrid search (handles edge cases like exact API names)
+        retriever = Retriever()
+        logger.info("Trying semantic-only search first")
+        retrieval_result = retriever.retrieve(request.query, top_k=request.top_k)
+        
+        # If confidence is low and hybrid is available, try hybrid as fallback
+        if retrieval_result.get("confidence", 0.0) < 0.65 and hybrid_retriever is not None:
+            logger.info(f"Semantic confidence {retrieval_result['confidence']:.3f} < 0.65, trying hybrid search")
+            hybrid_result = hybrid_retriever.search(request.query, top_k=request.top_k)
+            
+            # Use whichever has higher confidence
+            if hybrid_result.get("confidence", 0.0) > retrieval_result.get("confidence", 0.0):
+                logger.info(f"Using hybrid search (conf={hybrid_result['confidence']:.3f} > semantic={retrieval_result['confidence']:.3f})")
+                retrieval_result = hybrid_result
+            else:
+                logger.info(f"Keeping semantic-only (conf={retrieval_result['confidence']:.3f} >= hybrid={hybrid_result['confidence']:.3f})")
+        elif retrieval_result.get("confidence", 0.0) >= 0.65:
+            logger.info(f"Semantic confidence {retrieval_result['confidence']:.3f} >= 0.65, using semantic-only")
         else:
-            logger.warning("Hybrid retriever not available, using semantic-only")
-            retriever = Retriever()
-            retrieval_result = retriever.retrieve(request.query, top_k=request.top_k)
+            logger.info("Hybrid retriever not available, using semantic-only result")
         
         # Check for errors
         if "error" in retrieval_result:
