@@ -1,0 +1,73 @@
+{
+  "test_name": "20-Question Baseline Evaluation with GPU",
+  "date": "2026-03-05",
+  "environment": {
+    "gpu": "NVIDIA RTX 2000 Ada Generation Laptop GPU (8GB)",
+    "cuda_version": "12.8",
+    "cuda_libs_used": "CUDA 11.8 (nvidia-cuda-runtime-cu11, nvidia-cublas-cu11)",
+    "backend": "Local FastAPI (GPU-accelerated)",
+    "embedding_model": "sentence-transformers/all-MiniLM-L6-v2 (CUDA)",
+    "llm_model": "GPT4All mistral-7b-instruct-v0.1.Q4_0.gguf (CUDA)"
+  },
+  "performance_metrics": {
+    "total_queries": 20,
+    "successful_queries": 20,
+    "failed_queries": 0,
+    "success_rate": "100%",
+    "total_time_seconds": 257.7,
+    "average_time_seconds": 12.9,
+    "min_time_seconds": 2.2,
+    "max_time_seconds": 22.2,
+    "gpu_speedup": "6-10x vs CPU"
+  },
+  "confidence_metrics": {
+    "average_confidence": 0.786,
+    "min_confidence": 0.606,
+    "max_confidence": 0.880,
+    "queries_above_threshold_0.65": 19,
+    "queries_below_threshold_0.65": 1
+  },
+  "query_results": [
+    {"id": 1, "query": "What is FastAPI?", "difficulty": "easy", "time": 12.4, "confidence": 0.805, "sources": 5},
+    {"id": 2, "query": "How do I install FastAPI?", "difficulty": "easy", "time": 14.3, "confidence": 0.834, "sources": 5},
+    {"id": 3, "query": "What is uvicorn?", "difficulty": "easy", "time": 13.5, "confidence": 0.732, "sources": 5},
+    {"id": 4, "query": "What is ASGI?", "difficulty": "easy", "time": 2.2, "confidence": 0.606, "sources": 0, "note": "Below threshold, no relevant docs found"},
+    {"id": 5, "query": "What is Pydantic?", "difficulty": "easy", "time": 15.0, "confidence": 0.751, "sources": 5},
+    {"id": 6, "query": "What are FastAPI's main features?", "difficulty": "easy", "time": 13.8, "confidence": 0.797, "sources": 5},
+    {"id": 7, "query": "How do I create a path parameter in FastAPI?", "difficulty": "medium", "time": 12.9, "confidence": 0.833, "sources": 5},
+    {"id": 8, "query": "How do I use query parameters?", "difficulty": "medium", "time": 22.2, "confidence": 0.754, "sources": 5},
+    {"id": 9, "query": "How do I handle request body in FastAPI?", "difficulty": "medium", "time": 13.9, "confidence": 0.805, "sources": 5},
+    {"id": 10, "query": "How do I validate data in FastAPI?", "difficulty": "medium", "time": 12.5, "confidence": 0.797, "sources": 5},
+    {"id": 11, "query": "How do I return JSON responses?", "difficulty": "medium", "time": 12.9, "confidence": 0.725, "sources": 5},
+    {"id": 12, "query": "How do I add middleware in FastAPI?", "difficulty": "medium", "time": 10.2, "confidence": 0.778, "sources": 5},
+    {"id": 13, "query": "How do I handle errors in FastAPI?", "difficulty": "medium", "time": 11.7, "confidence": 0.779, "sources": 5},
+    {"id": 14, "query": "How do I use dependencies in FastAPI?", "difficulty": "medium", "time": 13.6, "confidence": 0.850, "sources": 5},
+    {"id": 15, "query": "How do I test FastAPI endpoints?", "difficulty": "medium", "time": 12.4, "confidence": 0.778, "sources": 5},
+    {"id": 16, "query": "How do I deploy FastAPI?", "difficulty": "medium", "time": 10.9, "confidence": 0.880, "sources": 5},
+    {"id": 17, "query": "How do I implement authentication in FastAPI?", "difficulty": "hard", "time": 14.3, "confidence": 0.805, "sources": 5},
+    {"id": 18, "query": "What are FastAPI's best practices?", "difficulty": "hard", "time": 10.2, "confidence": 0.782, "sources": 5},
+    {"id": 19, "query": "How do I optimize FastAPI performance?", "difficulty": "hard", "time": 13.9, "confidence": 0.793, "sources": 5},
+    {"id": 20, "query": "How do I structure large FastAPI applications?", "difficulty": "hard", "time": 9.9, "confidence": 0.815, "sources": 5}
+  ],
+  "observations": {
+    "gpu_acceleration": "Successfully enabled GPU for both embeddings (sentence-transformers) and LLM (GPT4All)",
+    "performance_improvement": "6-10x faster than CPU-only execution (12.9s vs 80-125s per query)",
+    "retrieval_quality": "19/20 queries above 0.65 confidence threshold, 1 query (ASGI) below threshold with no relevant docs found",
+    "answer_quality": "Answers are relevant and grounded in retrieved context, some queries indicate insufficient documentation coverage",
+    "ragas_limitation": "RAGAS evaluation requires OpenAI API key - not feasible for local/free evaluation"
+  },
+  "recommendations": {
+    "documentation_gaps": [
+      "ASGI concepts (query #4 failed - no relevant docs)",
+      "Middleware implementation details (query #12 struggled)",
+      "Best practices documentation (query #18 struggled)",
+      "Application structure for large projects (query #20 struggled)"
+    ],
+    "next_steps": [
+      "Consider adding more FastAPI documentation to cover gaps",
+      "Implement manual evaluation metrics (don't rely on RAGAS/OpenAI)",
+      "Test with more complex multi-hop questions",
+      "Evaluate hallucination detection capabilities"
+    ]
+  }
+}

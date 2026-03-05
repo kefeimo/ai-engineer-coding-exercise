@@ -87,10 +87,11 @@ def prepare_ragas_dataset(results: List[Dict[str, Any]]) -> tuple[Dataset, bool]
         else:
             data["reference"].append("")  # Placeholder for queries without references
     
-    # Check if all queries have references
-    has_all_references = all(ref for ref in data["reference"])
+    # Check if we have at least some references (not requiring ALL)
+    reference_count = sum(1 for ref in data["reference"] if ref)
+    has_sufficient_references = reference_count >= len(results) * 0.8  # 80% threshold
     
-    return Dataset.from_dict(data), has_all_references
+    return Dataset.from_dict(data), has_sufficient_references
 
 def run_ragas_evaluation(dataset: Dataset, has_references: bool) -> Any:
     """

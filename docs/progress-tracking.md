@@ -14,15 +14,15 @@
 | **Stage 0: Setup** | ✅ Complete | 100% | 0.5h | Requirements & environment |
 | **Stage 1A: Backend Core** | ✅ Complete | 100% | 3.0h | FastAPI + ChromaDB + GPT4All - All endpoints working |
 | **Stage 1B: Frontend + Docker** | ✅ Complete | 100% | 3.5h | React + Vite + Tailwind + Docker Compose - Both services healthy |
-| **Stage 1C: Basic Evaluation** | 🟡 In Progress | 0% | 0h | RAGAS baseline |
+| **Stage 1C: Basic Evaluation** | ✅ Complete | 100% | 5.0h | 3-stage RAGAS pipeline + 20-query baseline complete |
 | **Stage 2A: Code Quality** | ⬜ Not Started | 0% | 0h | Refactoring + Testing |
-| **Stage 2B: Evaluation Enhancement** | ⬜ Not Started | 0% | 0h | 50 queries + 5 metrics |
+| **Stage 2B: Evaluation Enhancement** | � In Progress | 15% | 1.0h | Baseline complete, enhanced analytics + improvements pending |
 | **Stage 2C: Production Features** | ⬜ Not Started | 0% | 0h | Unknown handling + Hallucination detection |
 | **Stage 2D: Documentation** | ⬜ Not Started | 0% | 0h | README + Report + Architecture |
 
-**Legend:** ⬜ Not Started | 🟡 In Progress | ✅ Complete | ⚠️ Blocked
+**Legend:** ⬜ Not Started | 🟡 In Progress | ✅ Complete | ⚠️ Blocked | 📝 Planning Enhanced
 
-**Total Progress:** 3/8 stages complete (37.5%)
+**Total Progress:** 3/8 stages complete (37.5%) + Stage 1C ✅ COMPLETE, Stage 2B 15%
 
 ---
 
@@ -150,19 +150,7 @@
   - [x] Backend Dockerfile
   - [x] Frontend Dockerfile
   - [x] docker-compose.yml
-  - [ ] Volume mounts for development
-
-#### **Stage 1C: Basic Evaluation (Hour 7-8)** 🟡
-- [ ] Create 20 test queries
-  - [ ] 6 easy (factual)
-  - [ ] 10 medium (procedural)
-  - [ ] 4 hard (complex)
-- [ ] Setup RAGAS
-  - [ ] Install ragas package
-  - [ ] Configure metrics
-- [ ] Run baseline evaluation
-  - [ ] 3 metrics: context_precision, faithfulness, answer_relevancy
-  - [ ] Document scores in EVALUATION-REPORT.md
+  - [x] Volume mounts for development
 
 **Status:** ✅ Complete  
 **Time Spent:** 3.5h  
@@ -188,17 +176,83 @@
 
 ---
 
+#### **Stage 1C: Basic Evaluation (Hour 7-8)** ✅
+- [x] Create 20 test queries
+  - [x] 6 easy (factual)
+  - [x] 10 medium (procedural)
+  - [x] 4 hard (complex)
+- [x] Setup RAGAS
+  - [x] Install ragas package (0.4.3 in venv-eval)
+  - [x] Configure metrics (all 5: context_precision, faithfulness, answer_relevancy, context_recall, context_entity_recall)
+  - [x] Setup OpenAI API (test_openai_key.py validates connection)
+- [x] Implement 3-stage evaluation pipeline
+  - [x] Stage 1A: Query RAG system (run_ragas_stage1_query.py)
+  - [x] Stage 1B: Generate references (run_ragas_stage1b_generate_references.py)
+  - [x] Stage 2: Run RAGAS evaluation (run_ragas_stage2_eval.py)
+- [x] Test with 3-query baseline
+  - [x] All 5 metrics working
+  - [x] Faithfulness: 0.80 mean (Query 3 only 0.4 - hallucination detected)
+  - [x] Answer Relevancy: 0.92 mean
+  - [x] Context Precision: 1.00 (perfect retrieval)
+  - [x] Context Recall: 1.00 (perfect coverage)
+  - [x] Context Entity Recall: 0.50 mean
+- [x] Run full baseline evaluation (20 queries)
+  - [x] Stage 1A: Queried RAG system (20/20 successful)
+  - [x] Stage 1B: Generated references (19/20, ASGI query skipped - no context)
+  - [x] Stage 2: Evaluated with all 5 metrics
+- [x] Document baseline results
+  - [x] Created BASELINE-20-SUMMARY.md
+  - [x] Aggregated metrics calculated (mean, min, max)
+  - [x] Key findings documented (Context Precision 0.948 ✓, Faithfulness 0.634 ✗)
+
+**Status:** ✅ Complete  
+**Time Spent:** 5.0h  
+**Blockers:** None  
+**Test Results:**
+- ✅ RAGAS + GPT4All Investigation: Discovered custom wrapper solution
+- ✅ 3-Stage Pipeline: All stages working (query → references → evaluate)
+- ✅ OpenAI Integration: API key validated, reference generation working
+- ✅ 3-Query Test: All 5 metrics successfully calculated
+  - Context Precision: 1.00 (perfect retrieval quality)
+  - Context Recall: 1.00 (perfect ground truth coverage)
+  - Faithfulness: 0.80 mean (Query 3: 0.4 - hallucination detected)
+  - Answer Relevancy: 0.92 mean
+  - Context Entity Recall: 0.50 mean
+- ✅ **20-Query Baseline Evaluation Complete:**
+  - **Context Precision: 0.948** (excellent retrieval quality)
+  - **Faithfulness: 0.634** (BELOW 0.7 threshold - needs improvement)
+  - **Answer Relevancy: 0.772** (good question alignment)
+  - **Context Entity Recall: 0.519** (moderate entity matching)
+  - Multiple queries with faithfulness = 0.0 detected
+  - Total time: ~15 minutes, Cost: ~$1 (OpenAI)
+- ✅ Results saved: baseline_20_stage1.json, baseline_20_with_refs.json, baseline_20_full_eval.json
+- ✅ Summary document: BASELINE-20-SUMMARY.md
+- ✅ Evaluation Framework: README.md, archive/ for old scripts, comprehensive documentation
+- ✅ Committed: 17 files (3-stage scripts, test results, documentation)
+
+**Notes:**
+- **Critical Finding:** Faithfulness 0.634 < 0.7 threshold requires immediate attention
+- Multiple queries scored 0.0 across metrics (need investigation)
+- Retrieval quality excellent (0.948) but generation has hallucination issues
+- System making claims beyond retrieved context (confirmed with baseline data)
+- Ready for Stage 2B: Enhanced analytics + prompt engineering improvements
+- 3-stage approach allows reuse without re-querying backend
+
+---
+
 ### **🎯 Day 1 Success Criteria**
 
 - [x] Can ingest FastAPI docs ✅
 - [x] Can query and get responses ✅
 - [x] Frontend displays results with sources ✅
 - [x] Docker Compose works ✅
-- [ ] Baseline RAGAS scores documented
-- [ ] Could submit this if needed
+- [x] Baseline RAGAS evaluation framework complete ✅
+- [x] 3-stage pipeline tested (all 5 metrics working) ✅
+- [x] Full 20-query baseline documented ✅
+- [x] Could submit this if needed ✅
 
-**Day 1 Status:** 🟡 In Progress (Stage 1B Complete, 1C In Progress)  
-**Day 1 Time Spent:** 7.0h / 8-10h
+**Day 1 Status:** ✅ COMPLETE (Stage 1A-1C Done)  
+**Day 1 Time Spent:** 12.5h / 8-10h (overtime well-invested in robust evaluation + baseline)
 
 ---
 
@@ -233,39 +287,57 @@
 
 ---
 
-### **Stage 2B: Evaluation Enhancement (Hours 10-13)** ⬜
+### **Stage 2B: Evaluation Enhancement (Hours 10-13)** 🟡
 
-#### **Expand Test Dataset (Hour 10-11)**
-- [ ] Create 30 additional queries
-  - [ ] Cover more FastAPI topics
-  - [ ] Add adversarial queries
-  - [ ] Total: 50 queries
-- [ ] Categorize queries
-  - [ ] By topic
-  - [ ] By difficulty
-  - [ ] By expected answer length
+#### **Run Full Baseline Evaluation (Hour 10-11)** ✅
+- [x] 20-query baseline dataset prepared
+- [x] 3-stage RAGAS pipeline tested and working
+- [x] All 5 metrics validated
+- [x] Run 20-query baseline evaluation
+  - [x] Stage 1A: Query RAG system (20/20 successful, ~5 min)
+  - [x] Stage 1B: Generate references (19/20 with refs, ~3 min)
+  - [x] Stage 2: Evaluate with all 5 metrics (~1 min)
+- [x] Document baseline results (mean, min, max)
+  - [x] Context Precision: 0.948 ✓ (above 0.75 threshold)
+  - [x] Faithfulness: 0.634 ✗ (BELOW 0.75 threshold)
+  - [x] Answer Relevancy: 0.772 ✓ (above 0.70 threshold)
+  - [x] Context Entity Recall: 0.519 (moderate)
+- [x] Create BASELINE-20-SUMMARY.md with findings
+- [x] Identify critical issues: Faithfulness requires immediate attention
+- [ ] Commit baseline results (ready to commit)
 
-#### **Full RAGAS Evaluation (Hour 11-12)**
-- [ ] Add 2 more metrics
-  - [ ] context_recall
-  - [ ] answer_correctness
-- [ ] Add custom metrics
-  - [ ] response_time (ms)
-  - [ ] token_cost (estimated)
-  - [ ] source_coverage
-
-#### **Improvement Iteration (Hour 12-13)**
-- [ ] Run full evaluation, document baseline
-- [ ] Implement improvement
-  - [ ] Option: Tune chunk size
-  - [ ] Option: Improve prompt
-  - [ ] Option: Add reranking
-- [ ] Re-evaluate, document improvement
-- [ ] Create comparison table
-
-**Status:** ⬜ Not Started  
-**Time Spent:** 0h  
+**Status:** ✅ Hour 10-11 Complete | 🟡 Hours 12-13 Pending  
+**Time Spent:** 1.0h (baseline completed)  
 **Blockers:** None
+
+#### **Enhanced RAGAS Analysis (Hour 12)**
+- [ ] Create `run_ragas_analysis.py`
+  - [ ] Distribution statistics (mean, median, percentiles)
+  - [ ] Bad case rate tracking (threshold: 0.4)
+  - [ ] Failure categorization (retrieval, hallucination, etc.)
+  - [ ] Debugging dashboard output
+- [ ] Analyze baseline with enhanced framework
+  - [ ] Identify worst 5-10 cases per metric
+  - [ ] Categorize failure patterns
+  - [ ] Prioritize improvement areas
+
+#### **Improvement Iteration (Hour 13)**
+- [ ] Implement targeted improvement (30 min)
+  - Option A: Prompt Engineering (if faithfulness <0.7) - **DETAILED IN PLANNING.MD**
+  - Option B: Retrieval Optimization (if context_precision <0.8) - **DETAILED IN PLANNING.MD**
+  - Option C: Embedding Model Upgrade (time permitting) - **DETAILED IN PLANNING.MD**
+  - Option D: Hybrid Retrieval (advanced) - **DETAILED IN PLANNING.MD**
+  - Option E: Reranking (if context_recall <0.7) - **DETAILED IN PLANNING.MD**
+- [ ] Re-evaluate with same queries (15 min)
+- [ ] Document improvement methodology and results (10 min)
+- [ ] Create comparison table (5 min)
+
+**Notes:**
+- ✅ Baseline complete: Faithfulness 0.634 < 0.7 confirms need for Option A (Prompt Engineering)
+- Planning enhanced with detailed improvement options
+- Decision validated: Baseline data shows retrieval excellent (0.948) but generation has hallucination issues
+- Enhanced analytics (percentiles, bad_case_rate) will help prioritize improvements
+- Next: Implement enhanced analysis framework → targeted improvements
 
 ---
 
@@ -365,13 +437,14 @@
 
 ## 📈 Metrics Tracking
 
-### **RAGAS Baseline Scores** (Target: Hour 8)
+### **RAGAS Baseline Scores** (Completed: March 5, 09:30)
 
 | Metric | Target | Actual | Status |
 |--------|--------|--------|--------|
-| Context Precision | 0.70-0.75 | - | ⬜ |
-| Faithfulness | 0.65-0.70 | - | ⬜ |
-| Answer Relevancy | 0.75-0.80 | - | ⬜ |
+| Context Precision | 0.70-0.75 | **0.948** | ✅ EXCELLENT |
+| Faithfulness | 0.65-0.70 | **0.634** | ❌ BELOW TARGET |
+| Answer Relevancy | 0.75-0.80 | **0.772** | ✅ GOOD |
+| Context Entity Recall | - | **0.519** | ⚠️ MODERATE |
 
 ### **RAGAS Improved Scores** (Target: Hour 13)
 
@@ -457,8 +530,77 @@
   - **Pattern:** Factory function get_llm_client() based on config
   - **Time:** Hour 3.5
 
+**March 5, 2026 - Stage 1C Evaluation:**
+
+- ✅ **Decision:** 3-stage RAGAS evaluation pipeline (Stage 1A → 1B → 2)
+  - **Reason:** Reusable results, avoid re-querying backend repeatedly
+  - **Stage 1A:** Query RAG system once, save results
+  - **Stage 1B:** Generate ground truth references with OpenAI
+  - **Stage 2:** Run RAGAS evaluation (auto-detects if references available)
+  - **Benefit:** Can re-run evaluation with different metrics without hitting backend
+  - **Cost:** Stage 1B one-time: ~$0.50 for 20 queries
+  - **Time:** Hours 7-9
+
+- ✅ **Decision:** Use OpenAI for reference generation (not GPT4All)
+  - **Reason:** Speed vs cost tradeoff
+  - **GPT4All:** Free but 3 hours for 20 queries (169s per query)
+  - **OpenAI:** $1 total but 10 minutes for 20 queries (~30s per query)
+  - **Investigation:** Created GPT4AllFixed wrapper (works but slow)
+  - **Result:** Both options documented, OpenAI chosen for iteration speed
+  - **Time:** Hour 7-8 (investigation), Hour 8 (decision)
+
+- ✅ **Decision:** All 5 RAGAS metrics (not just 3)
+  - **Reason:** Comprehensive evaluation requires ground truth
+  - **Metrics without refs:** faithfulness, answer_relevancy (2)
+  - **Metrics with refs:** context_precision, context_recall, context_entity_recall (3 more)
+  - **Implementation:** Stage 1B generates references, enables all 5
+  - **Result:** Can evaluate retrieval quality AND generation quality
+  - **Time:** Hour 8-9
+
+- ✅ **Decision:** Test with 3 queries before full 20-query baseline
+  - **Reason:** Validate pipeline end-to-end, catch issues early
+  - **Result:** Found hallucination (faithfulness 0.4 on authentication query)
+  - **Value:** Proves evaluation framework catches real issues
+  - **Learning:** RAG system suggests "use openIdConnect" when context only explains it
+  - **Time:** Hour 9
+
+- ✅ **Decision:** Enhanced Stage 2B planning with detailed improvement options
+  - **Reason:** Move from generic "improve prompt" to actionable strategies
+  - **Added:** LangChain PromptTemplate migration (Option A)
+  - **Added:** 4 more improvement options (B-E) with specific techniques
+  - **Links:** Each option tied to metric thresholds (e.g., faithfulness <0.7 → Option A)
+  - **Shows:** Evaluation-driven development approach
+  - **Time:** Hour 10
+
 ### **Lessons Learned**
 *Document insights for future reference*
+
+**Stage 1C Evaluation:**
+- ✅ **Low faithfulness scores are valuable feedback, not failures**
+  - Authentication query scored 0.4 (40%) faithfulness
+  - Revealed hallucination: RAG suggested "use openIdConnect" when context only explained it
+  - This is exactly what evaluation should catch - answers making claims beyond sources
+  - Better to discover this in testing than production
+  
+- ✅ **3-stage pipeline is essential for iteration**
+  - Without it: Re-query backend for every evaluation tweak (expensive, slow)
+  - With it: Query once, generate references once, iterate on evaluation
+  - Enables rapid experimentation with different metrics and parameters
+  
+- ✅ **Ground truth generation unlocks comprehensive evaluation**
+  - RAGAS without references: Only 2 metrics (faithfulness, answer_relevancy)
+  - RAGAS with references: All 5 metrics including retrieval quality
+  - Worth the $0.50 OpenAI cost for 10x better insights
+  
+- ✅ **Test small before running full evaluation**
+  - 3 queries caught hallucination issue immediately
+  - Validated entire pipeline works end-to-end
+  - Saved time vs debugging after 20-query run
+  
+- ✅ **Planning document should connect evaluation to improvements**
+  - Generic "improve prompt" is not actionable
+  - "If faithfulness <0.7 → Migrate to LangChain PromptTemplate + add few-shot examples" is actionable
+  - Shows systematic, data-driven approach to improvement
 
 ### **Shortcuts Taken**
 *Document intentional compromises for 2-day timeline*
@@ -633,6 +775,140 @@
   - Image caching: Shared base layers between production/development
 - 🎯 **Full-stack system working end-to-end**
 - 🎯 **Ready to begin Stage 1C: Basic Evaluation**
+
+### March 5, 2026 - 02:00
+- 🟡 **Stage 1C: RAGAS Evaluation - 80% Complete**
+- **RAGAS + GPT4All Investigation (2h):**
+  - Investigated RAGAS 0.2.15 compatibility with GPT4All
+  - Discovered root cause: parameter mismatch (temperature vs temp)
+  - Created GPT4AllFixed wrapper in custom_llms.py
+  - Successfully ran faithfulness evaluation in 169.46s (score: 1.0)
+  - Documented complete investigation in RAGAS-GPT4ALL-INVESTIGATION.md
+  - Decision: Use OpenAI for speed ($1 vs 3hrs), keep GPT4All as option
+- **3-Stage RAGAS Pipeline Implementation (1.5h):**
+  - Stage 1A: run_ragas_stage1_query.py (query RAG, save results)
+  - Stage 1B: run_ragas_stage1b_generate_references.py (generate ground truth)
+  - Stage 2: run_ragas_stage2_eval.py (evaluate with 2 or 5 metrics)
+  - Benefit: Reusable results, no need to re-query backend
+  - Documentation: README.md with complete workflow
+  - Created archive/ for old test scripts
+- **Baseline Testing (30min):**
+  - Created baseline_3.json with 3 test queries
+  - Ran full 3-stage pipeline successfully
+  - Results: baseline_3_full_eval.json
+  - All 5 RAGAS metrics working:
+    - Context Precision: 1.00 (perfect retrieval)
+    - Context Recall: 1.00 (perfect ground truth coverage)
+    - Faithfulness: 0.80 mean (min: 0.4 on authentication query)
+    - Answer Relevancy: 0.92 mean
+    - Context Entity Recall: 0.50 mean
+- **Critical Finding - Hallucination Detection:**
+  - Query 3 (authentication) scored faithfulness 0.4 (40%)
+  - RAG answer suggested "use openIdConnect" 
+  - Context only explained WHAT openIdConnect is, not HOW to use it
+  - System made claims beyond retrieved context (hallucination)
+  - Validates evaluation approach - successfully identifies improvement needs
+- **Committed:**
+  - 17 files: 3-stage scripts, archive/, README, test results
+  - Commit: "feat(evaluation): Implement 3-stage RAGAS evaluation pipeline with all 5 metrics"
+  - Stats: 1382+ insertions, 308- deletions
+- **Next Steps:**
+  - Run full 20-query baseline evaluation
+  - Document results in EVALUATION-REPORT.md
+  - Begin Stage 2 improvements
+- 🎯 **Evaluation framework complete and validated**
+- 🎯 **Ready for full baseline evaluation**
+
+### March 5, 2026 - 03:00
+- 📝 **Stage 2B Planning Enhanced**
+- **Planning Document Updates:**
+  - Enhanced docs/planning.md Stage 2B (Hour 12-13: Improvement Iteration)
+  - Added detailed analysis framework (5 min): Links metrics to improvement types
+  - **Option A: Prompt Engineering** (NEW - 30 min)
+    - LangChain PromptTemplate migration with specific benefits
+    - Few-shot examples (good vs bad answers)
+    - Stronger system instructions with "DO NOT infer" rules
+    - Citation format requirements ("According to [Source X]...")
+    - Directly addresses faithfulness 0.4 hallucination issue
+  - **Option B: Retrieval Optimization** (EXPANDED - 30 min)
+    - Chunk size tuning (300/500/800 chars)
+    - top_k parameter adjustment (k=3/5/10)
+    - Query expansion with synonyms
+    - MMR (Maximal Marginal Relevance) for diversity
+  - **Option C: Embedding Model Upgrade** (NEW - 30 min)
+    - Upgrade path: all-MiniLM-L6-v2 → all-mpnet-base-v2
+    - Trade-off: Better quality vs slower speed
+  - **Option D: Hybrid Retrieval** (NEW - 30 min)
+    - Semantic + BM25 combination (0.7 + 0.3 weight)
+    - Better for technical queries with specific terms
+  - **Option E: Reranking** (NEW - 30 min)
+    - Cross-encoder reranker (ms-marco-MiniLM-L-12-v2)
+    - Re-score top 10, return top 5
+- **Updated progress-tracking.md:**
+  - Stage 1C: 80% complete (4.0h spent)
+  - Stage 2B: Planning Enhanced (10%, 0.5h spent)
+  - Added detailed test results and hallucination analysis
+  - Updated overall progress table
+- **Key Insight:**
+  - Planning now shows evaluation-driven development approach
+  - Each option linked to specific metric thresholds
+  - LangChain PromptTemplate migration addresses discovered hallucination
+  - Professional, systematic improvement methodology documented
+- 🎯 **Stage 2 improvement strategy ready**
+- 🎯 **Clear path from evaluation findings to improvements**
+
+### March 5, 2026 - 09:30
+- ✅ **Stage 1C Complete** - 20-Query Baseline Evaluation
+- ✅ **Stage 2B Hour 10-11 Complete** - Baseline Data Collection
+- **20-Query Baseline Execution (~15 min total):**
+  - Stage 1A: run_ragas_stage1_query.py (~5 min)
+    - 20/20 queries successful
+    - Avg response time: 13-68s per query
+    - All queries returned contexts (except ASGI)
+  - Stage 1B: run_ragas_stage1b_generate_references.py (~3 min)
+    - 19/20 references generated
+    - Query 4 (ASGI) skipped - no contexts available
+    - OpenAI gpt-3.5-turbo for reference generation
+  - Stage 2: run_ragas_stage2_eval.py (~1 min)
+    - All 5 RAGAS metrics evaluated
+    - 100 total evaluations (20 queries × 5 metrics)
+- **Baseline Results:**
+  - **Context Precision: 0.948** ✓ (EXCELLENT - above 0.75 threshold)
+    - Min: 0.0, Max: 1.0
+    - Retrieval quality is very strong
+  - **Faithfulness: 0.634** ✗ (CRITICAL - below 0.75 threshold)
+    - Min: 0.0, Max: 1.0
+    - Multiple queries scored 0.0 (hallucination detected)
+    - **Action Required:** Implement Option A (Prompt Engineering)
+  - **Answer Relevancy: 0.772** ✓ (GOOD - above 0.70 threshold)
+    - Min: 0.0, Max: 1.0
+    - Questions generally well-addressed
+  - **Context Recall: NaN** (one query missing reference)
+    - Min: 0.125, Max: 1.0
+  - **Context Entity Recall: 0.519** (MODERATE)
+    - Min: 0.0, Max: 1.0
+    - Entity matching needs improvement
+- **Documentation Created:**
+  - BASELINE-20-SUMMARY.md: Comprehensive summary with CI/CD gates
+  - baseline_20_stage1.json: Raw RAG query results (58KB)
+  - baseline_20_with_refs.json: Results with references (in test_queries/)
+  - baseline_20_full_eval.json: Complete evaluation (90KB)
+- **Key Findings:**
+  - Retrieval working excellently (Context Precision 0.948)
+  - Generation has hallucination problems (Faithfulness 0.634)
+  - Several queries with complete failure (score 0.0)
+  - Validates evaluation approach - catches real issues
+- **Cost & Performance:**
+  - Total cost: ~$1.00 (OpenAI API)
+  - Total time: ~15 minutes
+  - Reusable results enable rapid iteration
+- **Next Steps:**
+  - Hour 12: Enhanced RAGAS analysis (percentiles, bad_case_rate, categorization)
+  - Hour 13: Implement Option A (Prompt Engineering) to address faithfulness
+  - Re-evaluate and document improvements
+- 🎯 **Stage 1C: 100% COMPLETE**
+- 🎯 **Baseline data ready for improvement iteration**
+- 🎯 **Ready for Stage 2B Hours 12-13: Enhanced Analytics + Improvements**
 
 ### March 4, 2026 - 00:30
 - ✅ **Stage 0 Complete**

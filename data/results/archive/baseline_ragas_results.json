@@ -1,0 +1,280 @@
+{
+  "test_name": "RAG Query Evaluation (RAGAS metrics skipped)",
+  "timestamp": "2026-03-05 02:26:49",
+  "status": "queries_complete_ragas_skipped",
+  "note": "RAGAS evaluation requires OpenAI API key",
+  "test_results": {
+    "total_queries": 20,
+    "successful_queries": 20,
+    "failed_queries": 0
+  },
+  "query_results": [
+    {
+      "id": 1,
+      "query": "What is FastAPI?",
+      "difficulty": "easy",
+      "category": "basics",
+      "answer": "FastAPI is a modern, fast (high-performance), web framework for building APIs with Python based on standard Python type hints.",
+      "contexts_count": 5,
+      "expected_aspects": [
+        "web framework",
+        "Python",
+        "API",
+        "high performance"
+      ]
+    },
+    {
+      "id": 2,
+      "query": "How do I install FastAPI?",
+      "difficulty": "easy",
+      "category": "setup",
+      "answer": "You can install FastAPI using pip by running the command `pip install \"fastapi[standard]\"`. If you don't want to include the optional dependencies, you can run `pip install fastapi`.",
+      "contexts_count": 5,
+      "expected_aspects": [
+        "pip install",
+        "fastapi",
+        "uvicorn"
+      ]
+    },
+    {
+      "id": 3,
+      "query": "What is uvicorn?",
+      "difficulty": "easy",
+      "category": "basics",
+      "answer": "Uvicorn is a server that loads and serves your FastAPI application. It's used by default when you run `fastapi dev` or `uvicorn main:app --reload`.",
+      "contexts_count": 5,
+      "expected_aspects": [
+        "ASGI server",
+        "FastAPI",
+        "async"
+      ]
+    },
+    {
+      "id": 4,
+      "query": "What is ASGI?",
+      "difficulty": "easy",
+      "category": "basics",
+      "answer": "I don't have enough information to answer that question based on the provided documentation. Please try rephrasing your question or ask about FastAPI features.",
+      "contexts_count": 0,
+      "expected_aspects": [
+        "asynchronous",
+        "server gateway interface",
+        "Python"
+      ]
+    },
+    {
+      "id": 5,
+      "query": "What is Pydantic?",
+      "difficulty": "easy",
+      "category": "basics",
+      "answer": "Pydantic is a Python library for data validation that performs all the data validation under the hood. It's used by FastAPI for data validation.",
+      "contexts_count": 5,
+      "expected_aspects": [
+        "data validation",
+        "type hints",
+        "models"
+      ]
+    },
+    {
+      "id": 6,
+      "query": "What are FastAPI's main features?",
+      "difficulty": "easy",
+      "category": "basics",
+      "answer": "FastAPI is a modern, fast (high-performance), web framework for building APIs with Python based on standard Python type hints. Its key features include performance similar to NodeJS and Go due to Star...",
+      "contexts_count": 5,
+      "expected_aspects": [
+        "fast",
+        "automatic docs",
+        "type validation",
+        "async"
+      ]
+    },
+    {
+      "id": 7,
+      "query": "How do I create a path parameter in FastAPI?",
+      "difficulty": "medium",
+      "category": "routing",
+      "answer": "You can create a path parameter in FastAPI by using an option directly from Starlette, like this:\n```\n/files/{file_path:path}\n```\nIn this case, the name of the parameter is `file_path`, and the last p...",
+      "contexts_count": 5,
+      "expected_aspects": [
+        "function parameter",
+        "path operation",
+        "curly braces"
+      ]
+    },
+    {
+      "id": 8,
+      "query": "How do I use query parameters?",
+      "difficulty": "medium",
+      "category": "routing",
+      "answer": "Query parameters are used in URLs to provide additional information about the requested resource. They consist of key-value pairs separated by `&` characters, and they go after the `?` character in a ...",
+      "contexts_count": 5,
+      "expected_aspects": [
+        "function parameters",
+        "optional",
+        "default values"
+      ]
+    },
+    {
+      "id": 9,
+      "query": "How do I handle request body in FastAPI?",
+      "difficulty": "medium",
+      "category": "request",
+      "answer": "In FastAPI, you can use Pydantic models to declare a **request** body. You should use one of `POST`, `PUT`, `DELETE` or `PATCH` methods to send data as a body. Sending a body with a `GET` request has ...",
+      "contexts_count": 5,
+      "expected_aspects": [
+        "Pydantic model",
+        "BaseModel",
+        "POST"
+      ]
+    },
+    {
+      "id": 10,
+      "query": "How do I validate data in FastAPI?",
+      "difficulty": "medium",
+      "category": "validation",
+      "answer": "FastAPI uses the return type of a path operation function to perform data validation, documentation, filtering, etc. You can declare the type used for the response by annotating the *path operation fu...",
+      "contexts_count": 5,
+      "expected_aspects": [
+        "Pydantic",
+        "automatic",
+        "type hints"
+      ]
+    },
+    {
+      "id": 11,
+      "query": "How do I return JSON responses?",
+      "difficulty": "medium",
+      "category": "response",
+      "answer": "FastAPI automatically returns JSON responses if the function's return type is a model or a subclass of `Response`. If you want to explicitly return a JSON response, use `JSONResponse` from FastAPI.",
+      "contexts_count": 5,
+      "expected_aspects": [
+        "automatic",
+        "Pydantic model",
+        "dict"
+      ]
+    },
+    {
+      "id": 12,
+      "query": "How do I add middleware in FastAPI?",
+      "difficulty": "medium",
+      "category": "middleware",
+      "answer": "FastAPI does not have built-in support for middleware, but you can use the **<a href=\"https://uvicorn.readthedocs.io/en/latest/\" class=\"external-link\" target=\"_blank\">Uvicorn</a>** ASGI server to add ...",
+      "contexts_count": 5,
+      "expected_aspects": [
+        "app.middleware",
+        "decorator",
+        "request/response"
+      ]
+    },
+    {
+      "id": 13,
+      "query": "How do I handle errors in FastAPI?",
+      "difficulty": "medium",
+      "category": "errors",
+      "answer": "FastAPI provides several ways to handle errors, including using the `try-except` block, raising exceptions with custom error messages, and defining custom exception classes that inherit from FastAPI's...",
+      "contexts_count": 5,
+      "expected_aspects": [
+        "HTTPException",
+        "exception handler",
+        "status code"
+      ]
+    },
+    {
+      "id": 14,
+      "query": "How do I use dependencies in FastAPI?",
+      "difficulty": "medium",
+      "category": "dependencies",
+      "answer": "In FastAPI, you can declare dependencies using the `Depends()` function. This function takes parameters in the same way that path operation functions do. You never call those functions directly; they ...",
+      "contexts_count": 5,
+      "expected_aspects": [
+        "Depends",
+        "dependency injection",
+        "reusable"
+      ]
+    },
+    {
+      "id": 15,
+      "query": "How do I test FastAPI endpoints?",
+      "difficulty": "medium",
+      "category": "testing",
+      "answer": "FastAPI uses the `pytest` testing framework to provide extremely easy tests based on HTTPX. You can find more information about how to set up and run these tests in the [tutorial/testing.md](https://g...",
+      "contexts_count": 5,
+      "expected_aspects": [
+        "TestClient",
+        "pytest",
+        "requests"
+      ]
+    },
+    {
+      "id": 16,
+      "query": "How do I deploy FastAPI?",
+      "difficulty": "medium",
+      "category": "deployment",
+      "answer": "To deploy a FastAPI application, you can use the `fastapi deploy` command if you have a FastAPI Cloud account. If not, you can join the waiting list by visiting <https://fastapicloud.com/>.",
+      "contexts_count": 5,
+      "expected_aspects": [
+        "uvicorn",
+        "Docker",
+        "server",
+        "production"
+      ]
+    },
+    {
+      "id": 17,
+      "query": "How do I implement authentication in FastAPI?",
+      "difficulty": "hard",
+      "category": "security",
+      "answer": "FastAPI provides several tools for each of these security schemes in the `fastapi.security` module that simplify using these security mechanisms. To add security to your API, you can use the provided ...",
+      "contexts_count": 5,
+      "expected_aspects": [
+        "OAuth2",
+        "JWT",
+        "dependencies",
+        "security"
+      ]
+    },
+    {
+      "id": 18,
+      "query": "What are FastAPI's best practices?",
+      "difficulty": "hard",
+      "category": "best-practices",
+      "answer": "I don't have enough information to answer that question based on the provided documentation.",
+      "contexts_count": 5,
+      "expected_aspects": [
+        "async",
+        "dependencies",
+        "validation",
+        "documentation"
+      ]
+    },
+    {
+      "id": 19,
+      "query": "How do I optimize FastAPI performance?",
+      "difficulty": "hard",
+      "category": "performance",
+      "answer": "FastAPI has high performance due to its use of Starlette and Pydantic, which allows it to be on par with NodeJS and Go in terms of speed. To further optimize FastAPI performance, you can consider usin...",
+      "contexts_count": 5,
+      "expected_aspects": [
+        "async",
+        "database connections",
+        "caching",
+        "profiling"
+      ]
+    },
+    {
+      "id": 20,
+      "query": "How do I structure large FastAPI applications?",
+      "difficulty": "hard",
+      "category": "architecture",
+      "answer": "I don't have enough information to answer that question based on the provided documentation.",
+      "contexts_count": 5,
+      "expected_aspects": [
+        "routers",
+        "APIRouter",
+        "modules",
+        "organization"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "test_name": "RAG Query Evaluation (RAGAS metrics skipped)",
+  "timestamp": "2026-03-05 01:03:07",
+  "status": "queries_complete_ragas_skipped",
+  "note": "RAGAS evaluation requires OpenAI API key",
+  "test_results": {
+    "total_queries": 3,
+    "successful_queries": 3,
+    "failed_queries": 0
+  },
+  "query_results": [
+    {
+      "id": 1,
+      "query": "What is FastAPI?",
+      "difficulty": "easy",
+      "category": "basics",
+      "answer": "FastAPI is a modern, fast (high-performance), web framework for building APIs with Python based on standard Python type hints.",
+      "contexts_count": 5,
+      "expected_aspects": [
+        "web framework",
+        "Python",
+        "API",
+        "high performance"
+      ]
+    },
+    {
+      "id": 2,
+      "query": "How do I create a path parameter in FastAPI?",
+      "difficulty": "medium",
+      "category": "routing",
+      "answer": "You can create a path parameter in FastAPI by using an option directly from Starlette, like this:\n```bash\n/files/{file_path:path}\n```\nIn this case, the name of the parameter is `file_path`, and the la...",
+      "contexts_count": 5,
+      "expected_aspects": [
+        "function parameter",
+        "path operation",
+        "curly braces"
+      ]
+    },
+    {
+      "id": 3,
+      "query": "How do I implement authentication in FastAPI?",
+      "difficulty": "hard",
+      "category": "security",
+      "answer": "FastAPI provides several tools for each of these security schemes in the `fastapi.security` module that simplify using these security mechanisms. To add security to your API, you can use one or more o...",
+      "contexts_count": 5,
+      "expected_aspects": [
+        "OAuth2",
+        "JWT",
+        "dependencies",
+        "security"
+      ]
+    }
+  ]
+}

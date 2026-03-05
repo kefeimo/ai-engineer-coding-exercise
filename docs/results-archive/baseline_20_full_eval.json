@@ -1,0 +1,497 @@
+{
+  "evaluation_timestamp": "2026-03-05 09:19:22",
+  "query_timestamp": "2026-03-05 09:14:06",
+  "dataset_info": {
+    "total_queries": 20,
+    "successful_queries": 20,
+    "failed_queries": 0,
+    "evaluated_queries": 20
+  },
+  "aggregated_metrics": {
+    "faithfulness": {
+      "mean": 0.6344507575757576,
+      "min": 0.0,
+      "max": 1.0,
+      "count": 20
+    },
+    "answer_relevancy": {
+      "mean": 0.7716143394223796,
+      "min": 0.0,
+      "max": 0.9999999999999997,
+      "count": 20
+    },
+    "context_precision": {
+      "mean": 0.9474999999805626,
+      "min": 0.0,
+      "max": 0.99999999998,
+      "count": 20
+    },
+    "context_recall": {
+      "mean": NaN,
+      "min": 0.125,
+      "max": 1.0,
+      "count": 20
+    },
+    "context_entity_recall": {
+      "mean": 0.5190120983766238,
+      "min": 0.0,
+      "max": 0.9999999985714286,
+      "count": 20
+    }
+  },
+  "results": [
+    {
+      "query": "What is FastAPI?",
+      "difficulty": "easy",
+      "answer": "FastAPI is a modern, fast (high-performance), web framework for building APIs with Python based on standard Python type hints.",
+      "contexts": [
+        "author and team behind **FastAPI**.\n\nIt streamlines the process of **building**, **deploying**, and **accessing** an API with minimal effort.\n\nIt brings the same **developer experience** of building apps with FastAPI to **deploying** them to the cloud. \ud83c\udf89\n\nFastAPI Cloud is the primary sponsor and funding provider for the *FastAPI and friends* open source projects. \u2728\n\n#### Deploy to other cloud providers { #deploy-to-other-cloud-providers }\n\nFastAPI is open source and based on standards.",
+        "# Tutorial - User Guide { #tutorial-user-guide }\n\nThis tutorial shows you how to use **FastAPI** with most of its features, step by step.\n\nEach section gradually builds on the previous ones, but it's structured to separate topics, so that you can go directly to any specific one to solve your specific API needs.\n\nIt is also built to work as a future reference so you can come back and see exactly what you need.",
+        "# Tutorial - User Guide { #tutorial-user-guide }\n\nThis tutorial shows you how to use **FastAPI** with most of its features, step by step.\n\nEach section gradually builds on the previous ones, but it's structured to separate topics, so that you can go directly to any specific one to solve your specific API needs.\n\nIt is also built to work as a future reference so you can come back and see exactly what you need.",
+        "he-openapi-json }\n\nIf you are curious about how the raw OpenAPI schema looks like, FastAPI automatically generates a JSON (schema) with the descriptions of all your API.\n\nYou can see it directly at: <a href=\"http://127.0.0.1:8000/openapi.json\" class=\"external-link\" target=\"_blank\">http://127.0.0.1:8000/openapi.json</a>.\n\nIt will show a JSON starting with something like:\n\n```JSON\n{\n    \"openapi\": \"3.1.0\",\n    \"info\": {\n        \"title\": \"FastAPI\",\n        \"version\": \"0.1.0\"\n    },\n    \"paths\": {",
+        "github.com/fastapi/fastapi\" target=\"_blank\">https://github.com/fastapi/fastapi</a>\n\n---\n\nFastAPI is a modern, fast (high-performance), web framework for building APIs with Python based on standard Python type hints.\n\nThe key features are:\n\n* **Fast**: Very high performance, on par with **NodeJS** and **Go** (thanks to Starlette and Pydantic). [One of the fastest Python frameworks available](#performance).\n* **Fast to code**: Increase the speed to develop features by about 200% to 300%."
+      ],
+      "confidence": 0.8052,
+      "num_sources": 5,
+      "response_time": 68.26,
+      "reference": "FastAPI is a modern, high-performance web framework for building APIs with Python. It streamlines the process of building, deploying, and accessing APIs with minimal effort, providing a developer experience that is efficient and user-friendly. FastAPI is open source, based on standards, and offers features such as high performance comparable to NodeJS and Go, thanks to Starlette and Pydantic. FastAPI Cloud is the primary sponsor and funding provider for the FastAPI and friends open source projects.\n\nA key aspect of FastAPI is its ability to automatically generate an OpenAPI schema in JSON format that describes all aspects of your API. This schema can be accessed at `http://127.0.0.1:8000/openapi.json` and provides detailed information about the API, including its title, version, and paths.\n\nThe framework is designed to be fast to code, enabling developers to increase the speed of feature development by 200% to 300%. Additionally, FastAPI offers a tutorial user guide that walks users through using its features step by step. The guide is structured to allow users to easily navigate to specific topics based on their API needs and serves as a valuable future reference for users to revisit as needed.\n\nOverall, FastAPI is a powerful web framework that combines high performance, ease of use, and comprehensive documentation to facilitate the development and deployment of APIs with Python.",
+      "ragas_scores": {
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.9999999999999997,
+        "context_precision": 0.99999999998,
+        "context_recall": 1.0,
+        "context_entity_recall": 0.8333333326388889
+      }
+    },
+    {
+      "query": "How do I install FastAPI?",
+      "difficulty": "easy",
+      "answer": "You can install FastAPI using `pip install \"fastapi[standard]\"` or `pip install fastapi`. If you want to include the optional dependencies, including `fastapi-cloud-cli`, use `pip install \"fastapi[standard]\"`.",
+      "contexts": [
+        "you can install with `pip install \"fastapi[standard-no-fastapi-cloud-cli]\"`.\n\n///\n\n## Advanced User Guide { #advanced-user-guide }\n\nThere is also an **Advanced User Guide** that you can read later after this **Tutorial - User guide**.\n\nThe **Advanced User Guide** builds on this one, uses the same concepts, and teaches you some extra features.\n\nBut you should first read the **Tutorial - User Guide** (what you are reading right now).",
+        "you can install with `pip install \"fastapi[standard-no-fastapi-cloud-cli]\"`.\n\n///\n\n## Advanced User Guide { #advanced-user-guide }\n\nThere is also an **Advanced User Guide** that you can read later after this **Tutorial - User guide**.\n\nThe **Advanced User Guide** builds on this one, uses the same concepts, and teaches you some extra features.\n\nBut you should first read the **Tutorial - User Guide** (what you are reading right now).",
+        "I is open source and based on standards. You can deploy FastAPI apps to any cloud provider you choose.\n\nFollow your cloud provider's guides to deploy FastAPI apps with them. \ud83e\udd13\n\n## Recap { #recap }\n\n* Import `FastAPI`.\n* Create an `app` instance.\n* Write a **path operation decorator** using decorators like `@app.get(\"/\")`.\n* Define a **path operation function**; for example, `def root(): ...`.\n* Run the development server using the command `fastapi dev`.",
+        "udes some dependencies (e.g. `uvloop`) needed for high performance serving.\n* `fastapi-cli[standard]` - to provide the `fastapi` command.\n    * This includes `fastapi-cloud-cli`, which allows you to deploy your FastAPI application to <a href=\"https://fastapicloud.com\" class=\"external-link\" target=\"_blank\">FastAPI Cloud</a>.\n\n### Without `standard` Dependencies { #without-standard-dependencies }\n\nIf you don't want to include the `standard` optional dependencies, you can install with `pip install",
+        "install with `pip install \"fastapi[standard]\"` it comes with some default optional standard dependencies, including `fastapi-cloud-cli`, which allows you to deploy to <a href=\"https://fastapicloud.com\" class=\"external-link\" target=\"_blank\">FastAPI Cloud</a>.\n\nIf you don't want to have those optional dependencies, you can instead install `pip install fastapi`.\n\nIf you want to install the standard dependencies but without the `fastapi-cloud-cli`, you can install with `pip install"
+      ],
+      "confidence": 0.8335,
+      "num_sources": 5,
+      "response_time": 12.96,
+      "reference": "To install FastAPI, you can use `pip` with specific options based on your requirements:\n\n1. **Install FastAPI with Standard Dependencies (including `fastapi-cloud-cli`):**\n   - Run `pip install \"fastapi[standard]\"` to install FastAPI with default optional standard dependencies, including `fastapi-cloud-cli` for deploying to FastAPI Cloud.\n\n2. **Install FastAPI without Standard Dependencies:**\n   - If you prefer not to include the standard optional dependencies, you can install FastAPI without them by running `pip install fastapi`.\n\n3. **Install FastAPI with Specific Dependencies (excluding `fastapi-cloud-cli`):**\n   - To install FastAPI with standard dependencies but without `fastapi-cloud-cli`, use `pip install \"fastapi[standard-no-fastapi-cloud-cli]\"`.\n\nRemember to follow your cloud provider's guides if you plan to deploy FastAPI apps to a specific cloud provider.",
+      "ragas_scores": {
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.9713262835678099,
+        "context_precision": 0.99999999998,
+        "context_recall": 1.0,
+        "context_entity_recall": 0.7499999981250001
+      }
+    },
+    {
+      "query": "What is uvicorn?",
+      "difficulty": "easy",
+      "answer": "Uvicorn is a Python ASGI server that loads and serves FastAPI applications. It's used by default when you run `fastapi dev` or `uvicorn main:app --reload`.",
+      "contexts": [
+        "omeapp']\nINFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)\nINFO:     Started reloader process [2248755] using WatchFiles\nINFO:     Started server process [2248757]\nINFO:     Waiting for application startup.\nINFO:     Application startup complete.\n```\n\n</div>\n\n<details markdown=\"1\">\n<summary>About the command <code>fastapi dev main.py</code>...</summary>\n\nThe command `fastapi dev` reads your `main.py` file, detects the **FastAPI** app in it, and starts a server using <a",
+        "es to deploy FastAPI apps with them. \ud83e\udd13\n\n## Performance { #performance }\n\nIndependent TechEmpower benchmarks show **FastAPI** applications running under Uvicorn as <a href=\"https://www.techempower.com/benchmarks/#section=test&runid=7464e520-0dc2-473d-bd34-dbdfd7e85911&hw=ph&test=query&l=zijzen-7\" class=\"external-link\" target=\"_blank\">one of the fastest Python frameworks available</a>, only below Starlette and Uvicorn themselves (used internally by FastAPI).",
+        "s <b>[</b><font color=\"#34E2E2\"><b>383153</b></font><b>]</b>\n     <span style=\"background-color:#007166\"><font color=\"#D3D7CF\"> INFO </font></span>  Waiting for application startup.\n     <span style=\"background-color:#007166\"><font color=\"#D3D7CF\"> INFO </font></span>  Application startup complete.\n```\n\n</div>\n\nIn the output, there's a line with something like:\n\n```hl_lines=\"4\"\nINFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)\n```\n\nThat line shows the URL where your app",
+        "://github.com/Kludex/python-multipart\" target=\"_blank\"><code>python-multipart</code></a> - Required if you want to support form <dfn title=\"converting the string that comes from an HTTP request into Python data\">\"parsing\"</dfn>, with `request.form()`.\n\nUsed by FastAPI:\n\n* <a href=\"https://www.uvicorn.dev\" target=\"_blank\"><code>uvicorn</code></a> - for the server that loads and serves your application. This includes `uvicorn[standard]`, which includes some dependencies (e.g.",
+        "0.1:8000/docs               \u2502\n \u2502                                                     \u2502\n \u2502  Running in development mode, for production use:   \u2502\n \u2502                                                     \u2502\n \u2502  fastapi run                                        \u2502\n \u2502                                                     \u2502\n \u2570\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256f\n\nINFO:     Will watch for changes in these directories: ['/home/user/code/awesomeapp']\nINFO:     Uvicorn running on"
+      ],
+      "confidence": 0.7322,
+      "num_sources": 5,
+      "response_time": 13.57,
+      "reference": "Uvicorn is a server used by FastAPI to load and serve your application. It is responsible for running the FastAPI app and making it accessible via a specific URL. Uvicorn is known for its performance, with independent benchmarks showing FastAPI applications running under Uvicorn as one of the fastest Python frameworks available, only below Starlette and Uvicorn themselves.\n\nTo start a FastAPI app using Uvicorn, you can use the command `fastapi dev main.py`. This command reads the `main.py` file, detects the FastAPI app in it, and starts a server using Uvicorn. Once the server is running, you will see an output similar to `INFO: Uvicorn running on http://127.0.0.1:8000`, indicating the URL where your FastAPI app is accessible.\n\nUvicorn is a crucial component for deploying FastAPI applications and is used internally by FastAPI for serving the application. It is recommended to have `uvicorn[standard]` installed, which includes some dependencies necessary for running the server smoothly.\n\nIn summary, Uvicorn is a high-performance server that loads and serves FastAPI applications, making them accessible via specific URLs and contributing to the overall speed and efficiency of the application.",
+      "ragas_scores": {
+        "faithfulness": 0.3333333333333333,
+        "answer_relevancy": 0.7560391980040624,
+        "context_precision": 0.99999999998,
+        "context_recall": 1.0,
+        "context_entity_recall": 0.7142857132653061
+      }
+    },
+    {
+      "query": "What is ASGI?",
+      "difficulty": "easy",
+      "answer": "I don't have enough information to answer that question based on the provided documentation. Please try rephrasing your question or ask about FastAPI features.",
+      "contexts": [],
+      "confidence": 0.606,
+      "num_sources": 0,
+      "response_time": 2.52,
+      "ragas_scores": {
+        "faithfulness": 0.3333333333333333,
+        "answer_relevancy": 0.0,
+        "context_precision": 0.0,
+        "context_recall": NaN,
+        "context_entity_recall": 0.0
+      }
+    },
+    {
+      "query": "What is Pydantic?",
+      "difficulty": "easy",
+      "answer": "Pydantic is a Python library for building data models with type hints. It provides an easy way to define your data structures using classes, which can be validated against input data. Pydantic also supports complex data schemas and allows you to use features like auto-completion, linting, mypy, and validation with your validated data.",
+      "contexts": [
+        "ependencies you might want to install.\n\nAdditional optional Pydantic dependencies:\n\n* <a href=\"https://docs.pydantic.dev/latest/usage/pydantic_settings/\" target=\"_blank\"><code>pydantic-settings</code></a> - for settings management.\n* <a href=\"https://docs.pydantic.dev/latest/usage/types/extra_types/extra_types/\" target=\"_blank\"><code>pydantic-extra-types</code></a> - for extra types to be used with Pydantic.",
+        "k\" target=\"_blank\">http://127.0.0.1:8000/redoc</a>:\n\n<img src=\"/img/tutorial/path-params/image02.png\">\n\nThe same way, there are many compatible tools. Including code generation tools for many languages.\n\n## Pydantic { #pydantic }\n\nAll the data validation is performed under the hood by <a href=\"https://docs.pydantic.dev/\" class=\"external-link\" target=\"_blank\">Pydantic</a>, so you get all the benefits from it.",
+        "cess background tasks.\n* Startup and shutdown events.\n* Test client built on HTTPX.\n* **CORS**, GZip, Static Files, Streaming responses.\n* **Session and Cookie** support.\n* 100% test coverage.\n* 100% type annotated codebase.\n\n## Pydantic features { #pydantic-features }\n\n**FastAPI** is fully compatible with (and based on) <a href=\"https://docs.pydantic.dev/\" class=\"external-link\" target=\"_blank\"><strong>Pydantic</strong></a>.",
+        "FastAPI). (*)\n\nTo understand more about it, see the section <a href=\"https://fastapi.tiangolo.com/benchmarks/\" class=\"internal-link\" target=\"_blank\">Benchmarks</a>.\n\n## Dependencies { #dependencies }\n\nFastAPI depends on Pydantic and Starlette.\n\n### `standard` Dependencies { #standard-dependencies }\n\nWhen you install FastAPI with `pip install \"fastapi[standard]\"` it comes with the `standard` group of optional dependencies:\n\nUsed by Pydantic:\n\n* <a",
+        "hat checks for code errors\">linter</dfn>/brain**:\n    * Because pydantic data structures are just instances of classes you define; auto-completion, linting, mypy and your intuition should all work properly with your validated data.\n* Validate **complex structures**:\n    * Use of hierarchical Pydantic models, Python `typing`\u2019s `List` and `Dict`, etc.\n    * And validators allow complex data schemas to be clearly and easily defined, checked and documented as JSON Schema."
+      ],
+      "confidence": 0.7509,
+      "num_sources": 5,
+      "response_time": 13.28,
+      "reference": "Pydantic is a Python library that provides data validation capabilities. It is used in conjunction with FastAPI for data validation purposes. Pydantic offers various features such as settings management and extra types through optional dependencies like `pydantic-settings` and `pydantic-extra-types`. Pydantic is fully compatible with FastAPI and is responsible for handling all data validation tasks within the FastAPI framework.\n\nPydantic allows for the validation of complex data structures using hierarchical models, Python `typing`'s `List` and `Dict`, as well as validators that enable the clear definition, checking, and documentation of complex data schemas as JSON Schema. Pydantic data structures are instances of user-defined classes, ensuring proper auto-completion, linting, and compatibility with tools like mypy.\n\nIn summary, Pydantic is a powerful library that enables robust data validation in Python applications, particularly when used in conjunction with frameworks like FastAPI.",
+      "ragas_scores": {
+        "faithfulness": 0.6,
+        "answer_relevancy": 0.9371985783267628,
+        "context_precision": 0.99999999998,
+        "context_recall": 1.0,
+        "context_entity_recall": 0.5999999993999999
+      }
+    },
+    {
+      "query": "What are FastAPI's main features?",
+      "difficulty": "easy",
+      "answer": "FastAPI is a modern, fast (high-performance), web framework for building APIs with Python based on standard Python type hints. Its key features include performance similar to NodeJS and Go due to Starlette and Pydantic, as well as increased speed in developing features by about 200% to 300%.\n\nReference(s):\n[Source 1: tutorial/first-steps.md (confidence: 0.81)]",
+      "contexts": [
+        "author and team behind **FastAPI**.\n\nIt streamlines the process of **building**, **deploying**, and **accessing** an API with minimal effort.\n\nIt brings the same **developer experience** of building apps with FastAPI to **deploying** them to the cloud. \ud83c\udf89\n\nFastAPI Cloud is the primary sponsor and funding provider for the *FastAPI and friends* open source projects. \u2728\n\n#### Deploy to other cloud providers { #deploy-to-other-cloud-providers }\n\nFastAPI is open source and based on standards.",
+        "github.com/fastapi/fastapi\" target=\"_blank\">https://github.com/fastapi/fastapi</a>\n\n---\n\nFastAPI is a modern, fast (high-performance), web framework for building APIs with Python based on standard Python type hints.\n\nThe key features are:\n\n* **Fast**: Very high performance, on par with **NodeJS** and **Go** (thanks to Starlette and Pydantic). [One of the fastest Python frameworks available](#performance).\n* **Fast to code**: Increase the speed to develop features by about 200% to 300%.",
+        "# Tutorial - User Guide { #tutorial-user-guide }\n\nThis tutorial shows you how to use **FastAPI** with most of its features, step by step.\n\nEach section gradually builds on the previous ones, but it's structured to separate topics, so that you can go directly to any specific one to solve your specific API needs.\n\nIt is also built to work as a future reference so you can come back and see exactly what you need.",
+        "# Tutorial - User Guide { #tutorial-user-guide }\n\nThis tutorial shows you how to use **FastAPI** with most of its features, step by step.\n\nEach section gradually builds on the previous ones, but it's structured to separate topics, so that you can go directly to any specific one to solve your specific API needs.\n\nIt is also built to work as a future reference so you can come back and see exactly what you need.",
+        "he-openapi-json }\n\nIf you are curious about how the raw OpenAPI schema looks like, FastAPI automatically generates a JSON (schema) with the descriptions of all your API.\n\nYou can see it directly at: <a href=\"http://127.0.0.1:8000/openapi.json\" class=\"external-link\" target=\"_blank\">http://127.0.0.1:8000/openapi.json</a>.\n\nIt will show a JSON starting with something like:\n\n```JSON\n{\n    \"openapi\": \"3.1.0\",\n    \"info\": {\n        \"title\": \"FastAPI\",\n        \"version\": \"0.1.0\"\n    },\n    \"paths\": {"
+      ],
+      "confidence": 0.7973,
+      "num_sources": 5,
+      "response_time": 13.92,
+      "reference": "FastAPI is a modern web framework for building APIs with Python that streamlines the process of building, deploying, and accessing APIs with minimal effort. It offers a high developer experience and is open source and based on standards. FastAPI is sponsored and funded by FastAPI Cloud, the primary supporter of the FastAPI and friends open source projects.\n\nThe key features of FastAPI include:\n- **Fast Performance**: FastAPI boasts very high performance, comparable to NodeJS and Go, thanks to its underlying technologies Starlette and Pydantic. It is recognized as one of the fastest Python frameworks available.\n- **Fast Development**: It significantly increases the speed to develop features, reducing development time by about 200% to 300%.\n\nFastAPI provides a comprehensive tutorial that guides users on how to utilize its features step by step. The tutorial is structured to build on previous sections gradually, allowing users to navigate directly to specific topics to address their API requirements. Additionally, the tutorial serves as a future reference for users to revisit and access the information they need.\n\nFor users curious about the raw OpenAPI schema generated by FastAPI, they can view the JSON schema with descriptions of their API directly at `http://127.0.0.1:8000/openapi.json`. The JSON schema includes information such as the OpenAPI version, title (FastAPI), version, and paths defined in the API.",
+      "ragas_scores": {
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.9679284657543793,
+        "context_precision": 0.99999999998,
+        "context_recall": 0.8333333333333334,
+        "context_entity_recall": 0.3636363633057851
+      }
+    },
+    {
+      "query": "How do I create a path parameter in FastAPI?",
+      "difficulty": "medium",
+      "answer": "You can create a path parameter in FastAPI by using an option directly from Starlette, declaring it as a parameter with the `path` keyword. For example:\n```\n/files/{file_path:path}\n```\nIn this case, the name of the parameter is `file_path`, and the last part, `:path`, tells it that the parameter should contain a path.",
+      "contexts": [
+        "do it in **FastAPI**, using one of the internal tools from Starlette.\n\nAnd the docs would still work, although not adding any documentation telling that the parameter should contain a path.\n\n### Path convertor { #path-convertor }\n\nUsing an option directly from Starlette you can declare a *path parameter* containing a *path* using a URL like:\n\n```\n/files/{file_path:path}\n```\n\nIn this case, the name of the parameter is `file_path`, and the last part, `:path`, tells it that the parameter should",
+        "# Multiple path and query parameters { #multiple-path-and-query-parameters }\n\nYou can declare multiple path parameters and query parameters at the same time, **FastAPI** knows which is which.\n\nAnd you don't have to declare them in any specific order.\n\nThey will be detected by name:\n\n{* ../../docs_src/query_params/tutorial004_py310.py hl[6,8] *}\n\n## Required query parameters { #required-query-parameters }\n\nWhen you declare a default value for non-path parameters (for now, we have only seen query",
+        "from your function.\n* Assign that result to the parameter in your *path operation function*.\n\n```mermaid\ngraph TB\n\ncommon_parameters([\"common_parameters\"])\nread_items[\"/items/\"]\nread_users[\"/users/\"]\n\ncommon_parameters --> read_items\ncommon_parameters --> read_users\n```\n\nThis way you write shared code once and **FastAPI** takes care of calling it for your *path operations*.\n\n/// check\n\nNotice that you don't have to create a special class and pass it somewhere to **FastAPI** to \"register\" it or",
+        "'t add the parenthesis at the end), you just pass it as a parameter to `Depends()`.\n\nAnd that function takes parameters in the same way that *path operation functions* do.\n\n/// tip\n\nYou'll see what other \"things\", apart from functions, can be used as dependencies in the next chapter.\n\n///\n\nWhenever a new request arrives, **FastAPI** will take care of:\n\n* Calling your dependency (\"dependable\") function with the correct parameters.\n* Get the result from your function.",
+        "# Tutorial - User Guide { #tutorial-user-guide }\n\nThis tutorial shows you how to use **FastAPI** with most of its features, step by step.\n\nEach section gradually builds on the previous ones, but it's structured to separate topics, so that you can go directly to any specific one to solve your specific API needs.\n\nIt is also built to work as a future reference so you can come back and see exactly what you need."
+      ],
+      "confidence": 0.8331,
+      "num_sources": 5,
+      "response_time": 13.36,
+      "reference": "To create a path parameter in FastAPI, you can use an option directly from Starlette. You can declare a path parameter containing a path using a URL pattern like `/files/{file_path:path}`. In this case, `file_path` is the name of the parameter, and `:path` specifies that the parameter should contain a path.\n\nFastAPI allows you to declare multiple path parameters and query parameters simultaneously, and it can differentiate between them based on their names. The order in which you declare them does not matter.\n\nWhen you declare a default value for non-path parameters, FastAPI recognizes them as query parameters. You can assign the result of a shared code to the parameter in your path operation function, allowing you to reuse code efficiently.\n\nTo use dependencies in FastAPI, you can pass a function as a parameter to `Depends()`. This function takes parameters in the same way as path operation functions. FastAPI handles calling the dependency function with the correct parameters and retrieving the result from your function when a new request arrives.\n\nThe FastAPI tutorial provides a comprehensive guide on using FastAPI with its features step by step. It is structured to allow you to navigate directly to specific topics to address your API requirements and serves as a valuable future reference resource.",
+      "ragas_scores": {
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.9936634205794386,
+        "context_precision": 0.99999999998,
+        "context_recall": 1.0,
+        "context_entity_recall": 0.4285714282653061
+      }
+    },
+    {
+      "query": "How do I use query parameters?",
+      "difficulty": "medium",
+      "answer": "Query parameters are used in URLs to pass additional information beyond the path. They are key-value pairs that go after the `?` in a URL, separated by `&` characters. You can declare them as function parameters and they will be automatically interpreted as \"query\" parameters. To use query parameters, you simply set their values in the URL when making requests to your API. For example:\n```javascript\nhttp://127.0.0.1:8000/items/?skip=20&limit=10\n```\nIn this case, the `skip` and `limit` parameters are set with values of 20 and 10 respectively. You can also declare optional query parameters by setting their default to `None`. To make a parameter required, simply don't declare any default value for it.",
+      "contexts": [
+        "# Query Parameters { #query-parameters }\n\nWhen you declare other function parameters that are not part of the path parameters, they are automatically interpreted as \"query\" parameters.\n\n{* ../../docs_src/query_params/tutorial001_py310.py hl[9] *}\n\nThe query is the set of key-value pairs that go after the `?` in a URL, separated by `&` characters.\n\nFor example, in the URL:\n\n```\nhttp://127.0.0.1:8000/items/?skip=0&limit=10\n```\n\n...the query parameters are:\n\n* `skip`: with a value of `0`\n*",
+        "path parameters (for now, we have only seen query parameters), then it is not required.\n\nIf you don't want to add a specific value but just make it optional, set the default as `None`.\n\nBut when you want to make a query parameter required, you can just not declare any default value:\n\n{* ../../docs_src/query_params/tutorial005_py310.py hl[6:7] *}\n\nHere the query parameter `needy` is a required query parameter of type `str`.",
+        "you go to, for example:\n\n```\nhttp://127.0.0.1:8000/items/?skip=20\n```\n\nThe parameter values in your function will be:\n\n* `skip=20`: because you set it in the URL\n* `limit=10`: because that was the default value\n\n## Optional parameters { #optional-parameters }\n\nThe same way, you can declare optional query parameters, by setting their default to `None`:\n\n{* ../../docs_src/query_params/tutorial002_py310.py hl[7] *}\n\nIn this case, the function parameter `q` will be optional, and will be `None` by",
+        "# Multiple path and query parameters { #multiple-path-and-query-parameters }\n\nYou can declare multiple path parameters and query parameters at the same time, **FastAPI** knows which is which.\n\nAnd you don't have to declare them in any specific order.\n\nThey will be detected by name:\n\n{* ../../docs_src/query_params/tutorial004_py310.py hl[6,8] *}\n\n## Required query parameters { #required-query-parameters }\n\nWhen you declare a default value for non-path parameters (for now, we have only seen query",
+        "needy\n```\n\n...this would work:\n\n```JSON\n{\n    \"item_id\": \"foo-item\",\n    \"needy\": \"sooooneedy\"\n}\n```\n\nAnd of course, you can define some parameters as required, some as having a default value, and some entirely optional:\n\n{* ../../docs_src/query_params/tutorial006_py310.py hl[8] *}\n\nIn this case, there are 3 query parameters:\n\n* `needy`, a required `str`.\n* `skip`, an `int` with a default value of `0`.\n* `limit`, an optional `int`."
+      ],
+      "confidence": 0.7543,
+      "num_sources": 5,
+      "response_time": 16.97,
+      "reference": "To use query parameters in FastAPI, you can declare them as function parameters that are not part of the path parameters. Query parameters are the key-value pairs that come after the `?` in a URL, separated by `&` characters. Here is how you can work with query parameters:\n\n1. **Declaring Query Parameters:**\n   - Query parameters are automatically interpreted when declared as function parameters.\n   - To make a query parameter optional, set its default value to `None`.\n   - To make a query parameter required, simply do not declare any default value.\n\n2. **Optional Query Parameters:**\n   - Declare optional query parameters by setting their default value to `None`.\n   - Example:\n     ```python\n     from fastapi import FastAPI\n\n     app = FastAPI()\n\n     @app.get(\"/items/\")\n     async def read_items(skip: int = 0, limit: int = 10, q: str = None):\n         return {\"skip\": skip, \"limit\": limit, \"q\": q}\n     ```\n\n3. **Required Query Parameters:**\n   - To make a query parameter required, do not declare any default value.\n   - Example:\n     ```python\n     from fastapi import FastAPI\n\n     app = FastAPI()\n\n     @app.get(\"/items/\")\n     async def read_items(needy: str):\n         return {\"needy\": needy}\n     ```\n\n4. **Multiple Path and Query Parameters:**\n   - FastAPI can handle multiple path and query parameters simultaneously.\n   - Parameters are detected by name.\n   - They can be declared in any order.\n   - Example:\n     ```python\n     from fastapi import FastAPI\n\n     app = FastAPI()\n\n     @app.get(\"/items/{item_id}\")\n     async def read_item(item_id: str, needy: str):\n         return {\"item_id\": item_id, \"needy\": needy}\n     ```\n\n5. **Mixing Required, Default, and Optional Parameters:**\n   - You can define some query parameters as required, some with default values, and some entirely optional.\n   - Example:\n     ```python\n     from fastapi import FastAPI\n\n     app = FastAPI()\n\n     @app.get(\"/items/\")\n     async def read_items(item_id: str, needy: str, skip: int = 0, limit: int = None):\n         return {\"item_id\": item_id, \"needy\": needy, \"skip\": skip, \"limit\": limit}\n     ```\n\nBy following these guidelines, you can effectively work with query parameters in FastAPI to build robust and flexible APIs.",
+      "ragas_scores": {
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.9397035569952928,
+        "context_precision": 0.99999999998,
+        "context_recall": 0.6,
+        "context_entity_recall": 0.3333333331111111
+      }
+    },
+    {
+      "query": "How do I handle request body in FastAPI?",
+      "difficulty": "medium",
+      "answer": "To declare a **request** body, you use <a href=\"https://docs.pydantic.dev/\" class=\"external-link\" target=\"_blank\">Pydantic</a> models with all their power and benefits.",
+      "contexts": [
+        "me query parameters, but don't send a body.\n\nTo declare a **request** body, you use <a href=\"https://docs.pydantic.dev/\" class=\"external-link\" target=\"_blank\">Pydantic</a> models with all their power and benefits.\n\n/// info\n\nTo send data, you should use one of: `POST` (the more common), `PUT`, `DELETE` or `PATCH`.\n\nSending a body with a `GET` request has an undefined behavior in the specifications, nevertheless, it is supported by FastAPI, only for very complex/extreme use cases.",
+        "# Request Body { #request-body }\n\nWhen you need to send data from a client (let's say, a browser) to your API, you send it as a **request body**.\n\nA **request** body is data sent by the client to your API. A **response** body is the data your API sends to the client.\n\nYour API almost always has to send a **response** body. But clients don't necessarily need to send **request bodies** all the time, sometimes they only request a path, maybe with some query parameters, but don't send a body.",
+        "edoc-simple.png)\n\n## Example upgrade { #example-upgrade }\n\nNow modify the file `main.py` to receive a body from a `PUT` request.\n\nDeclare the body using standard Python types, thanks to Pydantic.\n\n```Python hl_lines=\"2  7-10 23-25\"\nfrom fastapi import FastAPI\nfrom pydantic import BaseModel\n\napp = FastAPI()\n\n\nclass Item(BaseModel):\n    name: str\n    price: float\n    is_offer: bool | None = None\n\n\n@app.get(\"/\")\ndef read_root():\n    return {\"Hello\": \"World\"}\n\n\n@app.get(\"/items/{item_id}\")\ndef",
+        "ing `\"3\"`.\n\nSo, with that type declaration, **FastAPI** gives you automatic request <dfn title=\"converting the string that comes from an HTTP request into Python data\">\"parsing\"</dfn>.\n\n///\n\n## Data validation { #data-validation }\n\nBut if you go to the browser at <a href=\"http://127.0.0.1:8000/items/foo\" class=\"external-link\" target=\"_blank\">http://127.0.0.1:8000/items/foo</a>, you will see a nice HTTP error of:\n\n```JSON\n{\n  \"detail\": [\n    {\n      \"type\": \"int_parsing\",\n      \"loc\": [",
+        "c/body/tutorial001_py310.py hl[16] *}\n\n...and declare its type as the model you created, `Item`.\n\n## Results { #results }\n\nWith just that Python type declaration, **FastAPI** will:\n\n* Read the body of the request as JSON.\n* Convert the corresponding types (if needed).\n* Validate the data.\n    * If the data is invalid, it will return a nice and clear error, indicating exactly where and what was the incorrect data.\n* Give you the received data in the parameter `item`."
+      ],
+      "confidence": 0.8043,
+      "num_sources": 5,
+      "response_time": 12.7,
+      "reference": "To handle a request body in FastAPI, you can use Pydantic models to declare the structure of the data being sent. When sending data from a client to your API, you typically use HTTP methods like `POST`, `PUT`, `DELETE`, or `PATCH`. While sending a body with a `GET` request is not recommended due to undefined behavior in specifications, FastAPI supports it for complex use cases.\n\nTo receive a body from a `PUT` request in FastAPI, you can modify your code as follows:\n\n1. Define a Pydantic model to represent the structure of the data being sent. For example:\n   ```python\n   from pydantic import BaseModel\n\n   class Item(BaseModel):\n       name: str\n       price: float\n       is_offer: bool | None = None\n   ```\n\n2. Use this model in your FastAPI route to handle the request body. For instance:\n   ```python\n   from fastapi import FastAPI\n\n   app = FastAPI()\n\n   @app.put(\"/items/{item_id}\")\n   def update_item(item_id: int, item: Item):\n       return {\"item_id\": item_id, \"item\": item}\n   ```\n\nBy declaring the type of the request body as the Pydantic model `Item`, FastAPI will automatically parse the JSON body of the request, convert the data types if necessary, and validate the data. If the data is invalid, FastAPI will return a clear error message indicating the issue.\n\nIn summary, to handle request bodies in FastAPI:\n- Use Pydantic models to define the structure of the data being sent.\n- Modify your FastAPI route to receive the request body using the defined model.\n- FastAPI will handle parsing, type conversion, and data validation automatically based on the model you provide.",
+      "ragas_scores": {
+        "faithfulness": 0.6666666666666666,
+        "answer_relevancy": 0.8684951936745345,
+        "context_precision": 0.94999999997625,
+        "context_recall": 1.0,
+        "context_entity_recall": 0.39999999984
+      }
+    },
+    {
+      "query": "How do I validate data in FastAPI?",
+      "difficulty": "medium",
+      "answer": "FastAPI uses the return type of a path operation function to perform data validation, documentation, filtering, etc. You can declare the type used for the response by annotating the *path operation function* **return type**. If you don't want to use Pydantic models or Body parameters, you can disable the response model generation by setting `response_model=None`.",
+      "contexts": [
+        "List[Item]`.\n\nFastAPI will use this `response_model` to do all the data documentation, validation, etc. and also to **convert and filter the output data** to its type declaration.\n\n/// tip\n\nIf you have strict type checks in your editor, mypy, etc, you can declare the function return type as `Any`.\n\nThat way you tell the editor that you are intentionally returning anything. But FastAPI will still do the data documentation, validation, filtering, etc.",
+        "# Response Model - Return Type { #response-model-return-type }\n\nYou can declare the type used for the response by annotating the *path operation function* **return type**.\n\nYou can use **type annotations** the same way you would for input data in function **parameters**, you can use Pydantic models, lists, dictionaries, scalar values like integers, booleans, etc.\n\n{* ../../docs_src/response_model/tutorial001_01_py310.py hl[16,21] *}\n\nFastAPI will use this return type to:\n\n* **Validate** the",
+        "tAPI will know that the value of `q` is not required because of the default value `= None`.\n\nThe `str | None` is not used by FastAPI to determine that the value is not required, it will know it's not required because it has a default value of `= None`.\n\nBut adding the type annotations will allow your editor to give you better support and detect errors.\n\n///\n\n## Without Pydantic { #without-pydantic }\n\nIf you don't want to use Pydantic models, you can also use **Body** parameters.",
+        "ault data validation, documentation, filtering, etc. that is performed by FastAPI.\n\nBut you might want to still keep the return type annotation in the function to get the support from tools like editors and type checkers (e.g. mypy).\n\nIn this case, you can disable the response model generation by setting `response_model=None`:\n\n{* ../../docs_src/response_model/tutorial003_05_py310.py hl[7] *}\n\nThis will make FastAPI skip the response model generation and that way you can have any return type",
+        "ank\">http://127.0.0.1:8000/items/4.2</a>\n\n/// check\n\nSo, with the same Python type declaration, **FastAPI** gives you data validation.\n\nNotice that the error also clearly states exactly the point where the validation didn't pass.\n\nThis is incredibly helpful while developing and debugging code that interacts with your API.\n\n///\n\n## Documentation { #documentation }\n\nAnd when you open your browser at <a href=\"http://127.0.0.1:8000/docs\" class=\"external-link\""
+      ],
+      "confidence": 0.7941,
+      "num_sources": 5,
+      "response_time": 13.29,
+      "reference": "To validate data in FastAPI, you can use the `response_model` attribute to declare the type used for the response in your path operation function. FastAPI will utilize this `response_model` to perform data documentation, validation, and filtering based on the type declaration. You can annotate the return type of your path operation function using type annotations, Pydantic models, lists, dictionaries, or scalar values like integers and booleans.\n\nIf you prefer not to use Pydantic models, you can also utilize **Body** parameters for data validation. FastAPI can determine that a value is not required if it has a default value specified. Adding type annotations to your code allows your editor to provide better support and error detection.\n\nTo disable the automatic response model generation by FastAPI, you can set `response_model=None` in your function. This will allow you to have any return type while still benefiting from tools like editors and type checkers such as mypy.\n\nWhen interacting with your API, FastAPI provides data validation based on your Python type declarations. Any validation errors are clearly indicated, pinpointing the exact location where the validation failed. This feature is extremely useful for developing and debugging code that interacts with your API.",
+      "ragas_scores": {
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.8041280617711468,
+        "context_precision": 0.99999999998,
+        "context_recall": 1.0,
+        "context_entity_recall": 0.7142857132653061
+      }
+    },
+    {
+      "query": "How do I return JSON responses?",
+      "difficulty": "medium",
+      "answer": "FastAPI automatically returns JSON responses if you use a Python type declaration for your response model and pass it to `Response`. If you don't specify the response model, FastAPI will try to infer it from the request body.",
+      "contexts": [
+        "ost common case would be [returning a Response directly as explained later in the advanced docs](../advanced/response-directly.md){.internal-link target=_blank}.\n\n{* ../../docs_src/response_model/tutorial003_02_py310.py hl[8,10:11] *}\n\nThis simple case is handled automatically by FastAPI because the return type annotation is the class (or a subclass of) `Response`.\n\nAnd tools will also be happy because both `RedirectResponse` and `JSONResponse` are subclasses of `Response`, so the type",
+        "c/body/tutorial001_py310.py hl[16] *}\n\n...and declare its type as the model you created, `Item`.\n\n## Results { #results }\n\nWith just that Python type declaration, **FastAPI** will:\n\n* Read the body of the request as JSON.\n* Convert the corresponding types (if needed).\n* Validate the data.\n    * If the data is invalid, it will return a nice and clear error, indicating exactly where and what was the incorrect data.\n* Give you the received data in the parameter `item`.",
+        "n, etc.\n\n///\n\n## Data <dfn title=\"also known as: serialization, parsing, marshalling\">conversion</dfn> { #data-conversion }\n\nIf you run this example and open your browser at <a href=\"http://127.0.0.1:8000/items/3\" class=\"external-link\" target=\"_blank\">http://127.0.0.1:8000/items/3</a>, you will see a response of:\n\n```JSON\n{\"item_id\":3}\n```\n\n/// check\n\nNotice that the value your function received (and returned) is `3`, as a Python `int`, not a string `\"3\"`.",
+        "ery\" class=\"external-link\" target=\"_blank\">http://127.0.0.1:8000/items/5?q=somequery</a>.\n\nYou will see the JSON response as:\n\n```JSON\n{\"item_id\": 5, \"q\": \"somequery\"}\n```\n\nYou already created an API that:\n\n* Receives HTTP requests in the _paths_ `/` and `/items/{item_id}`.\n* Both _paths_ take `GET` <em>operations</em> (also known as HTTP _methods_).\n* The _path_ `/items/{item_id}` has a _path parameter_ `item_id` that should be an `int`.",
+        "List[Item]`.\n\nFastAPI will use this `response_model` to do all the data documentation, validation, etc. and also to **convert and filter the output data** to its type declaration.\n\n/// tip\n\nIf you have strict type checks in your editor, mypy, etc, you can declare the function return type as `Any`.\n\nThat way you tell the editor that you are intentionally returning anything. But FastAPI will still do the data documentation, validation, filtering, etc."
+      ],
+      "confidence": 0.725,
+      "num_sources": 5,
+      "response_time": 12.59,
+      "reference": "To return JSON responses in FastAPI, you can utilize the `response_model` feature. By declaring the return type of your function as a specific model, such as `Item`, FastAPI will automatically handle the following tasks:\n\n1. Read the request body as JSON.\n2. Convert the data to the corresponding types if necessary.\n3. Validate the data, providing clear error messages if the data is invalid.\n4. Provide the received data in the parameter specified in the function.\n\nFor example, if you have a function that returns a list of `Item` objects, you can declare the return type as `List[Item]`. FastAPI will use this `response_model` to document the data, validate it, and convert the output data to match the specified type.\n\nAdditionally, FastAPI supports subclasses of `Response` such as `RedirectResponse` and `JSONResponse`. By returning instances of these subclasses directly, FastAPI can handle the response automatically. This is particularly useful for tools as they recognize these subclasses as types of `Response`.\n\nWhen running your FastAPI application and accessing endpoints like `/items/3` or `/items/5?q=somequery`, FastAPI will handle data conversion, serialization, and validation. The responses will be in JSON format, and the data will be converted to the appropriate types based on your model declarations.\n\nBy leveraging the `response_model` feature and specifying the return type of your functions, you can ensure that FastAPI performs data documentation, validation, and filtering based on the declared types. If needed, you can declare the function return type as `Any` to bypass strict type checks in editors like mypy while still benefiting from FastAPI's data handling capabilities.",
+      "ragas_scores": {
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.7708891546350588,
+        "context_precision": 0.99999999998,
+        "context_recall": 1.0,
+        "context_entity_recall": 0.7499999990624999
+      }
+    },
+    {
+      "query": "How do I add middleware in FastAPI?",
+      "difficulty": "medium",
+      "answer": "FastAPI does not have built-in support for middleware, but you can create custom middleware using the `Middleware` class. You can also use third-party libraries like `uvicorn-middleware` to add additional functionality to your application.",
+      "contexts": [
+        "# Tutorial - User Guide { #tutorial-user-guide }\n\nThis tutorial shows you how to use **FastAPI** with most of its features, step by step.\n\nEach section gradually builds on the previous ones, but it's structured to separate topics, so that you can go directly to any specific one to solve your specific API needs.\n\nIt is also built to work as a future reference so you can come back and see exactly what you need.",
+        "# Tutorial - User Guide { #tutorial-user-guide }\n\nThis tutorial shows you how to use **FastAPI** with most of its features, step by step.\n\nEach section gradually builds on the previous ones, but it's structured to separate topics, so that you can go directly to any specific one to solve your specific API needs.\n\nIt is also built to work as a future reference so you can come back and see exactly what you need.",
+        "Try using your favorite ones, it's highly probable that they are already supported.\n\n### Step 6: Deploy it { #step-6-deploy-it }\n\nDeploy your app to **<a href=\"https://fastapicloud.com\" class=\"external-link\" target=\"_blank\">FastAPI Cloud</a>** with one command: `fastapi deploy`. \ud83c\udf89\n\n#### About FastAPI Cloud { #about-fastapi-cloud }\n\n**<a href=\"https://fastapicloud.com\" class=\"external-link\" target=\"_blank\">FastAPI Cloud</a>** is built by the same author and team behind **FastAPI**.",
+        "# Advanced User Guide { #advanced-user-guide }\n\n## Additional Features { #additional-features }\n\nThe main [Tutorial - User Guide](../tutorial/index.md){.internal-link target=_blank} should be enough to give you a tour through all the main features of **FastAPI**.\n\nIn the next sections you will see other options, configurations, and additional features.\n\n/// tip\n\nThe next sections are **not necessarily \"advanced\"**.\n\nAnd it's possible that for your use case, the solution is in one of them.",
+        "i dev`.\n* Optionally deploy your app with `fastapi deploy`."
+      ],
+      "confidence": 0.7776,
+      "num_sources": 5,
+      "response_time": 11.25,
+      "reference": "To add middleware in FastAPI, you can follow these steps:\n\n1. Import the necessary modules:\n```python\nfrom fastapi import FastAPI, Request\nfrom fastapi.middleware.cors import CORSMiddleware\n```\n\n2. Create an instance of the FastAPI app:\n```python\napp = FastAPI()\n```\n\n3. Define your middleware function:\n```python\nasync def custom_middleware(request: Request, call_next):\n    # Add your middleware logic here\n    response = await call_next(request)\n    return response\n```\n\n4. Add the middleware to your FastAPI app:\n```python\napp.add_middleware(CORSMiddleware, allow_origins=[\"*\"], allow_credentials=True, allow_methods=[\"*\"], allow_headers=[\"*\"])\napp.middleware('http')(custom_middleware)\n```\n\nBy following these steps, you can add middleware to your FastAPI application to customize its behavior according to your specific needs.",
+      "ragas_scores": {
+        "faithfulness": 0.0,
+        "answer_relevancy": 0.8925474823119363,
+        "context_precision": 0.999999999975,
+        "context_recall": 0.3333333333333333,
+        "context_entity_recall": 0.07692307686390532
+      }
+    },
+    {
+      "query": "How do I handle errors in FastAPI?",
+      "difficulty": "medium",
+      "answer": "FastAPI provides several ways to handle errors, including using the `try-except` block, raising exceptions with custom error messages, and defining custom exception classes that inherit from built-in exceptions. Additionally, you can use middleware functions to intercept requests and responses and perform additional error handling logic.",
+      "contexts": [
+        "tAPI will know that the value of `q` is not required because of the default value `= None`.\n\nThe `str | None` is not used by FastAPI to determine that the value is not required, it will know it's not required because it has a default value of `= None`.\n\nBut adding the type annotations will allow your editor to give you better support and detect errors.\n\n///\n\n## Without Pydantic { #without-pydantic }\n\nIf you don't want to use Pydantic models, you can also use **Body** parameters.",
+        "ault data validation, documentation, filtering, etc. that is performed by FastAPI.\n\nBut you might want to still keep the return type annotation in the function to get the support from tools like editors and type checkers (e.g. mypy).\n\nIn this case, you can disable the response model generation by setting `response_model=None`:\n\n{* ../../docs_src/response_model/tutorial003_05_py310.py hl[7] *}\n\nThis will make FastAPI skip the response model generation and that way you can have any return type",
+        "tc. with the `response_model`.\n\n///\n\n### `response_model` Priority { #response-model-priority }\n\nIf you declare both a return type and a `response_model`, the `response_model` will take priority and be used by FastAPI.\n\nThis way you can add correct type annotations to your functions even when you are returning a type different than the response model, to be used by the editor and tools like mypy. And still you can have FastAPI do the data validation, documentation, etc.",
+        "List[Item]`.\n\nFastAPI will use this `response_model` to do all the data documentation, validation, etc. and also to **convert and filter the output data** to its type declaration.\n\n/// tip\n\nIf you have strict type checks in your editor, mypy, etc, you can declare the function return type as `Any`.\n\nThat way you tell the editor that you are intentionally returning anything. But FastAPI will still do the data documentation, validation, filtering, etc.",
+        "# Tutorial - User Guide { #tutorial-user-guide }\n\nThis tutorial shows you how to use **FastAPI** with most of its features, step by step.\n\nEach section gradually builds on the previous ones, but it's structured to separate topics, so that you can go directly to any specific one to solve your specific API needs.\n\nIt is also built to work as a future reference so you can come back and see exactly what you need."
+      ],
+      "confidence": 0.7793,
+      "num_sources": 5,
+      "response_time": 12.21,
+      "reference": "To handle errors in FastAPI, you can follow these guidelines:\n\n1. **Type Annotations**: Use type annotations to improve editor support and error detection. FastAPI can infer that a value is not required if it has a default value, such as `= None`.\n\n2. **Body Parameters**: If you prefer not to use Pydantic models, you can utilize **Body** parameters for data validation, documentation, and filtering.\n\n3. **Response Model**: To benefit from tools like editors and type checkers while still disabling response model generation, set `response_model=None`. This allows you to specify any return type in your function.\n\n4. **Response Model Priority**: When both a return type and a `response_model` are declared, FastAPI prioritizes the `response_model`. This enables you to add correct type annotations for editor and tool support while still utilizing FastAPI for data validation and documentation.\n\n5. **Data Conversion and Filtering**: By specifying a `response_model`, FastAPI performs data documentation, validation, conversion, and filtering based on the declared type.\n\n6. **Handling Any Return Type**: If you intentionally want to return any type, you can declare the function return type as `Any`. This informs the editor of your intention while still allowing FastAPI to perform data documentation, validation, and filtering.\n\n7. **Tutorial and User Guide**: The FastAPI tutorial provides a comprehensive guide on utilizing its features step by step. It is structured to address specific API needs and serves as a valuable future reference.\n\nBy following these practices and leveraging the capabilities of FastAPI, you can effectively handle errors and ensure robust data validation and documentation in your API development process.",
+      "ragas_scores": {
+        "faithfulness": 0.0,
+        "answer_relevancy": 0.95161353388546,
+        "context_precision": 0.99999999998,
+        "context_recall": 0.125,
+        "context_entity_recall": 0.3999999996
+      }
+    },
+    {
+      "query": "How do I use dependencies in FastAPI?",
+      "difficulty": "medium",
+      "answer": "In FastAPI, you can declare dependencies using the `Depends()` function and pass them as parameters. These dependencies will be called by FastAPI before your path operation functions are executed. You can also specify that a dependency should be executed before another dependency using the `dependency_order` parameter of the `Depends()` function.\n\nFastAPI supports multiple types of dependencies, including functions and other code logic. To use dependencies in your code, you need to import the `Depends()` function from FastAPI and call it with the appropriate parameters. For example:\n```python\nfrom fastapi import Depends\n\ndef my_dependency(param1):\n    # some dependency logic here\n    return param2\n\n@app.get(\"/my-endpoint\")\nasync def my_endpoint(param1, param2=None):\n    if not param2:\n        param2 = await my_dependency(param1)\n    # your endpoint logic here\n```\nIn this example, the `my_dependency()` function is called with the value of `param1` as its parameter. The result of this dependency function will be used to set the value of `param2`, which can then be used in your endpoint logic.\n\nYou can also use dependencies from other sources, such as external APIs or databases, by passing them as parameters to your path operation functions. For example:\n```python\nfrom fastapi import Depends, HTTPException\nimport requests\n\n@app.get(\"/my-endpoint\")\nasync def my_endpoint(param1):\n    if not param2:\n        response = await requests.get(\"https://example.com/dependency\", params={\"param1\": param1})\n        param2 = response.json()[\"result\"]\n    # your endpoint logic here\n```\nIn this example, the `requests.get()` function is used to call an external API and retrieve a dependency value based on the value of `param1`. This dependency value will then be used in your endpoint logic.\n\nOverall, using dependencies in FastAPI can help you write more modular and reusable code by separating concerns and allowing for easier maintenance and testing.",
+      "contexts": [
+        "'t add the parenthesis at the end), you just pass it as a parameter to `Depends()`.\n\nAnd that function takes parameters in the same way that *path operation functions* do.\n\n/// tip\n\nYou'll see what other \"things\", apart from functions, can be used as dependencies in the next chapter.\n\n///\n\nWhenever a new request arrives, **FastAPI** will take care of:\n\n* Calling your dependency (\"dependable\") function with the correct parameters.\n* Get the result from your function.",
+        "ing, that there is a way for your code (in this case, your *path operation functions*) to declare things that it requires to work and use: \"dependencies\".\n\nAnd then, that system (in this case **FastAPI**) will take care of doing whatever is needed to provide your code with those needed dependencies (\"inject\" the dependencies).\n\nThis is very useful when you need to:\n\n* Have shared logic (the same code logic again and again).\n* Share database connections.",
+        "work in this same way.\n\nYou never call those functions directly. They are called by your framework (in this case, **FastAPI**).\n\nWith the Dependency Injection system, you can also tell **FastAPI** that your *path operation function* also \"depends\" on something else that should be executed before your *path operation function*, and **FastAPI** will take care of executing it and \"injecting\" the results.",
+        "FastAPI). (*)\n\nTo understand more about it, see the section <a href=\"https://fastapi.tiangolo.com/benchmarks/\" class=\"internal-link\" target=\"_blank\">Benchmarks</a>.\n\n## Dependencies { #dependencies }\n\nFastAPI depends on Pydantic and Starlette.\n\n### `standard` Dependencies { #standard-dependencies }\n\nWhen you install FastAPI with `pip install \"fastapi[standard]\"` it comes with the `standard` group of optional dependencies:\n\nUsed by Pydantic:\n\n* <a",
+        "l dependencies, you can install with `pip install fastapi` instead of `pip install \"fastapi[standard]\"`.\n\n### Without `fastapi-cloud-cli` { #without-fastapi-cloud-cli }\n\nIf you want to install FastAPI with the standard dependencies but without the `fastapi-cloud-cli`, you can install with `pip install \"fastapi[standard-no-fastapi-cloud-cli]\"`.\n\n### Additional Optional Dependencies { #additional-optional-dependencies }\n\nThere are some additional dependencies you might want to install."
+      ],
+      "confidence": 0.8504,
+      "num_sources": 5,
+      "response_time": 24.28,
+      "reference": "In FastAPI, dependencies are used to declare requirements for your code, such as shared logic or database connections, and have the framework handle providing these dependencies to your code. Dependencies can be functions that are called automatically by FastAPI when a new request arrives. These functions are declared using the `Depends()` function and are passed as parameters to your path operation functions.\n\nWhen a new request arrives, FastAPI will call the dependency function with the correct parameters and retrieve the result. The Dependency Injection system in FastAPI allows you to specify that your path operation function depends on something else that should be executed before the function itself. FastAPI will then take care of executing this dependency and injecting the results into your function.\n\nTo use dependencies in FastAPI, you can declare them as functions and pass them to your path operation functions using the `Depends()` function. FastAPI will handle the execution of these dependencies and provide the necessary results to your code automatically.\n\nFastAPI itself depends on Pydantic and Starlette. When installing FastAPI, you can choose different dependency configurations. For example, installing FastAPI with `pip install \"fastapi[standard]\"` includes the standard group of optional dependencies. If you want to install FastAPI without certain dependencies, you can use variations like `pip install fastapi` or `pip install \"fastapi[standard-no-fastapi-cloud-cli]\"` to customize the installation based on your needs.",
+      "ragas_scores": {
+        "faithfulness": 0.8181818181818182,
+        "answer_relevancy": 0.9624728545680337,
+        "context_precision": 0.99999999998,
+        "context_recall": 1.0,
+        "context_entity_recall": 0.4444444441975308
+      }
+    },
+    {
+      "query": "How do I test FastAPI endpoints?",
+      "difficulty": "medium",
+      "answer": "FastAPI uses the `httpx` library for making HTTP requests. You can use it to test your API's endpoints by sending GET or POST requests with any necessary parameters. The responses will be in JSON format and contain information about the status code, headers, and body of the response. To view the documentation for a specific endpoint, you can look at the `paths` section of the OpenAPI schema generated by FastAPI (which is available at <a href=\"http://127.0.0.1:8000/openapi.json\" class=\"external-link\" target=\"_blank\">http://127.0.0.1:8000/openapi.json</a>).",
+      "contexts": [
+        "he-openapi-json }\n\nIf you are curious about how the raw OpenAPI schema looks like, FastAPI automatically generates a JSON (schema) with the descriptions of all your API.\n\nYou can see it directly at: <a href=\"http://127.0.0.1:8000/openapi.json\" class=\"external-link\" target=\"_blank\">http://127.0.0.1:8000/openapi.json</a>.\n\nIt will show a JSON starting with something like:\n\n```JSON\n{\n    \"openapi\": \"3.1.0\",\n    \"info\": {\n        \"title\": \"FastAPI\",\n        \"version\": \"0.1.0\"\n    },\n    \"paths\": {",
+        "# Tutorial - User Guide { #tutorial-user-guide }\n\nThis tutorial shows you how to use **FastAPI** with most of its features, step by step.\n\nEach section gradually builds on the previous ones, but it's structured to separate topics, so that you can go directly to any specific one to solve your specific API needs.\n\nIt is also built to work as a future reference so you can come back and see exactly what you need.",
+        "# Tutorial - User Guide { #tutorial-user-guide }\n\nThis tutorial shows you how to use **FastAPI** with most of its features, step by step.\n\nEach section gradually builds on the previous ones, but it's structured to separate topics, so that you can go directly to any specific one to solve your specific API needs.\n\nIt is also built to work as a future reference so you can come back and see exactly what you need.",
+        "\" target=\"_blank\">Strawberry</a> and other libraries.\n* Many extra features (thanks to Starlette) as:\n    * **WebSockets**\n    * extremely easy tests based on HTTPX and `pytest`\n    * **CORS**\n    * **Cookie Sessions**\n    * ...and more.\n\n### Deploy your app (optional) { #deploy-your-app-optional }\n\nYou can optionally deploy your FastAPI app to <a href=\"https://fastapicloud.com\" class=\"external-link\" target=\"_blank\">FastAPI Cloud</a>, go and join the waiting list if you haven't.",
+        "# Features { #features }\n\n## FastAPI features { #fastapi-features }\n\n**FastAPI** gives you the following:\n\n### Based on open standards { #based-on-open-standards }\n\n* <a href=\"https://github.com/OAI/OpenAPI-Specification\" class=\"external-link\" target=\"_blank\"><strong>OpenAPI</strong></a> for API creation, including declarations of <dfn title=\"also known as: endpoints, routes\">path</dfn> <dfn title=\"also known as HTTP methods, as POST, GET, PUT, DELETE\">operations</dfn>, parameters, request"
+      ],
+      "confidence": 0.7782,
+      "num_sources": 5,
+      "response_time": 15.48,
+      "reference": "To test FastAPI endpoints, you can utilize the many extra features provided by FastAPI, thanks to Starlette. Some of the features that can aid in testing include:\n\n1. **WebSockets**: FastAPI supports WebSockets, allowing you to test real-time communication in your endpoints.\n2. **Easy tests based on HTTPX and `pytest`**: FastAPI makes testing extremely easy by leveraging HTTPX and `pytest`. You can write comprehensive tests for your endpoints with ease.\n3. **CORS (Cross-Origin Resource Sharing)**: FastAPI supports CORS, enabling you to test endpoints that interact with resources from different origins.\n4. **Cookie Sessions**: FastAPI provides support for cookie sessions, which can be useful for testing endpoints that require session management.\n\nAdditionally, you can refer to the FastAPI OpenAPI schema to understand the structure of your API. FastAPI automatically generates a JSON schema that describes all your API endpoints. You can access this schema directly at `http://127.0.0.1:8000/openapi.json`. This JSON schema provides detailed information about your API, including the paths, operations, parameters, and more.\n\nBy leveraging these features and the OpenAPI schema, you can effectively test your FastAPI endpoints and ensure that they function correctly according to your requirements.",
+      "ragas_scores": {
+        "faithfulness": 0.3333333333333333,
+        "answer_relevancy": 0.8288621699329338,
+        "context_precision": 0.99999999998,
+        "context_recall": 0.5454545454545454,
+        "context_entity_recall": 0.14285714275510203
+      }
+    },
+    {
+      "query": "How do I deploy FastAPI?",
+      "difficulty": "medium",
+      "answer": "To deploy a FastAPI application, you can use the `fastapi deploy` command if you have a FastAPI Cloud account. Before doing so, make sure you are logged in by running `fastapi login`. If you don't have a FastAPI Cloud account yet and want to join the waiting list, go to <https://fastapicloud.com/>.\n\nReference(s):\n- Source 1: tutorial/first-steps.md (confidence: 0.89)\n- Source 2: tutorial/first-steps.md (confidence: 0.88)\n- Source 3: deployment/index.md (confidence: 0.88)",
+      "contexts": [
+        "i dev`.\n* Optionally deploy your app with `fastapi deploy`.",
+        "=\"external-link\" target=\"_blank\">FastAPI Cloud</a>, go and join the waiting list if you haven't. \ud83d\ude80\n\nIf you already have a **FastAPI Cloud** account (we invited you from the waiting list \ud83d\ude09), you can deploy your application with one command.\n\nBefore deploying, make sure you are logged in:\n\n<div class=\"termy\">\n\n```console\n$ fastapi login\n\nYou are logged in to FastAPI Cloud \ud83d\ude80\n```\n\n</div>\n\nThen deploy your app:\n\n<div class=\"termy\">\n\n```console\n$ fastapi deploy\n\nDeploying to FastAPI Cloud...",
+        "# Deployment { #deployment }\n\nDeploying a **FastAPI** application is relatively easy.\n\n## What Does Deployment Mean { #what-does-deployment-mean }\n\nTo **deploy** an application means to perform the necessary steps to make it **available to the users**.\n\nFor a **web API**, it normally involves putting it in a **remote machine**, with a **server program** that provides good performance, stability, etc, so that your **users** can **access** the application efficiently and without interruptions or",
+        "the waiting list if you haven't. \ud83d\ude80\n\nIf you already have a **FastAPI Cloud** account (we invited you from the waiting list \ud83d\ude09), you can deploy your application with one command.\n\nBefore deploying, make sure you are logged in:\n\n<div class=\"termy\">\n\n```console\n$ fastapi login\n\nYou are logged in to FastAPI Cloud \ud83d\ude80\n```\n\n</div>\n\nThen deploy your app:\n\n<div class=\"termy\">\n\n```console\n$ fastapi deploy\n\nDeploying to FastAPI Cloud...",
+        "mind when deploying a **FastAPI** application (although most of it applies to any other type of web application).\n\nYou will see more details to keep in mind and some of the techniques to do it in the next sections. \u2728"
+      ],
+      "confidence": 0.8804,
+      "num_sources": 5,
+      "response_time": 13.7,
+      "reference": "To deploy a FastAPI application, you can use the FastAPI Cloud service. If you have a FastAPI Cloud account, you can deploy your application with a single command. Before deploying, ensure you are logged in by running the following command:\n\n```console\n$ fastapi login\n```\n\nOnce you are logged in, you can deploy your FastAPI application by executing the command:\n\n```console\n$ fastapi deploy\n```\n\nThis command will initiate the deployment process to FastAPI Cloud. Deployment in the context of FastAPI means making your application available to users. For a web API like FastAPI, deployment typically involves hosting the application on a remote machine with a server program to ensure good performance, stability, and uninterrupted access for users.\n\nWhen deploying a FastAPI application, there are specific considerations to keep in mind, which are detailed in the provided context. These considerations are essential for ensuring a successful deployment and optimal performance of your FastAPI application on FastAPI Cloud.",
+      "ragas_scores": {
+        "faithfulness": 0.6666666666666666,
+        "answer_relevancy": 0.9450492551300003,
+        "context_precision": 0.99999999998,
+        "context_recall": 1.0,
+        "context_entity_recall": 0.4285714282653061
+      }
+    },
+    {
+      "query": "How do I implement authentication in FastAPI?",
+      "difficulty": "hard",
+      "answer": "FastAPI provides several tools for each of these security schemes in the `fastapi.security` module that simplify using these security mechanisms. To add security to your API, you can use one or more of these tools provided by FastAPI. For example, you can use the `openIdConnect` tool to define how to discover OAuth2 authentication data automatically. Integrating other authentication/authorization providers like Google, Facebook, X (Twitter), GitHub, etc. is also possible and relatively easy using FastAPI's tools. You can find more information on how to add security to your API in the next chapters of this tutorial.",
+      "contexts": [
+        "# Security { #security }\n\nThere are many ways to handle security, authentication and authorization.\n\nAnd it normally is a complex and \"difficult\" topic.\n\nIn many frameworks and systems just handling security and authentication takes a big amount of effort and code (in many cases it can be 50% or more of all the code written).\n\n**FastAPI** provides several tools to help you deal with **Security** easily, rapidly, in a standard way, without having to study and learn all the security",
+        "stAPI** gives you the tools to do it easily, while doing the heavy lifting for you.\n\n///\n\n## **FastAPI** utilities { #fastapi-utilities }\n\nFastAPI provides several tools for each of these security schemes in the `fastapi.security` module that simplify using these security mechanisms.\n\nIn the next chapters you will see how to add security to your API using those tools provided by **FastAPI**.\n\nAnd you will also see how it gets automatically integrated into the interactive documentation system.",
+        "es of this.\n* `openIdConnect`: has a way to define how to discover OAuth2 authentication data automatically.\n    * This automatic discovery is what is defined in the OpenID Connect specification.\n\n\n/// tip\n\nIntegrating other authentication/authorization providers like Google, Facebook, X (Twitter), GitHub, etc. is also possible and relatively easy.\n\nThe most complex problem is building an authentication/authorization provider like those, but **FastAPI** gives you the tools to do it easily,",
+        "# Tutorial - User Guide { #tutorial-user-guide }\n\nThis tutorial shows you how to use **FastAPI** with most of its features, step by step.\n\nEach section gradually builds on the previous ones, but it's structured to separate topics, so that you can go directly to any specific one to solve your specific API needs.\n\nIt is also built to work as a future reference so you can come back and see exactly what you need.",
+        "# Tutorial - User Guide { #tutorial-user-guide }\n\nThis tutorial shows you how to use **FastAPI** with most of its features, step by step.\n\nEach section gradually builds on the previous ones, but it's structured to separate topics, so that you can go directly to any specific one to solve your specific API needs.\n\nIt is also built to work as a future reference so you can come back and see exactly what you need."
+      ],
+      "confidence": 0.8054,
+      "num_sources": 5,
+      "response_time": 14.61,
+      "reference": "To implement authentication in FastAPI, you can leverage the tools provided by the framework to handle security, authentication, and authorization easily and efficiently. FastAPI offers utilities in the `fastapi.security` module that simplify the implementation of various security schemes. These tools help in integrating security mechanisms into your API effortlessly.\n\nFastAPI simplifies the process of integrating authentication and authorization providers like Google, Facebook, Twitter, GitHub, etc. It also provides support for building custom authentication/authorization providers. By using FastAPI's tools, you can handle security concerns without the need to write extensive amounts of code or delve deeply into security concepts.\n\nOne key feature of FastAPI is its ability to automatically integrate security mechanisms into the interactive documentation system. This means that as you implement security in your API, it will be reflected in the documentation, providing a seamless experience for developers.\n\nTo implement authentication in FastAPI, you can refer to the tutorial and user guide provided by FastAPI. The tutorial is structured to cover various features of FastAPI step by step, allowing you to gradually build your understanding of authentication and other functionalities. It serves as a comprehensive reference that you can revisit whenever you need to address specific API requirements related to authentication.",
+      "ragas_scores": {
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.8841833323921384,
+        "context_precision": 0.99999999998,
+        "context_recall": 1.0,
+        "context_entity_recall": 0.9999999980000001
+      }
+    },
+    {
+      "query": "What are FastAPI's best practices?",
+      "difficulty": "hard",
+      "answer": "I don't have enough information to answer that question based on the provided documentation.",
+      "contexts": [
+        "mind when deploying a **FastAPI** application (although most of it applies to any other type of web application).\n\nYou will see more details to keep in mind and some of the techniques to do it in the next sections. \u2728",
+        "# Tutorial - User Guide { #tutorial-user-guide }\n\nThis tutorial shows you how to use **FastAPI** with most of its features, step by step.\n\nEach section gradually builds on the previous ones, but it's structured to separate topics, so that you can go directly to any specific one to solve your specific API needs.\n\nIt is also built to work as a future reference so you can come back and see exactly what you need.",
+        "# Tutorial - User Guide { #tutorial-user-guide }\n\nThis tutorial shows you how to use **FastAPI** with most of its features, step by step.\n\nEach section gradually builds on the previous ones, but it's structured to separate topics, so that you can go directly to any specific one to solve your specific API needs.\n\nIt is also built to work as a future reference so you can come back and see exactly what you need.",
+        "# Deployment { #deployment }\n\nDeploying a **FastAPI** application is relatively easy.\n\n## What Does Deployment Mean { #what-does-deployment-mean }\n\nTo **deploy** an application means to perform the necessary steps to make it **available to the users**.\n\nFor a **web API**, it normally involves putting it in a **remote machine**, with a **server program** that provides good performance, stability, etc, so that your **users** can **access** the application efficiently and without interruptions or",
+        "github.com/fastapi/fastapi\" target=\"_blank\">https://github.com/fastapi/fastapi</a>\n\n---\n\nFastAPI is a modern, fast (high-performance), web framework for building APIs with Python based on standard Python type hints.\n\nThe key features are:\n\n* **Fast**: Very high performance, on par with **NodeJS** and **Go** (thanks to Starlette and Pydantic). [One of the fastest Python frameworks available](#performance).\n* **Fast to code**: Increase the speed to develop features by about 200% to 300%."
+      ],
+      "confidence": 0.782,
+      "num_sources": 5,
+      "response_time": 10.3,
+      "reference": "FastAPI is a modern web framework for building APIs with Python that offers high performance and is fast to code. When deploying a FastAPI application, it is important to consider the following best practices:\n\n1. **Deployment Process**: Deploying a FastAPI application involves making it available to users by putting it on a remote machine with a server program that ensures good performance and stability. This ensures that users can access the application efficiently without interruptions.\n\n2. **Performance**: FastAPI is known for its high performance, comparable to NodeJS and Go. It leverages Starlette and Pydantic to achieve this performance, making it one of the fastest Python frameworks available.\n\n3. **Ease of Use**: FastAPI is designed to be fast to code, allowing developers to increase the speed of developing features by about 200% to 300%. This makes it efficient for building APIs with Python.\n\n4. **Structured Tutorial**: The FastAPI User Guide tutorial is structured to guide users through using FastAPI features step by step. Each section builds on the previous ones, allowing users to navigate directly to specific topics to address their API needs. It also serves as a future reference for users to revisit and find the information they need.\n\nIn summary, when working with FastAPI, developers should focus on efficient deployment practices, leverage its high performance capabilities, take advantage of its fast development speed, and refer to the structured User Guide tutorial for comprehensive guidance on using FastAPI features.",
+      "ragas_scores": {
+        "faithfulness": 0.0,
+        "answer_relevancy": 0.0,
+        "context_precision": 0.99999999998,
+        "context_recall": 1.0,
+        "context_entity_recall": 0.9999999985714286
+      }
+    },
+    {
+      "query": "How do I optimize FastAPI performance?",
+      "difficulty": "hard",
+      "answer": "FastAPI has high performance by default, but there are some ways to further optimize it. Here are the main recommendations:\n\n1. **Use Starlette**: FastAPI is built on top of Starlette, which provides a lot of performance improvements out-of-the-box. Make sure you're using the latest version of Starlette (v0.72 or higher) to take advantage of these improvements.\n2. **Enable Pydantic validation**: Pydantic is used for data validation in FastAPI, and enabling its validation can help improve performance by reducing the amount of work done during parsing requests. To enable it, set `pydantic_mode` to `strict`.\n3. **Use uvloop**: Uvloop is an asyncio event loop that provides better performance than the default asyncio event loop used in FastAPI. You can install it using pip: `pip install uvloop`. Then, add this line at the top of your main file to use uvloop:\n```python\nimport uvicorn\nfrom fastapi import FastAPI\n\nif __name__ == \"__main__\":\n    app = FastAPI()\n    uvicorn.run(app, host=\"0.0.0.0\", port=8000)\n```\n1. **Use `fastapi-cli[standard]`**: If you want to include the optional dependencies needed for high performance serving (like `uvloop`), use `pip install fastapi-cli[standard]`. This will also provide the `fastapi` command, which can be used to deploy your FastAPI application to FastAPI Cloud.\n2. **Follow best practices**: Make sure you follow best practices when building and running your FastAPI application, such as caching responses, using in-memory databases, and minimizing database queries. These will help improve the overall performance of your application.",
+      "contexts": [
+        "github.com/fastapi/fastapi\" target=\"_blank\">https://github.com/fastapi/fastapi</a>\n\n---\n\nFastAPI is a modern, fast (high-performance), web framework for building APIs with Python based on standard Python type hints.\n\nThe key features are:\n\n* **Fast**: Very high performance, on par with **NodeJS** and **Go** (thanks to Starlette and Pydantic). [One of the fastest Python frameworks available](#performance).\n* **Fast to code**: Increase the speed to develop features by about 200% to 300%.",
+        "mind when deploying a **FastAPI** application (although most of it applies to any other type of web application).\n\nYou will see more details to keep in mind and some of the techniques to do it in the next sections. \u2728",
+        "udes some dependencies (e.g. `uvloop`) needed for high performance serving.\n* `fastapi-cli[standard]` - to provide the `fastapi` command.\n    * This includes `fastapi-cloud-cli`, which allows you to deploy your FastAPI application to <a href=\"https://fastapicloud.com\" class=\"external-link\" target=\"_blank\">FastAPI Cloud</a>.\n\n### Without `standard` Dependencies { #without-standard-dependencies }\n\nIf you don't want to include the `standard` optional dependencies, you can install with `pip install",
+        "# Tutorial - User Guide { #tutorial-user-guide }\n\nThis tutorial shows you how to use **FastAPI** with most of its features, step by step.\n\nEach section gradually builds on the previous ones, but it's structured to separate topics, so that you can go directly to any specific one to solve your specific API needs.\n\nIt is also built to work as a future reference so you can come back and see exactly what you need.",
+        "# Tutorial - User Guide { #tutorial-user-guide }\n\nThis tutorial shows you how to use **FastAPI** with most of its features, step by step.\n\nEach section gradually builds on the previous ones, but it's structured to separate topics, so that you can go directly to any specific one to solve your specific API needs.\n\nIt is also built to work as a future reference so you can come back and see exactly what you need."
+      ],
+      "confidence": 0.7933,
+      "num_sources": 5,
+      "response_time": 22.01,
+      "reference": "To optimize FastAPI performance, you can follow these key points:\n\n1. **Leverage FastAPI Features**:\n   - FastAPI is designed for high performance, comparable to NodeJS and Go.\n   - Utilize standard Python type hints for building APIs efficiently.\n\n2. **Dependencies**:\n   - Consider using dependencies like `uvloop` for high-performance serving.\n   - Install `fastapi-cli[standard]` to access the `fastapi` command, which includes `fastapi-cloud-cli` for deploying FastAPI applications to FastAPI Cloud.\n\n3. **Deployment**:\n   - Keep deployment considerations in mind when deploying a FastAPI application, ensuring optimal performance.\n   - Refer to specific techniques and details provided in the deployment sections for guidance.\n\n4. **Tutorial - User Guide**:\n   - Refer to the FastAPI tutorial for a step-by-step guide on using FastAPI features effectively.\n   - The tutorial is structured to build on previous sections gradually, allowing you to navigate to specific topics based on your API requirements.\n   - Use the tutorial as a future reference to revisit and access the information you need for optimizing FastAPI performance.",
+      "ragas_scores": {
+        "faithfulness": 0.9375,
+        "answer_relevancy": 0.9581862469185999,
+        "context_precision": 0.99999999998,
+        "context_recall": 1.0,
+        "context_entity_recall": 0.8999999991
+      }
+    },
+    {
+      "query": "How do I structure large FastAPI applications?",
+      "difficulty": "hard",
+      "answer": "I don't have enough information to answer that question based on the provided documentation.",
+      "contexts": [
+        "mind when deploying a **FastAPI** application (although most of it applies to any other type of web application).\n\nYou will see more details to keep in mind and some of the techniques to do it in the next sections. \u2728",
+        "# Tutorial - User Guide { #tutorial-user-guide }\n\nThis tutorial shows you how to use **FastAPI** with most of its features, step by step.\n\nEach section gradually builds on the previous ones, but it's structured to separate topics, so that you can go directly to any specific one to solve your specific API needs.\n\nIt is also built to work as a future reference so you can come back and see exactly what you need.",
+        "# Tutorial - User Guide { #tutorial-user-guide }\n\nThis tutorial shows you how to use **FastAPI** with most of its features, step by step.\n\nEach section gradually builds on the previous ones, but it's structured to separate topics, so that you can go directly to any specific one to solve your specific API needs.\n\nIt is also built to work as a future reference so you can come back and see exactly what you need.",
+        "# Deployment { #deployment }\n\nDeploying a **FastAPI** application is relatively easy.\n\n## What Does Deployment Mean { #what-does-deployment-mean }\n\nTo **deploy** an application means to perform the necessary steps to make it **available to the users**.\n\nFor a **web API**, it normally involves putting it in a **remote machine**, with a **server program** that provides good performance, stability, etc, so that your **users** can **access** the application efficiently and without interruptions or",
+        "github.com/fastapi/fastapi\" target=\"_blank\">https://github.com/fastapi/fastapi</a>\n\n---\n\nFastAPI is a modern, fast (high-performance), web framework for building APIs with Python based on standard Python type hints.\n\nThe key features are:\n\n* **Fast**: Very high performance, on par with **NodeJS** and **Go** (thanks to Starlette and Pydantic). [One of the fastest Python frameworks available](#performance).\n* **Fast to code**: Increase the speed to develop features by about 200% to 300%."
+      ],
+      "confidence": 0.8154,
+      "num_sources": 5,
+      "response_time": 10.59,
+      "reference": "To structure large FastAPI applications, you can follow these guidelines:\n\n1. **Modularization**: Divide your application into multiple modules or packages based on functionality. This helps in organizing code and makes it easier to manage large projects.\n\n2. **Separation of Concerns**: Follow the principle of separating different concerns like routing, business logic, and data access. Use separate files or modules for each concern to maintain code clarity.\n\n3. **Dependency Injection**: Utilize FastAPI's dependency injection feature to manage dependencies and share common resources across different parts of your application.\n\n4. **Middleware**: Implement middleware functions to add cross-cutting concerns like authentication, logging, error handling, etc. This helps in keeping the core application logic clean and focused.\n\n5. **API Versioning**: Consider versioning your APIs to maintain backward compatibility and provide a clear structure for API consumers.\n\n6. **Documentation**: Leverage FastAPI's automatic OpenAPI documentation generation to document your API endpoints, request/response models, and dependencies. This helps in understanding the API structure and usage.\n\n7. **Testing**: Write comprehensive unit tests and integration tests to ensure the correctness and reliability of your application. FastAPI provides testing utilities to facilitate testing.\n\n8. **Performance Optimization**: Optimize your application for performance by following best practices, utilizing caching mechanisms, and monitoring performance metrics.\n\nBy following these guidelines and leveraging FastAPI's features, you can effectively structure large FastAPI applications to maintain scalability, readability, and maintainability.",
+      "ragas_scores": {
+        "faithfulness": 0.0,
+        "answer_relevancy": 0.0,
+        "context_precision": 0.99999999998,
+        "context_recall": 1.0,
+        "context_entity_recall": 0.0999999999
+      }
+    }
+  ]
+}

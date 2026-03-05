@@ -300,44 +300,111 @@ Response + Sources + Confidence Score
 #### **Hours 10-13: Stage 2B - Evaluation Enhancement**
 **Goal:** Showcase RAGAS expertise
 
-**Hour 10-11: Expand Test Dataset**
-- [ ] Create 30 additional queries (45 min)
-  - Cover more FastAPI topics (WebSockets, background tasks, dependencies)
-  - Add adversarial queries:
-    - "How to use Django with FastAPI?" (out of scope)
-    - "What's the admin password?" (security)
-  - Total: 50 queries
-- [ ] Categorize queries (15 min)
-  - By topic: basics, auth, async, testing, deployment
-  - By difficulty: easy/medium/hard
-  - By expected answer length: short/medium/long
+**Hour 10-11: Run Full Baseline Evaluation**
+- [x] ✅ 20-query baseline prepared with difficulty levels (easy/medium/hard)
+- [x] ✅ 3-stage RAGAS pipeline implemented and tested
+- [x] ✅ All 5 metrics validated with 3-query test
+- [ ] Run full 20-query baseline (15 min)
+  - Stage 1A: Query RAG system
+  - Stage 1B: Generate references (OpenAI)
+  - Stage 2: Evaluate with all 5 metrics
+  - Expected: ~10-15 minutes, ~$1 OpenAI cost
+- [ ] Document baseline results (15 min)
+  - Calculate aggregate statistics (mean, min, max)
+  - Identify lowest-scoring queries
+  - Note: Enhanced analytics (percentiles, bad_case_rate) deferred to Hour 12
+- [ ] Commit baseline results (5 min)
+- [ ] Quick review: Any critical issues blocking Stage 2A? (5 min)
 
-**Hour 11-12: Full RAGAS Evaluation**
-- [ ] Add 2 more metrics (30 min)
-  - context_recall
-  - answer_correctness
-- [ ] Add custom metrics (30 min)
-  - response_time (ms)
-  - token_cost (estimated)
-  - source_coverage (how many sources cited)
+**Hour 11-12: Stage 2A - Code Quality** (if time permits, can defer to end)
+- [ ] Core refactoring (30 min)
+  - Add type hints and docstrings
+  - Split into clean modules (config, models, rag/*)
+- [ ] Write 3-5 key unit tests (30 min)
 
 **Hour 12-13: Improvement Iteration**
-- [ ] Run full evaluation, document baseline (15 min)
-- [ ] Implement improvement (30 min)
-  - Option 1: Tune chunk size (500→800 chars)
-  - Option 2: Improve prompt (more explicit instructions)
-  - Option 3: Add reranking (if time)
-- [ ] Re-evaluate, document improvement (15 min)
-- [ ] Create comparison table (15 min)
+- [ ] Enhanced RAGAS analysis framework (20 min)
+  - Create `run_ragas_analysis.py` with distribution stats
+  - Add percentile calculations (P10, P25, P75, P90)
+  - Add bad_case_rate tracking (threshold: 0.4)
+  - Add failure categorization (retrieval, hallucination, ambiguous, etc.)
+  - Generate debugging dashboard output
+- [ ] Analyze baseline with enhanced framework (10 min)
+  - Identify worst 5-10 cases per metric
+  - Categorize failure patterns
+  - Prioritize improvement areas
+- [ ] Implement targeted improvement (30 min)
+  - **Option A: Prompt Engineering** (if faithfulness <0.7)
+    - Migrate to LangChain PromptTemplate
+    - Add few-shot examples (good vs bad answers)
+    - Strengthen "DO NOT infer" rules
+  - **Option B: Retrieval Optimization** (if context_precision <0.8)
+    - Tune chunk size or top_k
+    - Add query expansion
+    - Test MMR for diversity
+  - **Option C-E:** Other options from planning (embedding upgrade, hybrid, reranking)
+- [ ] Re-evaluate with same queries (10 min)
+- [ ] Document improvement with comparison table (10 min)
+- [ ] Analyze baseline results to identify improvement opportunities (5 min)
+  - Low faithfulness → Prompt engineering needed
+  - Low context precision → Retrieval tuning needed
+  - Low answer relevancy → Better query understanding needed
+- [ ] Implement improvement based on evaluation (30 min)
+  
+  **Option A: Prompt Engineering (if faithfulness <0.7)**
+  - Migrate to LangChain PromptTemplate for better management
+    - Benefits: Variable validation, template versioning, reusability
+    - Enable A/B testing of different prompt versions
+  - Add few-shot examples showing:
+    - Good: Answer citing specific sources
+    - Bad: Answer making inferences beyond context
+  - Strengthen system instructions:
+    - More explicit "DO NOT infer" rules
+    - Require citation format: "According to [Source X]..."
+  - Add output formatting instructions
+  
+  **Option B: Retrieval Optimization (if context_precision <0.8)**
+  - Tune chunk size (current: 500 chars)
+    - Test 800 chars (more context per chunk)
+    - Test 300 chars (more precise matching)
+  - Adjust top_k parameter (current: 5)
+    - Try k=3 for higher precision
+    - Try k=10 for better recall
+  - Add query expansion:
+    - Extract key terms from query
+    - Include synonyms in retrieval
+  - Implement MMR (Maximal Marginal Relevance):
+    - Balance relevance vs diversity
+    - Reduce redundant context
+  
+  **Option C: Embedding Model Upgrade (if time permits)**
+  - Switch from all-MiniLM-L6-v2 to larger model
+  - Options: all-mpnet-base-v2 (better quality, slower)
+  - Re-index documents with new embeddings
+  
+  **Option D: Hybrid Retrieval (advanced)**
+  - Combine semantic + keyword (BM25) search
+  - Weight: 0.7 semantic + 0.3 BM25
+  - Better for technical queries with specific terms
+  
+  **Option E: Reranking (if context_recall <0.7)**
+  - Add cross-encoder reranker after retrieval
+  - Re-score top 10 candidates, return top 5
+  - Models: ms-marco-MiniLM-L-12-v2
+
+- [ ] Re-evaluate with same 20/50 queries (15 min)
+- [ ] Document improvement methodology and results (10 min)
+- [ ] Create comparison table (5 min)
   ```
   Metric          | Baseline | After Improvement | Change
   ----------------|----------|-------------------|-------
   Context Prec.   | 0.72     | 0.84             | +16%
   Faithfulness    | 0.68     | 0.88             | +29%
   Answer Relevancy| 0.81     | 0.86             | +6%
+  Context Recall  | 0.75     | 0.82             | +9%
   ```
 
-**Deliverable:** Comprehensive evaluation with demonstrated improvement
+**Deliverable:** Comprehensive evaluation with demonstrated improvement and clear methodology
 
 ---
 

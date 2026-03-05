@@ -1,0 +1,53 @@
+{
+  "timestamp": "2026-03-05 02:36:48",
+  "total_queries": 3,
+  "successful_queries": 3,
+  "failed_queries": 0,
+  "results": [
+    {
+      "query": "What is FastAPI?",
+      "difficulty": "easy",
+      "answer": "FastAPI is a modern, fast (high-performance), web framework for building APIs with Python based on standard Python type hints.",
+      "contexts": [
+        "author and team behind **FastAPI**.\n\nIt streamlines the process of **building**, **deploying**, and **accessing** an API with minimal effort.\n\nIt brings the same **developer experience** of building apps with FastAPI to **deploying** them to the cloud. \ud83c\udf89\n\nFastAPI Cloud is the primary sponsor and funding provider for the *FastAPI and friends* open source projects. \u2728\n\n#### Deploy to other cloud providers { #deploy-to-other-cloud-providers }\n\nFastAPI is open source and based on standards.",
+        "# Tutorial - User Guide { #tutorial-user-guide }\n\nThis tutorial shows you how to use **FastAPI** with most of its features, step by step.\n\nEach section gradually builds on the previous ones, but it's structured to separate topics, so that you can go directly to any specific one to solve your specific API needs.\n\nIt is also built to work as a future reference so you can come back and see exactly what you need.",
+        "# Tutorial - User Guide { #tutorial-user-guide }\n\nThis tutorial shows you how to use **FastAPI** with most of its features, step by step.\n\nEach section gradually builds on the previous ones, but it's structured to separate topics, so that you can go directly to any specific one to solve your specific API needs.\n\nIt is also built to work as a future reference so you can come back and see exactly what you need.",
+        "he-openapi-json }\n\nIf you are curious about how the raw OpenAPI schema looks like, FastAPI automatically generates a JSON (schema) with the descriptions of all your API.\n\nYou can see it directly at: <a href=\"http://127.0.0.1:8000/openapi.json\" class=\"external-link\" target=\"_blank\">http://127.0.0.1:8000/openapi.json</a>.\n\nIt will show a JSON starting with something like:\n\n```JSON\n{\n    \"openapi\": \"3.1.0\",\n    \"info\": {\n        \"title\": \"FastAPI\",\n        \"version\": \"0.1.0\"\n    },\n    \"paths\": {",
+        "github.com/fastapi/fastapi\" target=\"_blank\">https://github.com/fastapi/fastapi</a>\n\n---\n\nFastAPI is a modern, fast (high-performance), web framework for building APIs with Python based on standard Python type hints.\n\nThe key features are:\n\n* **Fast**: Very high performance, on par with **NodeJS** and **Go** (thanks to Starlette and Pydantic). [One of the fastest Python frameworks available](#performance).\n* **Fast to code**: Increase the speed to develop features by about 200% to 300%."
+      ],
+      "confidence": 0.8052,
+      "num_sources": 5,
+      "response_time": 14.86
+    },
+    {
+      "query": "How do I create a path parameter in FastAPI?",
+      "difficulty": "medium",
+      "answer": "To create a path parameter in FastAPI, use an option directly from Starlette by declaring it using a URL like `/files/{file_path:path}`. The name of the parameter is `file_path`, and the last part, `:path`, tells it that the parameter should contain a path.\n\nYou can also declare multiple path parameters and query parameters at the same time in FastAPI. They will be detected by name.",
+      "contexts": [
+        "do it in **FastAPI**, using one of the internal tools from Starlette.\n\nAnd the docs would still work, although not adding any documentation telling that the parameter should contain a path.\n\n### Path convertor { #path-convertor }\n\nUsing an option directly from Starlette you can declare a *path parameter* containing a *path* using a URL like:\n\n```\n/files/{file_path:path}\n```\n\nIn this case, the name of the parameter is `file_path`, and the last part, `:path`, tells it that the parameter should",
+        "# Multiple path and query parameters { #multiple-path-and-query-parameters }\n\nYou can declare multiple path parameters and query parameters at the same time, **FastAPI** knows which is which.\n\nAnd you don't have to declare them in any specific order.\n\nThey will be detected by name:\n\n{* ../../docs_src/query_params/tutorial004_py310.py hl[6,8] *}\n\n## Required query parameters { #required-query-parameters }\n\nWhen you declare a default value for non-path parameters (for now, we have only seen query",
+        "from your function.\n* Assign that result to the parameter in your *path operation function*.\n\n```mermaid\ngraph TB\n\ncommon_parameters([\"common_parameters\"])\nread_items[\"/items/\"]\nread_users[\"/users/\"]\n\ncommon_parameters --> read_items\ncommon_parameters --> read_users\n```\n\nThis way you write shared code once and **FastAPI** takes care of calling it for your *path operations*.\n\n/// check\n\nNotice that you don't have to create a special class and pass it somewhere to **FastAPI** to \"register\" it or",
+        "'t add the parenthesis at the end), you just pass it as a parameter to `Depends()`.\n\nAnd that function takes parameters in the same way that *path operation functions* do.\n\n/// tip\n\nYou'll see what other \"things\", apart from functions, can be used as dependencies in the next chapter.\n\n///\n\nWhenever a new request arrives, **FastAPI** will take care of:\n\n* Calling your dependency (\"dependable\") function with the correct parameters.\n* Get the result from your function.",
+        "# Tutorial - User Guide { #tutorial-user-guide }\n\nThis tutorial shows you how to use **FastAPI** with most of its features, step by step.\n\nEach section gradually builds on the previous ones, but it's structured to separate topics, so that you can go directly to any specific one to solve your specific API needs.\n\nIt is also built to work as a future reference so you can come back and see exactly what you need."
+      ],
+      "confidence": 0.8331,
+      "num_sources": 5,
+      "response_time": 13.65
+    },
+    {
+      "query": "How do I implement authentication in FastAPI?",
+      "difficulty": "hard",
+      "answer": "FastAPI provides several tools for each of these security schemes in the `fastapi.security` module that simplify using these security mechanisms. To add security to your API, you can use the provided utilities such as `openIdConnect`. This automatic discovery is what is defined in the OpenID Connect specification and allows you to integrate other authentication/authorization providers like Google, Facebook, X (Twitter), GitHub, etc. easily.\n\nReference(s):\n- tutorial/security/index.md",
+      "contexts": [
+        "# Security { #security }\n\nThere are many ways to handle security, authentication and authorization.\n\nAnd it normally is a complex and \"difficult\" topic.\n\nIn many frameworks and systems just handling security and authentication takes a big amount of effort and code (in many cases it can be 50% or more of all the code written).\n\n**FastAPI** provides several tools to help you deal with **Security** easily, rapidly, in a standard way, without having to study and learn all the security",
+        "stAPI** gives you the tools to do it easily, while doing the heavy lifting for you.\n\n///\n\n## **FastAPI** utilities { #fastapi-utilities }\n\nFastAPI provides several tools for each of these security schemes in the `fastapi.security` module that simplify using these security mechanisms.\n\nIn the next chapters you will see how to add security to your API using those tools provided by **FastAPI**.\n\nAnd you will also see how it gets automatically integrated into the interactive documentation system.",
+        "es of this.\n* `openIdConnect`: has a way to define how to discover OAuth2 authentication data automatically.\n    * This automatic discovery is what is defined in the OpenID Connect specification.\n\n\n/// tip\n\nIntegrating other authentication/authorization providers like Google, Facebook, X (Twitter), GitHub, etc. is also possible and relatively easy.\n\nThe most complex problem is building an authentication/authorization provider like those, but **FastAPI** gives you the tools to do it easily,",
+        "# Tutorial - User Guide { #tutorial-user-guide }\n\nThis tutorial shows you how to use **FastAPI** with most of its features, step by step.\n\nEach section gradually builds on the previous ones, but it's structured to separate topics, so that you can go directly to any specific one to solve your specific API needs.\n\nIt is also built to work as a future reference so you can come back and see exactly what you need.",
+        "# Tutorial - User Guide { #tutorial-user-guide }\n\nThis tutorial shows you how to use **FastAPI** with most of its features, step by step.\n\nEach section gradually builds on the previous ones, but it's structured to separate topics, so that you can go directly to any specific one to solve your specific API needs.\n\nIt is also built to work as a future reference so you can come back and see exactly what you need."
+      ],
+      "confidence": 0.8054,
+      "num_sources": 5,
+      "response_time": 13.54
+    }
+  ]
+}
