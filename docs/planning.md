@@ -7,6 +7,29 @@
 
 ---
 
+## ✅ **Stack Alignment with Day 1-4 Projects**
+
+**This coding exercise uses 100% of the technology stack from your existing projects:**
+
+| Component | This Exercise | Your Day 1-4 Projects | Status |
+|-----------|---------------|----------------------|--------|
+| **Backend** | FastAPI | Day 2 FastAPI-K8s | ✅ Aligned |
+| **Vector DB** | ChromaDB | Day 1-2 ChromaDB | ✅ Aligned |
+| **Local LLM** | GPT4All | Day 1-2 GPT4All | ✅ Aligned |
+| **Cloud LLM** | OpenAI (optional) | Day 1-2 OpenAI | ✅ Aligned |
+| **RAG Framework** | LangChain | Day 1-2 LangChain | ✅ Aligned |
+| **Embeddings** | sentence-transformers | Day 1-2-4 sentence-transformers | ✅ Aligned |
+| **Evaluation** | RAGAS | Day 4 RAGAS | ✅ Aligned |
+| **Frontend** | React 19 + Vite | Day 3 React + Vite | ✅ Aligned |
+| **Styling** | Tailwind CSS | Day 3 Tailwind CSS | ✅ Aligned |
+| **API Client** | Axios | Day 3 Axios | ✅ Aligned |
+| **Container** | Docker Compose | Day 2 Docker Compose | ✅ Aligned |
+| **Testing** | pytest | Day 2 pytest | ✅ Aligned |
+
+**🎯 Key Advantage:** You can leverage all your Day 1-4 learning and code patterns directly!
+
+---
+
 ## 🎯 Strategic Positioning
 
 ### **What This Project Showcases**
@@ -34,7 +57,7 @@ Based on qualification evaluation, this project emphasizes:
 | Decision | Choice | Rationale |
 |----------|--------|-----------|
 | **Dataset** | FastAPI Documentation | Relevant to assignment, abundant quality docs, realistic queries, saves 2 hours vs Visa repos exploration |
-| **LLM** | Ollama (llama3:8b) primary, OpenAI-ready config | Free, shows infrastructure skills, easy to switch for better quality if needed |
+| **LLM** | GPT4All (mistral-7b) primary, OpenAI-ready config | Free, aligned with Day 1-2 experience, shows infrastructure skills, easy to switch for better quality if needed |
 | **Vector DB** | ChromaDB | Lightweight, Python-native, sufficient for assignment scale, easy local setup |
 | **Evaluation** | Start 3 metrics/20 queries → Expand 5 metrics/50 queries | Core functionality first, expand if ahead of schedule |
 | **Frontend** | Minimal React (functional, not fancy) | Backend/evaluation are differentiators, not UI/UX |
@@ -61,7 +84,7 @@ User Query
     ↓
 [5. Prompt Construction] (with strict source attribution instructions)
     ↓
-[6. LLM Generation (Ollama/OpenAI)]
+[6. LLM Generation (GPT4All/OpenAI)]
     ↓
 [7. Post-Processing] (hallucination check, source extraction)
     ↓
@@ -71,25 +94,34 @@ Response + Sources + Confidence Score
 ### **Technology Stack**
 
 **Backend:**
-- FastAPI (REST API)
-- ChromaDB (vector database)
-- Ollama (local LLM) / OpenAI (optional upgrade)
-- sentence-transformers (embeddings)
-- RAGAS (evaluation framework)
+- FastAPI (REST API) ✅ **Aligned with Day 2**
+- ChromaDB (vector database) ✅ **Aligned with Day 1-2**
+- ~~Ollama (local LLM)~~ → **Use GPT4All** ✅ **Aligned with Day 1-2** (you used gpt4all, not Ollama)
+- OpenAI (optional upgrade via config toggle) ✅ **Aligned with Day 1-2**
+- LangChain (RAG orchestration) ✅ **ADD - Used in Day 1-2**
+- sentence-transformers (embeddings) ✅ **Aligned with Day 1-2-4**
+- RAGAS (evaluation framework) ✅ **Aligned with Day 4**
 
 **Frontend:**
-- React (Vite)
-- Axios (API calls)
-- Basic CSS (no Tailwind, keep it simple)
+- React 19 (Vite) ✅ **Aligned with Day 3**
+- Axios (API calls) ✅ **Aligned with Day 3**
+- ~~Basic CSS~~ → **Tailwind CSS** ✅ **Aligned with Day 3** (you used Tailwind in day3-react-fundamentals)
 
 **Infrastructure:**
-- Docker Compose (local development)
+- Docker Compose (local development) ✅ **Aligned with Day 2**
 - Python 3.11+
 - Node 18+
 
 **Testing:**
-- pytest (unit tests)
-- RAGAS (RAG quality evaluation)
+- pytest (unit tests) ✅ **Aligned with Day 2**
+- RAGAS (RAG quality evaluation) ✅ **Aligned with Day 4**
+
+**📝 Stack Alignment Notes:**
+- **100% aligned** with your existing Day 1-4 projects
+- **Key correction:** Using **GPT4All** instead of Ollama (matches your Day 1-2 choice)
+- **Enhancement:** Adding **LangChain** for RAG orchestration (you used it in all projects)
+- **UI correction:** Using **Tailwind CSS** instead of basic CSS (matches Day 3)
+- All other choices perfectly match your existing projects
 
 ---
 
@@ -115,13 +147,13 @@ Response + Sources + Confidence Score
 ---
 
 #### **Hours 1-5: Stage 1A - Backend Core**
-**Goal:** FastAPI + ChromaDB + Ollama working
+**Goal:** FastAPI + ChromaDB + GPT4All working
 
 **Hour 1-2: Document Ingestion Pipeline**
 - [ ] Install dependencies (15 min)
   ```bash
   fastapi, uvicorn, chromadb, sentence-transformers, 
-  python-dotenv, pydantic, langchain, ollama
+  python-dotenv, pydantic, langchain, langchain-community, gpt4all
   ```
 - [ ] Implement document loader (30 min)
   - Parse FastAPI markdown docs
@@ -144,15 +176,15 @@ Response + Sources + Confidence Score
   - Threshold: <0.65 = "unknown"
 
 **Hour 3-4: LLM Integration**
-- [ ] Setup Ollama client (15 min)
-  - Pull llama3:8b model
+- [ ] Setup GPT4All client (15 min)
+  - Download mistral-7b-instruct model
   - Test connection
 - [ ] Implement prompt construction (30 min)
   - System prompt: "Use ONLY provided context"
   - User prompt template with sources
   - "Unknown" instruction
 - [ ] Implement generation endpoint (30 min)
-  - Call Ollama
+  - Call GPT4All
   - Parse response
   - Extract source citations
 - [ ] Add OpenAI-ready config (15 min)
@@ -189,7 +221,7 @@ Response + Sources + Confidence Score
   - Response display
   - Sources list with confidence scores
   - Error display
-  - Basic CSS (clean, readable)
+  - **Tailwind CSS** for clean, professional styling (aligned with Day 3)
 
 **Hour 6-7: Integration + Docker**
 - [ ] Connect frontend to backend (20 min)
@@ -539,7 +571,7 @@ ai-engineer-coding-exercise/
 
 | Issue | Solution |
 |-------|----------|
-| Ollama slow/crashes | Switch to OpenAI API (already configured) |
+| GPT4All slow/crashes | Switch to OpenAI API (already configured) |
 | ChromaDB issues | Use in-memory mode, simpler but functional |
 | React build problems | Use pure HTML/JS (still counts as frontend) |
 | RAGAS setup issues | Manual evaluation script (simple metrics) |
@@ -570,10 +602,11 @@ ai-engineer-coding-exercise/
 - Enough diversity without noise
 - Standard RAG practice
 
-### **4. LLM: Ollama llama3:8b**
+### **4. LLM: GPT4All mistral-7b-instruct**
 **Rationale:**
 - Free and fast for local development
-- 8B parameter = good quality/speed tradeoff
+- 7B parameter = good quality/speed tradeoff
+- Aligned with Day 1-2 experience (you used gpt4all)
 - Designed to easily switch to OpenAI gpt-3.5/gpt-4
 - Shows infrastructure skills
 

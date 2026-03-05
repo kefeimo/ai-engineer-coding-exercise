@@ -1,6 +1,6 @@
 # AI Engineer Coding Exercise - RAG System
 
-**Status:** 🔨 In Development  
+**Status:** 🔨 Stage 0 Complete - Beginning Implementation  
 **Timeline:** March 4-5, 2026 (2 Days)  
 **Submission For:** Visa Full-Stack AI Engineer Position
 
@@ -8,20 +8,25 @@
 
 ## 🎯 Project Overview
 
-A production-ready Retrieval-Augmented Generation (RAG) system built with FastAPI, ChromaDB, and Ollama, demonstrating enterprise-grade GenAI engineering with comprehensive evaluation framework.
+A production-ready Retrieval-Augmented Generation (RAG) system built with FastAPI, ChromaDB, and GPT4All, demonstrating enterprise-grade GenAI engineering with comprehensive evaluation framework.
+
+**Dataset:** FastAPI documentation (12 markdown files covering tutorials, advanced topics, and deployment)
 
 ### **Key Features**
 
-- ✅ **FastAPI Backend** with production patterns (error handling, logging, config management)
-- ✅ **Vector Database** (ChromaDB) for semantic search
-- ✅ **Local LLM** (Ollama llama3:8b) with OpenAI-ready configuration
-- ✅ **React Frontend** for user interaction
-- ✅ **RAGAS Evaluation** framework with 5 metrics
-- ✅ **Production Differentiation:**
+- 🔨 **FastAPI Backend** with production patterns (error handling, logging, config management)
+- 🔨 **Vector Database** (ChromaDB) for semantic search with sentence-transformers embeddings
+- 🔨 **Local LLM** (GPT4All mistral-7b-instruct) with OpenAI-ready configuration
+- 🔨 **React Frontend** (Vite + Tailwind CSS) for user interaction
+- 🔨 **LangChain** orchestration for RAG pipeline
+- 🔨 **RAGAS Evaluation** framework with 5 metrics
+- 🔨 **Production Differentiation:**
   - Source attribution in all responses
-  - "Unknown" handling for out-of-scope queries
+  - "Unknown" handling for out-of-scope queries (confidence threshold <0.65)
   - Confidence thresholding and hallucination detection
   - Agent-style multi-step pipeline
+
+**Legend:** ✅ Complete | 🔨 In Development | ⏳ Planned
 
 ---
 
@@ -29,11 +34,13 @@ A production-ready Retrieval-Augmented Generation (RAG) system built with FastAP
 
 This project fulfills the following deliverables:
 
-1. ✅ **Data Preparation** - FastAPI documentation dataset (50 test queries)
-2. ✅ **Backend Development** - FastAPI + ChromaDB + Ollama RAG system
-3. ✅ **Evaluation Framework** - RAGAS metrics + custom metrics (response time, cost)
-4. ✅ **Frontend Development** - React UI with query input and response display
-5. ✅ **Documentation** - README + 2-3 page report + architecture docs
+1. ✅ **Data Preparation** - FastAPI documentation dataset (12 files downloaded, 50 test queries planned)
+2. 🔨 **Backend Development** - FastAPI + ChromaDB + GPT4All RAG system
+3. 🔨 **Evaluation Framework** - RAGAS metrics (5 total) + custom metrics (response time, token cost, source coverage)
+4. 🔨 **Frontend Development** - React + Vite + Tailwind CSS UI with query input and response display
+5. ⏳ **Documentation** - README (in progress) + 2-3 page report + architecture docs
+
+**Progress:** Stage 0 complete (setup & requirements). Beginning Stage 1A (Backend Core).
 
 ---
 
@@ -43,18 +50,35 @@ This project fulfills the following deliverables:
 
 - Python 3.11+
 - Node.js 18+
-- Docker & Docker Compose
-- Ollama (for local LLM)
+- Docker & Docker Compose (optional)
+- 8GB RAM minimum (for GPT4All model)
 
 ### **Installation**
+
+#### **Option 1: Local Development (Recommended for Day 1)**
 
 ```bash
 # Clone repository
 git clone git@github.com:kefeimo/ai-engineer-coding-exercise.git
 cd ai-engineer-coding-exercise
 
-# Start with Docker Compose
-docker-compose up -d
+# Backend setup
+cd backend
+python -m venv venv
+source venv/bin/activate  # On Linux/Mac
+pip install -r requirements.txt
+
+# Configure environment
+cp .env.example .env
+# Edit .env if needed (defaults work for local development)
+
+# Start backend (GPT4All will auto-download ~4GB model on first run)
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+
+# Frontend setup (in new terminal)
+cd ../frontend
+npm install
+npm run dev
 
 # Access the application
 # Frontend: http://localhost:5173
@@ -62,19 +86,30 @@ docker-compose up -d
 # API Docs: http://localhost:8000/docs
 ```
 
-### **Manual Setup (Without Docker)**
+#### **Option 2: Docker Compose (Coming Soon)**
 
-See [SETUP.md](docs/SETUP.md) for detailed manual installation instructions.
+```bash
+# Start with Docker Compose
+docker-compose up -d
+
+# Access the application
+# Frontend: http://localhost:5173
+# Backend API: http://localhost:8000
+```
+
+**Note:** Docker Compose will be available after Stage 1B (Hour 6-7).
 
 ---
 
 ## 📚 Documentation
 
-- **[Planning Document](docs/planning.md)** - Strategic approach and technical decisions
-- **[Progress Tracking](docs/progress-tracking.md)** - Development progress and metrics
-- **[Architecture](docs/ARCHITECTURE.md)** - System design and component descriptions *(Coming Soon)*
-- **[Evaluation Report](docs/EVALUATION-REPORT.md)** - RAGAS metrics and improvements *(Coming Soon)*
-- **[Future Improvements](docs/FUTURE-IMPROVEMENTS.md)** - Production scaling plans *(Coming Soon)*
+- **[Planning Document](docs/planning.md)** - 20-hour strategic plan with technology decisions
+- **[Progress Tracking](docs/progress-tracking.md)** - Real-time development progress and metrics
+- **[Deliverables Checklist](docs/DELIVERABLES.md)** - All submission requirements tracked
+- **[Assignment](docs/assignment.md)** - Original requirements
+- **[Architecture](docs/ARCHITECTURE.md)** - System design and component descriptions *(Day 2)*
+- **[Evaluation Report](docs/EVALUATION-REPORT.md)** - RAGAS metrics and improvements *(Day 2)*
+- **[Future Improvements](docs/FUTURE-IMPROVEMENTS.md)** - Production scaling plans *(Day 2)*
 
 ---
 
@@ -82,14 +117,29 @@ See [SETUP.md](docs/SETUP.md) for detailed manual installation instructions.
 
 ```
 ai-engineer-coding-exercise/
-├── docs/                           # Documentation
-│   ├── assignment.md              # Original assignment
-│   ├── planning.md                # Strategic planning
-│   └── progress-tracking.md       # Progress checklist
-├── backend/                        # FastAPI application
-├── frontend/                       # React application
-├── docker-compose.yml             # Docker setup
-└── README.md                      # This file
+├── docs/                              # Documentation
+│   ├── assignment.md                 # Original assignment requirements
+│   ├── planning.md                   # 20-hour strategic plan
+│   ├── progress-tracking.md          # Development progress tracking
+│   └── DELIVERABLES.md               # Submission checklist
+├── data/                              # Dataset
+│   └── documents/                    # FastAPI markdown docs (12 files)
+├── backend/                           # FastAPI application
+│   ├── app/                          # Application code
+│   │   ├── rag/                      # RAG pipeline (ingestion, retrieval, generation)
+│   │   └── utils/                    # Utilities (logging, validators)
+│   ├── tests/                        # Unit tests (pytest)
+│   ├── data/                         # Runtime data
+│   │   ├── results/                  # Evaluation results
+│   │   └── test_queries/             # Test query dataset
+│   ├── requirements.txt              # Python dependencies
+│   ├── .env.example                  # Configuration template
+│   └── .env                          # Local configuration
+├── frontend/                          # React application
+│   └── src/                          # React components (Vite + Tailwind)
+├── download_docs.sh                   # Script to download FastAPI docs
+├── docker-compose.yml                 # Docker setup (coming in Stage 1B)
+└── README.md                         # This file
 ```
 
 ---
