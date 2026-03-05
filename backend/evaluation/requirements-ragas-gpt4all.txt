@@ -1,0 +1,22 @@
+# RAGAS + GPT4All Environment Requirements
+# Testing if modern LangChain (Pydantic v2) works with both RAGAS and GPT4All
+
+# Core evaluation framework
+ragas>=0.1.0
+
+# LLM providers
+gpt4all>=2.8.0  # For local LLM evaluation
+openai>=1.0.0   # Fallback option
+
+# For calling backend API during evaluation
+requests>=2.31.0
+
+# Dataset handling (required by RAGAS)
+datasets>=2.14.0
+
+# GPU support for GPT4All
+nvidia-cuda-runtime-cu11==11.8.89
+nvidia-cublas-cu11==11.11.3.6
+
+# Optional: Progress bars
+tqdm>=4.65.0

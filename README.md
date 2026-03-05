@@ -246,22 +246,75 @@ ai-engineer-coding-exercise/
 
 ---
 
-## 🧪 Testing
+## 🧪 Testing & Evaluation
 
+### Unit Tests
 ```bash
-# Run unit tests
 cd backend
 pytest tests/
-
-# Run RAGAS evaluation
-python -m app.rag.evaluation
 ```
+
+### RAG System Evaluation
+
+The evaluation framework uses **RAGAS** metrics to measure RAG system quality. See [`backend/evaluation/README.md`](backend/evaluation/README.md) for full documentation.
+
+#### Quick Evaluation (Query Results Only)
+```bash
+cd backend
+source venv/bin/activate
+python evaluation/run_ragas_baseline.py --input ../data/test_queries/baseline_3.json
+```
+
+This runs queries and saves results without RAGAS metrics (no API key needed).
+
+#### Full RAGAS Evaluation (Recommended)
+```bash
+# Set OpenAI API key
+export OPENAI_API_KEY="sk-your-api-key-here"
+
+# Run evaluation with RAGAS metrics
+python evaluation/run_ragas_baseline.py --input ../data/test_queries/baseline_20.json
+```
+
+This provides complete evaluation with quality metrics:
+- **Context Precision:** Relevance of retrieved documents
+- **Faithfulness:** Answer grounded in context (no hallucinations)  
+- **Answer Relevancy:** Answer addresses the question
+
+**Evaluation Time:**
+- With OpenAI API: ~2 minutes for 20 queries
+- Without RAGAS: ~5 minutes for 20 queries (query results only)
+
+**Test Datasets:**
+- `baseline_3.json` - Quick 3-query smoke test
+- `baseline_20.json` - Comprehensive 20-query evaluation
+
+For more details on RAGAS configuration, local LLM alternatives, and metrics explanation, see [`backend/evaluation/README.md`](backend/evaluation/README.md).
 
 ---
 
-## 📝 Development Log
+## � Known Issues & TODOs
+
+### GPU Support in Docker (TODO)
+- **Current Status:** GPU acceleration works in local backend (8-10x speedup), but NOT in Docker
+- **Impact:** Docker deployment runs in CPU mode (80-125s per query vs 12-15s with GPU)
+- **Workaround:** Run backend locally for evaluation/testing, use Docker for deployment
+- **Solution:** Install NVIDIA Container Toolkit to enable GPU in Docker
+- **Documentation:** See [`docs/TODO-DOCKER-GPU.md`](docs/TODO-DOCKER-GPU.md) for detailed instructions
+- **Priority:** LOW - System works without it, optimization for production
+
+### RAGAS Evaluation with Local LLM (Experimental)
+- **Current Status:** RAGAS requires OpenAI API for metrics calculation
+- **Alternative:** Can use GPT4All/local LLM via LangChain wrapper (very slow, 10-30s per query)
+- **Recommendation:** Use OpenAI API for evaluation (fast, reliable, ~$0.04 for 20 queries)
+- **Documentation:** See [`backend/evaluation/README.md`](backend/evaluation/README.md) for details
+
+---
+
+## �📝 Development Log
 
 - **March 4, 2026** - Project initialization, planning document created
+- **March 5, 2026** - Stage 1C evaluation framework complete, GPU acceleration enabled
 - *(Progress updates will be tracked in [progress-tracking.md](docs/progress-tracking.md))*
 
 ---

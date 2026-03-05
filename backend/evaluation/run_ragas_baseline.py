@@ -9,7 +9,30 @@ Metrics evaluated:
 2. faithfulness: Is the answer grounded in the context?
 3. answer_relevancy: Does the answer address the question?
 
+RAGAS LLM Configuration:
+-----------------------
+RAGAS requires an LLM to evaluate responses. Two options:
+
+1. OpenAI API (Recommended - Fast & Accurate):
+   export OPENAI_API_KEY="your-api-key-here"
+   
+   RAGAS will automatically use OpenAI's models (gpt-3.5-turbo by default).
+   This is the fastest and most reliable option.
+   
+2. Local LLM via LangChain (Experimental - Slow):
+   Can use GPT4All/Ollama through LangChain wrapper, but expect:
+   - Much slower evaluation (10-30 seconds per query vs 1-2 seconds with OpenAI)
+   - Potential async/threading issues
+   - Lower quality metrics
+   
+   Not recommended for routine evaluation.
+
 Usage:
+    # With OpenAI (recommended):
+    export OPENAI_API_KEY="sk-..."
+    python run_ragas_baseline.py
+    
+    # Without API key (saves query results only, no RAGAS metrics):
     python run_ragas_baseline.py
 """
 
@@ -24,7 +47,7 @@ from typing import List, Dict, Any
 sys.path.append(str(Path(__file__).parent.parent.parent))
 
 from ragas import evaluate
-from ragas.metrics import (
+from ragas.metrics.collections import (
     context_precision,
     faithfulness,
     answer_relevancy

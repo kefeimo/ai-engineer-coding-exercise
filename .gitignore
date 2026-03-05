@@ -88,3 +88,7 @@ data/documents/*.txt
 data/results/*.json
 data/results/*.csv
 !data/results/.gitkeep
+
+# Evaluation environment
+backend/evaluation/venv-eval/
+backend/evaluation/venv-ragas-gpt4all/

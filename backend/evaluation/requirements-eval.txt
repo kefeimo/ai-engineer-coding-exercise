@@ -1,0 +1,18 @@
+# RAGAS Evaluation Environment Requirements
+# Minimal dependencies for running RAGAS evaluation with OpenAI API
+# Separate from main backend to avoid GPT4All/LangChain version conflicts
+
+# Core evaluation framework
+ragas>=0.1.0
+
+# LLM provider (OpenAI for RAGAS metrics)
+openai>=1.0.0
+
+# For calling backend API during evaluation
+requests>=2.31.0
+
+# Dataset handling (required by RAGAS)
+datasets>=2.14.0
+
+# Optional: Progress bars
+tqdm>=4.65.0
