@@ -20,6 +20,7 @@ from app.models import (
 from app import __version__
 from app.rag.ingestion import ingest_documents
 from app.rag.retrieval import Retriever
+from app.rag.hybrid_retrieval import HybridRetriever
 from app.rag.generation import get_llm_client, generate_answer, extract_sources
 
 # Configure logging
@@ -47,6 +48,21 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Initialize hybrid retriever (global instance to cache BM25 index)
+hybrid_retriever = None
+
+@app.on_event("startup")
+async def startup_event():
+    """Initialize hybrid retriever on startup"""
+    global hybrid_retriever
+    logger.info("Initializing hybrid retriever...")
+    try:
+        hybrid_retriever = HybridRetriever(auto_classify=True)
+        logger.info("✓ Hybrid retriever initialized successfully")
+    except Exception as e:
+        logger.error(f"Failed to initialize hybrid retriever: {e}")
+        logger.warning("Falling back to semantic-only retrieval")
+
 
 @app.get("/health", response_model=HealthResponse, tags=["Health"])
 async def health_check():
@@ -64,7 +80,7 @@ async def health_check():
 @app.post("/api/v1/query", response_model=QueryResponse, tags=["RAG"])
 async def query_rag(request: QueryRequest):
     """
-    Query the RAG system
+    Query the RAG system with hybrid search (semantic + keyword)
     
     Args:
         request: Query request with user question
@@ -75,11 +91,14 @@ async def query_rag(request: QueryRequest):
     logger.info(f"Query received: {request.query}")
     
     try:
-        # Initialize retriever
-        retriever = Retriever()
-        
-        # Retrieve relevant documents
-        retrieval_result = retriever.retrieve(request.query, top_k=request.top_k)
+        # Use hybrid retriever if available, fallback to semantic-only
+        if hybrid_retriever is not None:
+            logger.info("Using hybrid search (semantic + BM25)")
+            retrieval_result = hybrid_retriever.search(request.query, top_k=request.top_k)
+        else:
+            logger.warning("Hybrid retriever not available, using semantic-only")
+            retriever = Retriever()
+            retrieval_result = retriever.retrieve(request.query, top_k=request.top_k)
         
         # Check for errors
         if "error" in retrieval_result:
@@ -95,8 +114,9 @@ async def query_rag(request: QueryRequest):
         documents = retrieval_result.get("documents", [])
         overall_confidence = retrieval_result.get("confidence", 0.0)
         
-        # Check confidence threshold
-        is_confident, confidence_msg = retriever.check_confidence(overall_confidence)
+        # Check confidence threshold (use Retriever for consistency)
+        temp_retriever = Retriever()
+        is_confident, confidence_msg = temp_retriever.check_confidence(overall_confidence)
         
         if not documents or not is_confident:
             logger.warning(f"Low confidence or no documents: {confidence_msg}")
