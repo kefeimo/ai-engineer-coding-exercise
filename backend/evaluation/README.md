@@ -1,281 +1,254 @@
-# RAG System Evaluation
+# 🎯 RAGAS Evaluation Framework
 
-This directory contains evaluation scripts and test datasets for the RAG system.
+Three-stage evaluation system for RAG (Retrieval-Augmented Generation) quality assessment using RAGAS metrics.
 
-## Overview
+## 📋 Overview
 
-The evaluation framework uses **RAGAS** (Retrieval-Augmented Generation Assessment) metrics to evaluate the quality of the RAG system's responses.
+**Three-Stage Pipeline:**
+1. **Stage 1**: Query RAG system → Save responses
+2. **Stage 1B**: (Optional) Generate reference answers → Enable all 5 metrics  
+3. **Stage 2**: Run RAGAS evaluation → Get quality scores
 
-**Important:** RAGAS **requires OpenAI API** - local models like GPT4All are **not compatible**.
+**Benefits:**
+- ✅ Reusable: Run evaluation multiple times without re-querying RAG
+- ✅ Cost-effective: Separate data collection from evaluation
+- ✅ Flexible: Generate references only when needed
+- ✅ Fast iteration: Experiment with evaluation parameters
 
-### Why OpenAI API is Required
+## 🎯 RAGAS Metrics
 
-After extensive testing (see `RAGAS-GPT4ALL-INVESTIGATION.md`), we confirmed:
-- ❌ **RAGAS 0.4.x:** Explicitly requires OpenAI-like API (deprecated LangchainLLMWrapper)
-- ❌ **RAGAS 0.1.x-0.3.x:** LangChain's GPT4All wrapper has API incompatibility (`temperature` parameter error)
-- ✅ **Solution:** Use OpenAI API for evaluation (cost: ~$0.50-$1.00 for 20 queries)
+### Without References (2 metrics)
+- **Faithfulness**: Answer grounded in retrieved context?
+- **AnswerRelevancy**: Answer addresses the question?
 
-**Hybrid Architecture:**
-- 🚀 **GPT4All for production queries:** Fast, local, GPU-accelerated, free (12-15s per query)
-- 📊 **OpenAI for evaluation metrics:** Reliable, accurate, one-time cost (~$1 for full evaluation)
+### With References (5 metrics total)
+- **ContextPrecision**: Relevant contexts retrieved?
+- **ContextRecall**: Ground truth coverage?
+- **ContextEntityRecall**: Entity match with reference?
 
-## Architecture
+## 🚀 Quick Start
 
-```
-backend/
-├── app/                    # Main RAG backend (FastAPI + GPT4All + ChromaDB)
-│   └── venv/              # Main backend dependencies
-└── evaluation/            # Separate evaluation environment
-    ├── venv-eval/         # RAGAS evaluation dependencies (separate!)
-    ├── requirements-eval.txt
-    ├── setup_eval_env.sh  # One-command setup
-    └── run_ragas_baseline.py
-```
-
-**Why separate environments?**
-- **Main backend:** GPT4All for fast, local GPU inference (free, 12-15s per query)
-- **RAGAS evaluation:** Requires OpenAI API (RAGAS 0.4.3 only supports InstructorLLM, not LangChain wrappers)
-- **Architecture change:** RAGAS deprecated LangchainLLMWrapper in version 0.4.3
-- **Cost:** OpenAI GPT-4o-mini is very cheap (~$0.02-0.05 for full 20-query evaluation)
-- **Solution:** Hybrid approach - GPT4All for production, OpenAI for evaluation
-
-## Quick Start
-
-### 1. Setup Evaluation Environment (One-Time)
+### Minimal (2 metrics, ~2 minutes)
 
 ```bash
 cd backend/evaluation
-./setup_eval_env.sh
-```
-
-This creates `venv-eval/` with minimal dependencies: RAGAS, OpenAI, requests, datasets.
-
-### 2. Run Evaluation (Query Results Only)
-
-Without an OpenAI API key, the script will run all queries and save results:
-
-```bash
-source venv-eval/bin/activate
-python run_ragas_baseline.py --input ../../data/test_queries/baseline_3.json
-```
-
-This will:
-- ✅ Run all test queries through the RAG system
-- ✅ Collect answers, contexts, and metadata
-- ✅ Save results to JSON file
-- ⚠️ Skip RAGAS metric calculation (requires OpenAI API)
-
-### 3. Run Full RAGAS Evaluation (Recommended)
-
-For complete evaluation with quality metrics:
-
-```bash
 source venv-eval/bin/activate
 
-# Set your OpenAI API key
-export OPENAI_API_KEY="sk-your-api-key-here"
+# Stage 1: Query RAG
+python run_ragas_stage1_query.py \
+  --input ../../data/test_queries/baseline_3.json \
+  --output ../../data/results/baseline_3_stage1.json
 
-# Run evaluation
-python run_ragas_baseline.py --input ../../data/test_queries/baseline_20.json
+# Stage 2: Evaluate
+python run_ragas_stage2_eval.py \
+  --input ../../data/results/baseline_3_stage1.json \
+  --output ../../data/results/baseline_3_evaluated.json
 ```
 
-This will:
-- ✅ Run all test queries
-- ✅ Calculate RAGAS metrics (context_precision, faithfulness, answer_relevancy)
-- ✅ Generate comprehensive evaluation report
-
-**Expected time:** ~2-5 minutes for 20 queries with OpenAI API
-
-**When done:**
-```bash
-deactivate  # Exit evaluation environment
-```
-
-## RAGAS Metrics Explained
-
-### 1. Context Precision
-- **Measures:** How relevant are the retrieved document chunks?
-- **Range:** 0.0 - 1.0 (higher is better)
-- **Interpretation:**
-  - 0.8+ : Excellent retrieval, highly relevant contexts
-  - 0.6-0.8 : Good retrieval, mostly relevant
-  - <0.6 : Poor retrieval, many irrelevant chunks
-
-### 2. Faithfulness
-- **Measures:** Is the answer grounded in the retrieved contexts?
-- **Range:** 0.0 - 1.0 (higher is better)
-- **Interpretation:**
-  - 0.9+ : Answer fully supported by contexts
-  - 0.7-0.9 : Mostly faithful with minor additions
-  - <0.7 : Contains hallucinations or unsupported claims
-
-### 3. Answer Relevancy
-- **Measures:** Does the answer address the question?
-- **Range:** 0.0 - 1.0 (higher is better)
-- **Interpretation:**
-  - 0.8+ : Answer directly addresses question
-  - 0.6-0.8 : Answer is relevant but could be more focused
-  - <0.6 : Answer misses key aspects of the question
-
-## Configuration Options
-
-### Option 1: OpenAI API (Recommended)
-
-**Pros:**
-- ✅ Fast (1-2 seconds per query)
-- ✅ Reliable and accurate metrics
-- ✅ Standard RAGAS configuration
-- ✅ Well-tested and documented
-
-**Cons:**
-- ❌ Requires API key (paid service)
-- ❌ Sends data to external service
-
-**Setup:**
-```bash
-export OPENAI_API_KEY="sk-your-api-key-here"
-```
-
-**Cost:** OpenAI API pricing:
-- GPT-3.5-turbo: ~$0.002 per query
-- 20 queries: ~$0.04
-- Negligible for evaluation purposes
-
-### Option 2: Local LLM (Not Compatible)
-
-**Status:** ❌ **Not compatible with RAGAS due to version conflicts**
-
-**What we discovered:**
-1. ✅ GPT4All works perfectly standalone (0.4s generation, GPU accelerated)
-2. ❌ **Version conflict when using GPT4All with RAGAS:**
-   ```
-   TypeError: GPT4All.generate() got an unexpected keyword argument 'temperature'
-   ```
-
-**Root cause - Dependency conflict:**
-- **Main backend:** Uses `langchain 0.1.0` + `langchain-community 0.0.13` (compatible with `gpt4all 2.8.2`)
-- **RAGAS 0.4.3:** Requires `langchain 1.2.10` + `langchain-community 0.4.1` (incompatible with GPT4All)
-- LangChain's GPT4All wrapper changed its API between versions
-- RAGAS passes parameters that newer GPT4All doesn't accept
-- Tested: Even after 60s timeout, evaluation fails with TypeError
-
-**Solution: Separate Environments**
-- **Main backend (`venv/`):** GPT4All + older LangChain → Fast GPU inference
-- **Evaluation (`venv-eval/`):** RAGAS + OpenAI → Reliable evaluation
-- No version conflicts, each optimized for its purpose
-
-**Why not just upgrade LangChain in main backend?**
-- Would break GPT4All GPU acceleration
-- Main backend needs to be stable and fast
-- Evaluation is separate concern
-- OpenAI API is industry standard for RAGAS anyway
-
-**Recommendation:** Use separate evaluation environment with OpenAI API (fast, cheap, reliable).
-
-## Test Datasets
-
-### baseline_3.json
-- **Purpose:** Quick smoke test
-- **Queries:** 3 (1 easy, 1 medium, 1 hard)
-- **Use case:** Verify system works before full evaluation
-- **Time:** ~30 seconds (without RAGAS), ~10 seconds (with OpenAI)
-
-### baseline_20.json
-- **Purpose:** Comprehensive baseline evaluation
-- **Queries:** 20 (6 easy, 10 medium, 4 hard)
-- **Categories:** basics, routing, validation, security, deployment, etc.
-- **Use case:** Full system evaluation, benchmark for improvements
-- **Time:** ~5 minutes (without RAGAS), ~2 minutes (with OpenAI)
-
-## Command-Line Options
+### Full (5 metrics, ~5 minutes)
 
 ```bash
-python evaluation/run_ragas_baseline.py [OPTIONS]
+# Stage 1: Query RAG
+python run_ragas_stage1_query.py \
+  --input ../../data/test_queries/baseline_20.json \
+  --output ../../data/results/baseline_20_stage1.json
 
-Options:
-  --input PATH   Path to test queries JSON file (default: ../data/test_queries/baseline_20.json)
-  --output PATH  Path to save results JSON file (default: ../data/results/baseline_ragas_results.json)
+# Stage 1B: Generate references
+python run_ragas_stage1b_generate_references.py \
+  --input ../../data/results/baseline_20_stage1.json \
+  --output ../../data/results/baseline_20_with_refs.json
 
-Examples:
-  # Run 3-query smoke test
-  python evaluation/run_ragas_baseline.py --input ../data/test_queries/baseline_3.json
-  
-  # Run full 20-query evaluation
-  python evaluation/run_ragas_baseline.py --input ../data/test_queries/baseline_20.json
-  
-  # Custom output location
-  python evaluation/run_ragas_baseline.py --output ../data/results/my_results.json
+# Stage 2: Evaluate with all metrics
+python run_ragas_stage2_eval.py \
+  --input ../../data/results/baseline_20_with_refs.json \
+  --output ../../data/results/baseline_20_evaluated.json
 ```
 
-## Output Format
+## 🔧 Setup
 
-The evaluation script generates a JSON file with:
+### Prerequisites
+- ✅ Backend running on `localhost:8000`
+- ✅ OpenAI API key set: `export OPENAI_API_KEY="sk-proj-..."`
 
-### With RAGAS metrics:
+### Install
+
+```bash
+cd backend/evaluation
+
+# Create virtual environment
+python3 -m venv venv-eval
+source venv-eval/bin/activate
+
+# Install dependencies
+pip install -r requirements-eval.txt
+
+# Test setup
+python test_openai_key.py
+```
+
+## 📊 Stages Explained
+
+### Stage 1: Query RAG System
+
+**What**: Execute queries through RAG, save responses
+
+**Input**: Test queries JSON
+```json
+[{
+  "id": 1,
+  "query": "What is FastAPI?",
+  "difficulty": "easy"
+}]
+```
+
+**Output**: RAG responses JSON
 ```json
 {
-  "test_name": "RAGAS Baseline Evaluation",
-  "timestamp": "2024-03-05 10:30:00",
-  "test_results": {
-    "total_queries": 20,
-    "successful_queries": 20,
-    "failed_queries": 0
-  },
-  "ragas_scores": {
-    "context_precision": 0.82,
-    "faithfulness": 0.89,
-    "answer_relevancy": 0.85
-  },
-  "per_query_metrics": [...]
+  "results": [{
+    "query": "What is FastAPI?",
+    "answer": "FastAPI is...",
+    "contexts": ["context1", "context2"],
+    "confidence": 0.85
+  }]
 }
 ```
 
-### Without RAGAS metrics (query results only):
+**Command**:
+```bash
+python run_ragas_stage1_query.py \
+  --input <queries.json> \
+  --output <results.json>
+```
+
+### Stage 1B: Generate References (Optional)
+
+**What**: Create ground truth answers using LLM
+
+**Why**: Enables 3 additional RAGAS metrics
+
+**Input**: Stage 1 results
+
+**Output**: Stage 1 results + `reference` field per query
+
+**Command**:
+```bash
+python run_ragas_stage1b_generate_references.py \
+  --input <stage1.json> \
+  --output <with_refs.json> \
+  [--model gpt-3.5-turbo] \
+  [--regenerate]
+```
+
+**Cost**: ~$0.30 for 20 queries
+
+### Stage 2: RAGAS Evaluation
+
+**What**: Evaluate responses using RAGAS metrics
+
+**Input**: Stage 1 or Stage 1B results
+
+**Output**: Evaluation scores + aggregated metrics
+
+**Metrics**:
+- Without references: 2 metrics
+- With references: 5 metrics
+
+**Command**:
+```bash
+python run_ragas_stage2_eval.py \
+  --input <stage1_or_1b.json> \
+  --output <evaluated.json>
+```
+
+**Cost**: ~$0.30 (2 metrics) or ~$0.80 (5 metrics)
+
+## 💰 Cost Breakdown (20 queries)
+
+| Stage | Model | Cost | Time |
+|-------|-------|------|------|
+| 1: Query RAG | Local GPT4All | $0 | 1-2 min |
+| 1B: References | gpt-3.5-turbo | ~$0.30 | 2-3 min |
+| 2: Eval (2 metrics) | gpt-3.5-turbo | ~$0.30 | 3-5 min |
+| 2: Eval (5 metrics) | gpt-3.5-turbo | ~$0.80 | 5-10 min |
+| **Total (Full)** | | **~$1.10** | **~10-15 min** |
+
+**Free Alternative**: GPT4All (~3 hours, $0) - See `RAGAS-GPT4ALL-INVESTIGATION.md`
+
+## 📁 File Structure
+
+```
+evaluation/
+├── run_ragas_stage1_query.py          # Stage 1: Query RAG
+├── run_ragas_stage1b_generate_references.py  # Stage 1B: Gen references
+├── run_ragas_stage2_eval.py           # Stage 2: Evaluate
+├── test_openai_key.py                 # Test API key
+├── requirements-eval.txt              # Dependencies
+├── README.md                          # This file
+├── RAGAS-GPT4ALL-INVESTIGATION.md    # GPT4All breakthrough
+├── venv-eval/                         # Virtual environment
+└── archive/                           # Old test scripts
+```
+
+## 🔍 Output Analysis
+
+Final evaluation output:
 ```json
 {
-  "test_name": "RAG Query Evaluation (RAGAS metrics skipped)",
-  "timestamp": "2024-03-05 10:30:00",
-  "status": "queries_complete_ragas_skipped",
-  "note": "RAGAS evaluation requires OpenAI API key",
-  "test_results": {
-    "total_queries": 20,
-    "successful_queries": 20,
-    "failed_queries": 0
+  "aggregated_metrics": {
+    "faithfulness": 0.92,
+    "answer_relevancy": 0.88,
+    "context_precision": 0.85,
+    "context_recall": 0.80,
+    "context_entity_recall": 0.78
   },
-  "query_results": [
-    {
-      "id": 1,
-      "query": "What is FastAPI?",
-      "difficulty": "easy",
-      "category": "basics",
-      "answer": "FastAPI is a modern, fast (high-performance), web framework...",
-      "contexts_count": 5,
-      "expected_aspects": ["web framework", "Python", "API"]
-    },
-    ...
-  ]
+  "results": [...]
 }
 ```
 
-## Troubleshooting
+**Score Interpretation**:
+- 0.9-1.0: Excellent ✅
+- 0.7-0.9: Good 👍
+- 0.5-0.7: Fair ⚠️
+- <0.5: Poor ❌
 
-### "RAGAS evaluation skipped"
-- **Cause:** No OpenAI API key found
-- **Solution:** Set `OPENAI_API_KEY` environment variable or accept query-only results
+## 🎯 Best Practices
 
-### Slow evaluation with local LLM
-- **Cause:** GPT4All/local LLM inference is CPU/GPU intensive
-- **Solution:** Use OpenAI API for faster evaluation
+1. **Start small**: Test with `baseline_3.json` first
+2. **Stage 1 once**: Query RAG once, evaluate multiple times
+3. **References optional**: Only generate for full metrics
+4. **Version control**: Save all intermediate outputs
+5. **Cost management**: Stage 1B is optional
 
-### "Collection not initialized" error
-- **Cause:** ChromaDB not set up
-- **Solution:** Run document ingestion first:
-  ```bash
-  curl -X POST http://localhost:8000/api/v1/ingest \
-       -H "Content-Type: application/json" \
-       -d '{"document_path": "../data/documents"}'
-  ```
+## 🐛 Troubleshooting
 
-## Next Steps
+### Backend not running
+```
+Error: HTTPConnectionPool...Max retries exceeded
+```
+**Fix**: Start backend
+```bash
+cd backend && source venv/bin/activate
+uvicorn app.main:app --reload --port 8000
+```
 
-See `docs/EVALUATION-REPORT.md` for baseline results and analysis.
+### API quota exceeded
+```
+Error: You exceeded your current quota
+```
+**Fix**: Add credits at https://platform.openai.com/settings/organization/billing
+
+### No references warning
+```
+⚠ No reference answers found
+```
+**Info**: Run Stage 1B to generate references (optional for full metrics)
+
+## 📚 Resources
+
+- [RAGAS Docs](https://docs.ragas.io/)
+- [OpenAI API](https://platform.openai.com/docs)
+- [Our GPT4All Breakthrough](RAGAS-GPT4ALL-INVESTIGATION.md)
+
+---
+
+**Next**: Test with `baseline_3.json` to verify setup! 🚀

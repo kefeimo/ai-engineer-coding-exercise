@@ -5,9 +5,13 @@ This script runs the 20 baseline test queries through the RAG system
 and evaluates the results using RAGAS metrics.
 
 Metrics evaluated:
-1. context_precision: How relevant are the retrieved contexts?
-2. faithfulness: Is the answer grounded in the context?
-3. answer_relevancy: Does the answer address the question?
+1. faithfulness: Is the answer grounded in the context?
+2. answer_relevancy: Does the answer address the question?
+
+Note: The following metrics require ground_truth reference answers (not evaluated):
+- context_precision: How relevant are the retrieved contexts?
+- context_recall: How much of the ground truth is captured?
+- context_entity_recall: How many entities are recalled?
 
 RAGAS LLM Configuration:
 -----------------------
@@ -47,10 +51,9 @@ from typing import List, Dict, Any
 sys.path.append(str(Path(__file__).parent.parent.parent))
 
 from ragas import evaluate
-from ragas.metrics.collections import (
-    context_precision,
-    faithfulness,
-    answer_relevancy
+from ragas.metrics import (
+    Faithfulness,
+    AnswerRelevancy
 )
 from datasets import Dataset
 
@@ -185,13 +188,26 @@ class RAGEvaluator:
         print("Running RAGAS evaluation...")
         print(f"{'='*60}\n")
         
+        # Configure LLM and embeddings explicitly for metrics
+        from langchain_openai import ChatOpenAI, OpenAIEmbeddings
+        
+        llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0)
+        embeddings = OpenAIEmbeddings()
+        
         # Run evaluation
+        # NOTE: Only using metrics that don't require 'reference' (ground truth) answers
+        # - Faithfulness: Checks if answer is grounded in retrieved context
+        # - AnswerRelevancy: Checks if answer addresses the question
+        # 
+        # Metrics that require reference answers (skipped):
+        # - ContextPrecision: Requires ground truth to assess context relevance
+        # - ContextRecall: Requires ground truth to measure coverage
+        # - ContextEntityRecall: Requires ground truth for entity comparison
         result = evaluate(
             dataset,
             metrics=[
-                context_precision,
-                faithfulness,
-                answer_relevancy
+                Faithfulness(llm=llm),
+                AnswerRelevancy(llm=llm, embeddings=embeddings)
             ]
         )
         
@@ -199,25 +215,36 @@ class RAGEvaluator:
         
     def save_results(
         self, 
-        results: Dict[str, float], 
+        results, 
         output_path: str
     ) -> None:
         """
         Save evaluation results to JSON file.
         
         Args:
-            results: RAGAS evaluation results
+            results: RAGAS EvaluationResult object
             output_path: Path to save results JSON
         """
+        # RAGAS 0.4.x returns EvaluationResult with .scores attribute
+        # scores is a list of dicts, one per query
+        # Calculate average scores across all queries
+        scores_list = results.scores if hasattr(results, 'scores') else []
+        
+        # Aggregate scores
+        metrics = {}
+        if scores_list:
+            # Get all metric names from first score
+            metric_names = scores_list[0].keys()
+            for metric_name in metric_names:
+                values = [score[metric_name] for score in scores_list if metric_name in score]
+                metrics[metric_name] = sum(values) / len(values) if values else 0.0
+        
         # Convert to serializable format
         results_dict = {
             "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
-            "metrics": {
-                "context_precision": float(results.get("context_precision", 0.0)),
-                "faithfulness": float(results.get("faithfulness", 0.0)),
-                "answer_relevancy": float(results.get("answer_relevancy", 0.0))
-            },
-            "dataset_size": len(results.get("question", [])) if hasattr(results, 'get') else 0
+            "metrics": metrics,
+            "dataset_size": len(scores_list),
+            "per_query_scores": scores_list  # Include individual scores too
         }
         
         # Save to file
@@ -272,26 +299,40 @@ class RAGEvaluator:
             
         print(f"✓ Query results saved to {output_path}")
         
-    def print_summary(self, results: Dict[str, float]) -> None:
+    def print_summary(self, results) -> None:
         """
         Print summary of evaluation results.
         
         Args:
-            results: RAGAS evaluation results
+            results: RAGAS EvaluationResult object
         """
         print(f"\n{'='*60}")
         print("RAGAS BASELINE EVALUATION RESULTS")
         print(f"{'='*60}\n")
         
-        metrics = {
+        # Extract scores from EvaluationResult
+        scores_list = results.scores if hasattr(results, 'scores') else []
+        
+        if not scores_list:
+            print("No scores available")
+            return
+        
+        # Calculate average scores
+        metric_names = scores_list[0].keys()
+        
+        metric_labels = {
             "context_precision": "Context Precision",
             "faithfulness": "Faithfulness",
-            "answer_relevancy": "Answer Relevancy"
+            "answer_relevancy": "Answer Relevancy",
+            "context_recall": "Context Recall",
+            "context_entity_recall": "Context Entity Recall"
         }
         
-        for key, label in metrics.items():
-            score = results.get(key, 0.0)
-            print(f"{label:20s}: {score:.4f}")
+        for metric_name in metric_names:
+            values = [score[metric_name] for score in scores_list if metric_name in score]
+            avg_score = sum(values) / len(values) if values else 0.0
+            label = metric_labels.get(metric_name, metric_name.replace('_', ' ').title())
+            print(f"{label:25s}: {avg_score:.4f}")
             
         print(f"\n{'='*60}\n")
 
@@ -306,8 +347,8 @@ def main():
     parser.add_argument('--output', type=str, help='Path to save results JSON file')
     args = parser.parse_args()
     
-    # Paths
-    project_root = Path(__file__).parent.parent
+    # Paths - go up two levels from evaluation/ to reach project root
+    project_root = Path(__file__).parent.parent.parent
     
     if args.input:
         queries_file = Path(args.input)

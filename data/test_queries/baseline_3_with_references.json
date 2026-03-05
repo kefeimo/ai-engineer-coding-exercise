@@ -1,0 +1,11 @@
+[
+  {
+    "query": "What is FastAPI?"
+  },
+  {
+    "query": "How do I create a path parameter in FastAPI?"
+  },
+  {
+    "query": "How do I implement authentication in FastAPI?"
+  }
+]
