@@ -23,10 +23,23 @@ services:
       - ./backend/.env:/app/.env
       # Mount data directory for persistence (at project root, shared across services)
       - ./data:/app/data
+      # Mount data-pipeline raw JSON files for Visa docs ingestion
+      - ./data-pipeline:/app/data-pipeline
       # Cache GPT4All models to avoid re-downloading
       - ~/.cache/gpt4all:/root/.cache/gpt4all
-    # Override the default CMD with reload flag
-    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+    # Start uvicorn, wait for health check, then auto-ingest all docs (skip if already loaded)
+    command: >
+      sh -c "
+        uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload &
+        until curl -sf http://localhost:8000/health > /dev/null; do echo 'Waiting for backend...'; sleep 3; done &&
+        echo 'Backend ready - running auto-ingest...' &&
+        echo 'Ingesting FastAPI docs...' &&
+        curl -s -X POST 'http://localhost:8000/api/v1/ingest' -H 'Content-Type: application/json' -d '{\"document_path\": \"data/documents\", \"force_reingest\": false}' &&
+        echo 'Ingesting Visa Chart Components docs...' &&
+        curl -s -X POST 'http://localhost:8000/api/v1/ingest/visa-docs?force_reingest=false' &&
+        echo 'Auto-ingest complete' &&
+        wait
+      "
     restart: unless-stopped
     # GPU support (requires nvidia-container-toolkit installed)
     deploy:
