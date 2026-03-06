@@ -11,6 +11,54 @@ This guide covers running the FastAPI RAG system using Docker Compose.
 - At least 8GB RAM (for GPT4All model)
 - At least 10GB disk space
 
+## GPU Support (WSL2)
+
+GPU acceleration gives **8-10x speedup** (12-15s vs 80-125s per query). The `docker-compose.yml` is already configured — you just need the NVIDIA Container Toolkit installed once.
+
+> 📝 See [DOCKER-GPU.md](docs/DOCKER-GPU.md) for full details and troubleshooting.
+
+### Requirements
+- NVIDIA GPU with drivers installed on Windows
+- WSL2 (kernel `5.10.43+`)
+- Docker Desktop 3.1.0+
+
+### Setup
+
+**1. Add the NVIDIA repository:**
+```bash
+curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | \
+  sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
+
+curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \
+  sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \
+  sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
+```
+
+**2. Install the toolkit:**
+```bash
+sudo apt-get update && sudo apt-get install -y nvidia-container-toolkit
+```
+
+**3. Configure the Docker runtime:**
+```bash
+sudo nvidia-ctk runtime configure --runtime=docker
+```
+
+**4. Restart Docker Desktop** from the Windows system tray (right-click → Restart).
+
+**5. Verify GPU is accessible inside containers:**
+```bash
+docker run --rm --gpus all nvidia/cuda:11.4.3-base-ubuntu20.04 nvidia-smi
+```
+
+You should see your GPU listed. The `ERR!` in the `GPU-Util` column is a **known WSL2 cosmetic issue** — it does not affect performance.
+
+**6. Verify the backend is using CUDA after `docker-compose up`:**
+```bash
+docker logs rag-backend 2>&1 | grep "pytorch device_name"
+# Expected: Use pytorch device_name: cuda
+```
+
 ## Quick Start
 
 ### Production Build (Recommended for Testing)
