@@ -98,17 +98,24 @@ function ResponseDisplay({ response, ragSystem }) {
           <ReactMarkdown 
             remarkPlugins={[remarkGfm]}
             components={{
-              code: ({node, inline, className, children, ...props}) => (
-                inline ? (
-                  <code className="bg-gray-100 px-1.5 py-0.5 rounded text-sm font-mono text-red-600" {...props}>
-                    {children}
-                  </code>
-                ) : (
+              code: ({node, inline, className, children, ...props}) => {
+                // Check if it's inline code (no newlines and not wrapped in pre)
+                const isInline = inline || !String(children).includes('\n');
+                
+                if (isInline) {
+                  return (
+                    <code className="bg-gray-100 px-1.5 py-0.5 rounded text-sm font-mono text-red-600" {...props}>
+                      {children}
+                    </code>
+                  );
+                }
+                
+                return (
                   <code className="block bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm font-mono" {...props}>
                     {children}
                   </code>
-                )
-              ),
+                );
+              },
               a: ({node, children, ...props}) => (
                 <a className="text-blue-600 hover:text-blue-800 underline" target="_blank" rel="noopener noreferrer" {...props}>
                   {children}
