@@ -187,6 +187,19 @@ def construct_prompt(query: str, context_documents: List[Dict[str, Any]]) -> str
     Returns:
         Formatted prompt string
     """
+    # Determine the documentation domain based on collection name
+    collection_name = settings.chroma_collection_name.lower()
+    
+    if "visa" in collection_name or "vcc" in collection_name or "chart" in collection_name:
+        domain_description = "Visa Chart Components (VCC)"
+        domain_suggestions = "chart types, accessibility, data props, integration, etc."
+    elif "fastapi" in collection_name:
+        domain_description = "FastAPI"
+        domain_suggestions = "routing, dependencies, middleware, etc."
+    else:
+        domain_description = "the provided documentation"
+        domain_suggestions = "topics covered in the documentation"
+    
     # System instructions
     system_prompt = """You are a helpful AI assistant that answers questions based ONLY on the provided context.
 

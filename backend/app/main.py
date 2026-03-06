@@ -30,6 +30,24 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+
+def get_help_text_for_collection() -> str:
+    """
+    Get context-appropriate help text based on the current collection name
+    
+    Returns:
+        Help text string with relevant suggestions
+    """
+    collection_name = settings.chroma_collection_name.lower()
+    
+    if "visa" in collection_name or "vcc" in collection_name or "chart" in collection_name:
+        return "Please try rephrasing your question or asking about specific Visa Chart Components features, such as: chart types, accessibility features, data props, or integration guides."
+    elif "fastapi" in collection_name:
+        return "Please try rephrasing your question or ask about FastAPI features."
+    else:
+        return "Please try rephrasing your question with more specific terms."
+
+
 # Create FastAPI app
 app = FastAPI(
     title="RAG System API",
@@ -133,9 +151,10 @@ async def query_rag(request: QueryRequest):
         
         if not documents or not is_confident:
             logger.warning(f"Low confidence or no documents: {confidence_msg}")
+            help_text = get_help_text_for_collection()
             return QueryResponse(
                 query=request.query,
-                answer="I don't have enough information to answer that question based on the provided documentation. Please try rephrasing your question or ask about FastAPI features.",
+                answer=f"I don't have enough information to answer that question based on the provided documentation. {help_text}",
                 sources=[],
                 confidence=overall_confidence,
                 model=settings.llm_provider
