@@ -129,37 +129,34 @@ function ResponseDisplay({ response, ragSystem }) {
             {response.answer}
           </ReactMarkdown>
         </div>
-      </div>
 
-      {/* Sources Display */}
-      {response.sources && response.sources.length > 0 && (
-        <div className="border border-gray-200 rounded-lg overflow-hidden">
-          {/* Collapsible header */}
-          <button
-            onClick={() => setSourcesOpen(o => !o)}
-            className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100 transition-colors text-left"
-          >
-            <span className="text-sm font-semibold text-gray-700">
-              Sources ({response.sources.length})
-            </span>
-            <svg
-              className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${sourcesOpen ? 'rotate-180' : ''}`}
-              fill="none" stroke="currentColor" viewBox="0 0 24 24"
+        {/* Sources — collapsible, inside the Answer card */}
+        {response.sources && response.sources.length > 0 && (
+          <div className="mt-4 border-t border-gray-100">
+            <button
+              onClick={() => setSourcesOpen(o => !o)}
+              className="w-full flex items-center justify-between pt-3 pb-1 text-left group"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-
-          {/* Collapsible body */}
-          {sourcesOpen && (
-            <div className="p-3 grid grid-cols-1 gap-3 border-t border-gray-200">
-              {response.sources.map((source, index) => (
-                <SourceCard key={index} source={source} index={index} />
-              ))}
-            </div>
-          )}
-        </div>
-      )}
+              <span className="text-sm font-semibold text-gray-500 group-hover:text-gray-700 transition-colors">
+                Sources ({response.sources.length})
+              </span>
+              <svg
+                className={`w-4 h-4 text-gray-400 group-hover:text-gray-600 transition-transform duration-200 ${sourcesOpen ? 'rotate-180' : ''}`}
+                fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            {sourcesOpen && (
+              <div className="mt-2 grid grid-cols-1 gap-3">
+                {response.sources.map((source, index) => (
+                  <SourceCard key={index} source={source} index={index} />
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
