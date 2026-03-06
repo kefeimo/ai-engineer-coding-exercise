@@ -947,13 +947,12 @@ rm -rf frontend/node_modules
 
 ## 📝 Known Issues & TODOs
 
-### GPU Support in Docker (TODO)
-- **Current Status:** GPU acceleration works in local backend (8-10x speedup), but NOT in Docker
-- **Impact:** Docker deployment runs in CPU mode (80-125s per query vs 12-15s with GPU)
-- **Workaround:** Run backend locally for evaluation/testing, use Docker for deployment
-- **Solution:** Install NVIDIA Container Toolkit to enable GPU in Docker
-- **Documentation:** See [`docs/TODO-DOCKER-GPU.md`](docs/TODO-DOCKER-GPU.md) for detailed instructions
-- **Priority:** LOW - System works without it, optimization for production
+### GPU Support in Docker ✅ IMPLEMENTED
+- **Current Status:** GPU acceleration enabled in Docker with NVIDIA Container Toolkit
+- **Performance:** Embeddings run on CUDA, similar performance to local backend (~12-15s per query)
+- **Requirements:** NVIDIA Container Toolkit v1.18.2+ and Docker Desktop restart
+- **Documentation:** See [`docs/DOCKER-GPU.md`](docs/DOCKER-GPU.md) for setup instructions
+- **Fallback:** Automatically falls back to CPU mode if GPU unavailable
 
 ### RAGAS Evaluation with Local LLM (Experimental)
 - **Current Status:** RAGAS requires OpenAI API for metrics calculation

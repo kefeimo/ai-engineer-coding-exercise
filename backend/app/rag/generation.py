@@ -259,6 +259,20 @@ def generate_answer(
         
     except Exception as e:
         logger.error(f"Answer generation failed: {str(e)}", exc_info=True)
+        
+        # Attempt fallback to GPT4All if OpenAI fails
+        if settings.llm_provider.lower() == "openai":
+            logger.warning("⚠️ OpenAI failed, attempting fallback to GPT4All (CPU)...")
+            try:
+                fallback_client = GPT4AllClient()
+                prompt = construct_prompt(query, retrieved_documents)
+                answer = fallback_client.generate(prompt, max_tokens=max_tokens, temperature=temperature)
+                logger.info("✅ Fallback to GPT4All successful")
+                return f"⚠️ Warning: OpenAI API failed, using local GPT4All fallback.\n\n{answer}"
+            except Exception as fallback_error:
+                logger.error(f"Fallback to GPT4All also failed: {str(fallback_error)}")
+                return f"Error: Both OpenAI and GPT4All failed. OpenAI error: {str(e)}, GPT4All error: {str(fallback_error)}"
+        
         return f"Error generating answer: {str(e)}"
 
 

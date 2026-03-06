@@ -64,19 +64,19 @@ def ingest_visa_docs(
     Returns:
         Dictionary with ingestion statistics
     """
-    # Default paths
+    # Default paths (absolute for Docker compatibility)
     if repo_docs_path is None:
-        repo_docs_path = "../data-pipeline/data/raw/visa_repo_docs.json"
+        repo_docs_path = Path("/app/data-pipeline/data/raw/visa_repo_docs.json")
+    else:
+        repo_docs_path = Path(repo_docs_path)
     if code_docs_path is None:
-        code_docs_path = "../data-pipeline/data/raw/visa_code_docs.json"
+        code_docs_path = Path("/app/data-pipeline/data/raw/visa_code_docs.json")
+    else:
+        code_docs_path = Path(code_docs_path)
     if issue_qa_path is None:
-        issue_qa_path = "../data-pipeline/data/raw/visa_issue_qa.json"
-    
-    # Make paths absolute
-    backend_dir = Path(__file__).parent
-    repo_docs_path = (backend_dir / repo_docs_path).resolve()
-    code_docs_path = (backend_dir / code_docs_path).resolve()
-    issue_qa_path = (backend_dir / issue_qa_path).resolve()
+        issue_qa_path = Path("/app/data-pipeline/data/raw/visa_issue_qa.json")
+    else:
+        issue_qa_path = Path(issue_qa_path)
     
     logger.info("=" * 70)
     logger.info("VISA CHART COMPONENTS - DOCUMENTATION INGESTION TEST")

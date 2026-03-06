@@ -80,6 +80,8 @@ docker-compose.override.yml
 *.bin
 
 # Data
+data/chroma_db/
+backend/data/
 data/documents/*.md
 data/documents/*.txt
 !data/documents/README.md
