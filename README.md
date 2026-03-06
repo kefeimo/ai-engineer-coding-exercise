@@ -42,7 +42,7 @@ A Retrieval-Augmented Generation (RAG) system built with FastAPI, ChromaDB, and 
 
 #### **Option 1: Docker Compose** ✅ Recommended
 
-No Python or Node.js setup needed. Source code is volume-mounted so edits to `backend/` and `frontend/src/` reflect instantly without rebuilding.
+No Python or Node.js setup needed. Source code is volume-mounted so edits to `backend/app/` and `frontend/src/` (plus config files) reflect instantly without rebuilding.
 
 ```bash
 git clone https://github.com/kefeimo/ai-engineer-coding-exercise.git
