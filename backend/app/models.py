@@ -49,3 +49,4 @@ class HealthResponse(BaseModel):
     """Response model for health check endpoint"""
     status: str = Field(..., description="Service status")
     version: str = Field(..., description="Application version")
+    model: str = Field(..., description="Active LLM provider (e.g. openai, gpt4all)")

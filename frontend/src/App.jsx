@@ -9,6 +9,7 @@ function App() {
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
   const [backendStatus, setBackendStatus] = useState('checking');
+  const [backendModel, setBackendModel] = useState(null); // LLM model from health check
   const [ragSystem, setRagSystem] = useState('vcc'); // 'fastapi' or 'vcc'
   const [isLoadingDocs, setIsLoadingDocs] = useState(false);
   const [docsLoaded, setDocsLoaded] = useState({ fastapi: false, vcc: false });
@@ -25,8 +26,9 @@ function App() {
   useEffect(() => {
     const checkBackend = async () => {
       try {
-        await checkHealth();
+        const health = await checkHealth();
         setBackendStatus('connected');
+        if (health.model) setBackendModel(health.model);
       } catch (err) {
         setBackendStatus('disconnected');
         setError('Backend is not accessible. Make sure the FastAPI server is running on http://localhost:8000');
@@ -333,16 +335,14 @@ function App() {
         {/* Footer */}
         <footer className="text-center mt-12 text-sm text-gray-500">
           <p>
-            Powered by {response?.model ? (
-              response.model === 'openai' ? (
-                <span className="font-medium text-blue-600">OpenAI (GPT-3.5-turbo)</span>
-              ) : response.model === 'gpt4all' ? (
-                <span className="font-medium text-purple-600">GPT4All (Mistral 7B)</span>
-              ) : (
-                <span className="font-medium">{response.model}</span>
-              )
+            Powered by {(response?.model ?? backendModel) === 'openai' ? (
+              <span className="font-medium text-blue-600">OpenAI (GPT-3.5-turbo)</span>
+            ) : (response?.model ?? backendModel) === 'gpt4all' ? (
+              <span className="font-medium text-purple-600">GPT4All (Mistral 7B)</span>
+            ) : (response?.model ?? backendModel) ? (
+              <span className="font-medium">{response?.model ?? backendModel}</span>
             ) : (
-              <span className="font-medium text-gray-600">AI</span>
+              <span className="font-medium text-gray-400">...</span>
             )} • ChromaDB • FastAPI
             {response?.api_version && (
               <span className="ml-2 text-xs text-gray-400">v{response.api_version}</span>

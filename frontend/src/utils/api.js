@@ -14,7 +14,7 @@ const apiClient = axios.create({
 
 /**
  * Check API health status
- * @returns {Promise<Object>} Health status object
+ * @returns {Promise<Object>} Health status object including model and version
  */
 export const checkHealth = async () => {
   try {

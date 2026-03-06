@@ -95,7 +95,8 @@ async def health_check():
     logger.info("Health check requested")
     return HealthResponse(
         status="healthy",
-        version=__version__
+        version=__version__,
+        model=settings.llm_provider
     )
 
 
