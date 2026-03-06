@@ -60,7 +60,7 @@ docker compose -f docker-compose-dev.yml up --build
 - **Backend API:** http://localhost:8000
 - **API Docs:** http://localhost:8000/docs
 
-See **[DOCKER.md](DOCKER.md)** for GPU support, common commands, and troubleshooting.
+See **[DOCKER.md](docs/DOCKER.md)** for GPU support, common commands, and troubleshooting.
 
 #### **Option 2: Local Development**
 
@@ -210,7 +210,7 @@ The frontend tracks your last 10 queries:
 ## 📚 Documentation
 
 **Setup & Deployment:**
-- [DOCKER.md](DOCKER.md) — Docker commands, GPU support, container management
+- [DOCKER.md](docs/DOCKER.md) — Docker commands, GPU support, container management
 - [docs/DOCKER-COMPOSE.md](docs/DOCKER-COMPOSE.md) — dev vs production compose comparison
 - [docs/DOCKER-GPU.md](docs/DOCKER-GPU.md) — GPU acceleration setup
 - [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) — common issues and full reset guide

@@ -126,4 +126,4 @@ docker compose -f docker-compose-dev.yml up --build
 
 ---
 
-*See also: [DOCKER.md](../DOCKER.md) | [DOCKER-GPU.md](DOCKER-GPU.md) | [backend/README.md](../backend/README.md)*
+*See also: [DOCKER.md](DOCKER.md) | [DOCKER-GPU.md](DOCKER-GPU.md) | [backend/README.md](../backend/README.md)*

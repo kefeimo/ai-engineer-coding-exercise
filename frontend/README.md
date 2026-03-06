@@ -212,7 +212,7 @@ export default {
 
 - **[Project README](../README.md)** - Main project documentation
 - **[Backend README](../backend/README.md)** - Backend API documentation
-- **[Docker Guide](../DOCKER.md)** - Docker deployment
+- **[Docker Guide](../docs/DOCKER.md)** - Docker deployment
 - **[Setup Guide](./SETUP.md)** - Detailed setup instructions
 
 ## 🎯 Future Enhancements
