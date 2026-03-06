@@ -31,18 +31,18 @@ Three-stage evaluation system for RAG (Retrieval-Augmented Generation) quality a
 ### Minimal (2 metrics, ~2 minutes)
 
 ```bash
-cd backend/evaluation
+cd evaluation
 source venv-eval/bin/activate
 
 # Stage 1: Query RAG
 python run_ragas_stage1_query.py \
-  --input ../../data/test_queries/baseline_3.json \
-  --output ../../data/results/baseline_3_stage1.json
+  --input ../data/test_queries/baseline_3.json \
+  --output ../data/results/baseline_3_stage1.json
 
 # Stage 2: Evaluate
 python run_ragas_stage2_eval.py \
-  --input ../../data/results/baseline_3_stage1.json \
-  --output ../../data/results/baseline_3_evaluated.json
+  --input ../data/results/baseline_3_stage1.json \
+  --output ../data/results/baseline_3_evaluated.json
 ```
 
 ### Full (5 metrics, ~5 minutes)
@@ -50,18 +50,18 @@ python run_ragas_stage2_eval.py \
 ```bash
 # Stage 1: Query RAG
 python run_ragas_stage1_query.py \
-  --input ../../data/test_queries/baseline_20.json \
-  --output ../../data/results/baseline_20_stage1.json
+  --input ../data/test_queries/baseline_20.json \
+  --output ../data/results/baseline_20_stage1.json
 
 # Stage 1B: Generate references
 python run_ragas_stage1b_generate_references.py \
-  --input ../../data/results/baseline_20_stage1.json \
-  --output ../../data/results/baseline_20_with_refs.json
+  --input ../data/results/baseline_20_stage1.json \
+  --output ../data/results/baseline_20_with_refs.json
 
 # Stage 2: Evaluate with all metrics
 python run_ragas_stage2_eval.py \
-  --input ../../data/results/baseline_20_with_refs.json \
-  --output ../../data/results/baseline_20_evaluated.json
+  --input ../data/results/baseline_20_with_refs.json \
+  --output ../data/results/baseline_20_evaluated.json
 ```
 
 ## 🔧 Setup
@@ -73,7 +73,7 @@ python run_ragas_stage2_eval.py \
 ### Install
 
 ```bash
-cd backend/evaluation
+cd evaluation
 
 # Create virtual environment
 python3 -m venv venv-eval

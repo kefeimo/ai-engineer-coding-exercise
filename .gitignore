@@ -90,5 +90,5 @@ data/results/*.csv
 !data/results/.gitkeep
 
 # Evaluation environment
-backend/evaluation/venv-eval/
-backend/evaluation/venv-ragas-gpt4all/
+evaluation/venv-eval/
+evaluation/venv-ragas-gpt4all/

@@ -645,4 +645,4 @@ This system is ready for production deployment and serves as a strong foundation
 *For technical implementation details, see:*
 - *README.md - Setup and usage guide*
 - *docs/progress-tracking.md - Development timeline*
-- *backend/evaluation/README.md - Evaluation framework documentation*
+- *evaluation/README.md - Evaluation framework documentation*

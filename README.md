@@ -389,19 +389,23 @@ ai-engineer-coding-exercise/
 │   ├── tests/                              # Unit tests (pytest)
 │   │   ├── test_rag.py                     # RAG pipeline tests
 │   │   └── test_vcc_queries.py             # VCC-specific query tests
-│   ├── evaluation/                         # RAGAS evaluation framework
-│   │   ├── run_ragas_baseline.py          # Baseline evaluation script
-│   │   └── README.md                       # Evaluation documentation
 │   ├── chroma_data/                        # ChromaDB persistence (local)
-│   ├── data/                               # Runtime data
-│   │   ├── results/                        # Evaluation results (JSON)
-│   │   └── test_queries/                   # Test datasets
+│   ├── data/                               # Runtime data (moved to root level)
 │   ├── ingest_visa_docs.py                 # VCC document ingestion
 │   ├── ingest_fastapi_docs.py              # FastAPI document ingestion
 │   ├── requirements.txt                    # Python dependencies
 │   ├── pytest.ini                          # Pytest configuration
 │   ├── .env.example                        # Configuration template
 │   └── Dockerfile                          # Production Docker image
+├── evaluation/                              # RAGAS evaluation framework (independent)
+│   ├── run_ragas_baseline.py              # Baseline evaluation script
+│   ├── run_ragas_stage1_query.py          # Stage 1A: Query RAG system
+│   ├── run_ragas_stage1b_generate_references.py  # Stage 1B: Generate references
+│   ├── run_ragas_stage2_eval.py           # Stage 2: RAGAS metrics
+│   ├── requirements-eval.txt              # Evaluation-specific dependencies
+│   ├── venv-eval/                         # Separate virtual environment
+│   ├── archive/                           # Old evaluation scripts
+│   └── README.md                           # Evaluation documentation
 ├── frontend/                                # React application
 │   ├── src/                                # React source code
 │   │   ├── App.jsx                         # Main app with query history
@@ -622,13 +626,13 @@ pytest tests/ -vv -s
 
 ### **RAG System Evaluation**
 
-The evaluation framework uses **RAGAS** metrics to measure RAG system quality. See [`backend/evaluation/README.md`](backend/evaluation/README.md) for full documentation.
+The evaluation framework uses **RAGAS** metrics to measure RAG system quality. See [`evaluation/README.md`](evaluation/README.md) for full documentation.
 
 #### **Quick Evaluation (Query Results Only)**
 ```bash
-cd backend
-source venv/bin/activate
-python evaluation/run_ragas_baseline.py --input data/test_queries/baseline_3.json
+cd evaluation
+source venv-eval/bin/activate  # Use evaluation-specific venv
+python run_ragas_baseline.py --input ../data/test_queries/baseline_3.json
 
 # Expected output:
 # Processing 3 queries...
@@ -646,8 +650,10 @@ This runs queries and saves results without RAGAS metrics (no API key needed).
 export OPENAI_API_KEY="sk-your-api-key-here"
 
 # Run evaluation with RAGAS metrics
-python evaluation/run_ragas_baseline.py \
-  --input data/test_queries/baseline_20.json \
+cd evaluation
+source venv-eval/bin/activate
+python run_ragas_baseline.py \
+  --input ../data/test_queries/baseline_20.json \
   --collection visa_chart_components
 
 # Expected output:
@@ -690,7 +696,7 @@ This provides complete evaluation with quality metrics:
 }
 ```
 
-For more details on RAGAS configuration, local LLM alternatives, and metrics explanation, see [`backend/evaluation/README.md`](backend/evaluation/README.md).
+For more details on RAGAS configuration, local LLM alternatives, and metrics explanation, see [`evaluation/README.md`](evaluation/README.md).
 
 ---
 
@@ -953,7 +959,7 @@ rm -rf frontend/node_modules
 - **Current Status:** RAGAS requires OpenAI API for metrics calculation
 - **Alternative:** Can use GPT4All/local LLM via LangChain wrapper (very slow, 10-30s per query)
 - **Recommendation:** Use OpenAI API for evaluation (fast, reliable, ~$0.04 for 20 queries)
-- **Documentation:** See [`backend/evaluation/README.md`](backend/evaluation/README.md) for details
+- **Documentation:** See [`evaluation/README.md`](evaluation/README.md) for details
 
 ---
 
