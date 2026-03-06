@@ -169,10 +169,15 @@ class DocumentLoader:
 class ChromaDBIngestion:
     """Handle ChromaDB ingestion and vector storage"""
     
-    def __init__(self):
-        """Initialize ChromaDB client and collection"""
+    def __init__(self, collection_name: str = None):
+        """Initialize ChromaDB client and collection
+        
+        Args:
+            collection_name: Override the target collection. Defaults to
+                             CHROMA_COLLECTION_NAME env var if not specified.
+        """
         self.persist_directory = settings.chroma_persist_directory
-        self.collection_name = settings.chroma_collection_name
+        self.collection_name = collection_name or settings.chroma_collection_name
         self.embedding_model_name = settings.embedding_model
         
         # Create persist directory if it doesn't exist
@@ -281,7 +286,10 @@ class ChromaDBIngestion:
 
 def ingest_documents(document_path: str, force_reingest: bool = False) -> Dict[str, Any]:
     """
-    Main ingestion function: Load, chunk, and store documents
+    Main ingestion function: Load, chunk, and store documents into FastAPI docs collection.
+
+    Always targets the 'fastapi_docs' collection regardless of CHROMA_COLLECTION_NAME env var.
+    (CHROMA_COLLECTION_NAME is only used as a query fallback default, not for ingestion routing.)
     
     Args:
         document_path: Path to documents directory
@@ -291,9 +299,9 @@ def ingest_documents(document_path: str, force_reingest: bool = False) -> Dict[s
         Dictionary with ingestion statistics
     """
     try:
-        # Initialize loader and ingestion
+        # Initialize loader and ingestion — FastAPI docs always go into 'fastapi_docs'
         loader = DocumentLoader()
-        ingestion = ChromaDBIngestion()
+        ingestion = ChromaDBIngestion(collection_name="fastapi_docs")
         
         # Load documents
         documents = loader.load_documents(document_path)

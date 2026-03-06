@@ -82,13 +82,13 @@ class HybridRetriever:
         Initialize hybrid retriever
         
         Args:
-            collection_name: ChromaDB collection name (defaults to settings) - NOT USED, kept for API compatibility
+            collection_name: ChromaDB collection name (defaults to settings)
             auto_classify: Automatically classify queries and adjust weights
         """
         self.auto_classify = auto_classify
         
-        # Initialize semantic retriever (Retriever doesn't take collection_name)
-        self.semantic_retriever = Retriever()
+        # Initialize semantic retriever with the specified collection
+        self.semantic_retriever = Retriever(collection_name=collection_name)
         
         # Initialize BM25 index
         self.bm25_index = None

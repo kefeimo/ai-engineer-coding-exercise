@@ -10,6 +10,7 @@ class QueryRequest(BaseModel):
     """Request model for RAG query endpoint"""
     query: str = Field(..., description="User query", min_length=1, max_length=1000)
     top_k: Optional[int] = Field(default=5, description="Number of results to retrieve", ge=1, le=20)
+    collection: Optional[str] = Field(default=None, description="ChromaDB collection to query (e.g. 'fastapi_docs', 'vcc_docs'). Defaults to CHROMA_COLLECTION_NAME env var.")
 
 
 class Source(BaseModel):

@@ -370,6 +370,9 @@ services:
     ports: ["8000:8000"]
     environment:
       - LLM_PROVIDER=openai
+      # Query fallback default — does NOT control which collection data is ingested into.
+      # Ingestion is hardcoded: FastAPI docs → fastapi_docs, VCC docs → vcc_docs.
+      # Frontend always sends 'collection' per-request via the toggle.
       - CHROMA_COLLECTION_NAME=vcc_docs
     volumes:
       - ./data:/app/data               # ChromaDB persistence

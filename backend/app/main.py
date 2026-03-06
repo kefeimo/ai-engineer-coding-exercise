@@ -66,20 +66,24 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Initialize hybrid retriever (global instance to cache BM25 index)
-hybrid_retriever = None
+# Known collections — extend this list if you add more
+KNOWN_COLLECTIONS = ["fastapi_docs", "vcc_docs"]
+
+# Per-collection HybridRetriever cache (building BM25 index is expensive)
+hybrid_retrievers: dict = {}
 
 @app.on_event("startup")
 async def startup_event():
-    """Initialize hybrid retriever on startup"""
-    global hybrid_retriever
-    logger.info("Initializing hybrid retriever...")
-    try:
-        hybrid_retriever = HybridRetriever(auto_classify=True)
-        logger.info("✓ Hybrid retriever initialized successfully")
-    except Exception as e:
-        logger.error(f"Failed to initialize hybrid retriever: {e}")
-        logger.warning("Falling back to semantic-only retrieval")
+    """Initialize hybrid retrievers for all known collections on startup"""
+    global hybrid_retrievers
+    logger.info("Initializing hybrid retrievers for all collections...")
+    for cname in KNOWN_COLLECTIONS:
+        try:
+            hr = HybridRetriever(collection_name=cname, auto_classify=True)
+            hybrid_retrievers[cname] = hr
+            logger.info(f"✓ Hybrid retriever ready: {cname}")
+        except Exception as e:
+            logger.warning(f"Could not init hybrid retriever for '{cname}': {e} (collection may not exist yet)")
 
 
 @app.get("/health", response_model=HealthResponse, tags=["Health"])
@@ -110,19 +114,24 @@ async def query_rag(request: QueryRequest):
     start_time = time.time()
     
     logger.info(f"Query received: {request.query}")
-    
+
+    # Resolve collection: request override → env default
+    collection = request.collection or settings.chroma_collection_name
+    logger.info(f"Using collection: {collection}")
+
     try:
         # Strategy: Try semantic-only first (handles most queries well)
         # If confidence is low, try hybrid search (handles edge cases like exact API names)
-        retriever = Retriever()
+        retriever = Retriever(collection_name=collection)
         logger.info("Trying semantic-only search first")
         retrieval_result = retriever.retrieve(request.query, top_k=request.top_k)
-        
-        # If confidence is low and hybrid is available, try hybrid as fallback
+
+        # If confidence is low and a hybrid retriever exists for this collection, try it
+        hybrid_retriever = hybrid_retrievers.get(collection)
         if retrieval_result.get("confidence", 0.0) < 0.65 and hybrid_retriever is not None:
             logger.info(f"Semantic confidence {retrieval_result['confidence']:.3f} < 0.65, trying hybrid search")
             hybrid_result = hybrid_retriever.search(request.query, top_k=request.top_k)
-            
+
             # Use whichever has higher confidence
             if hybrid_result.get("confidence", 0.0) > retrieval_result.get("confidence", 0.0):
                 logger.info(f"Using hybrid search (conf={hybrid_result['confidence']:.3f} > semantic={retrieval_result['confidence']:.3f})")
@@ -132,7 +141,7 @@ async def query_rag(request: QueryRequest):
         elif retrieval_result.get("confidence", 0.0) >= 0.65:
             logger.info(f"Semantic confidence {retrieval_result['confidence']:.3f} >= 0.65, using semantic-only")
         else:
-            logger.info("Hybrid retriever not available, using semantic-only result")
+            logger.info("Hybrid retriever not available for this collection, using semantic-only result")
         
         # Check for errors
         if "error" in retrieval_result:

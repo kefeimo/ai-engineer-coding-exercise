@@ -128,10 +128,11 @@ def ingest_visa_docs(
     for key, value in sample_doc['metadata'].items():
         logger.info(f"   {key}: {value}")
     
-    # Initialize components
+    # Initialize components — VCC docs always go into 'vcc_docs' collection
+    # regardless of CHROMA_COLLECTION_NAME env var (which is for FastAPI docs)
     logger.info("\n🔧 Initializing ingestion pipeline...")
     loader = DocumentLoader()
-    ingestion = ChromaDBIngestion()
+    ingestion = ChromaDBIngestion(collection_name="vcc_docs")
     
     # Process documents into chunks
     logger.info(f"\n✂️  Chunking documents (size={loader.chunk_size}, overlap={loader.chunk_overlap})...")

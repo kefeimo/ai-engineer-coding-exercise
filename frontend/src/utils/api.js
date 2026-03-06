@@ -37,13 +37,13 @@ export const checkHealth = async () => {
  * Submit a query to the RAG system
  * @param {string} query - The question to ask
  * @param {number} topK - Number of top results to retrieve (default: 3)
+ * @param {string|null} collection - ChromaDB collection name ('fastapi_docs' or 'vcc_docs')
  * @returns {Promise<Object>} Query response with answer and sources
  */
-export const queryRAG = async (query, topK = 3) => {
-  const response = await apiClient.post('/api/v1/query', {
-    query,
-    top_k: topK,
-  });
+export const queryRAG = async (query, topK = 3, collection = null) => {
+  const body = { query, top_k: topK };
+  if (collection) body.collection = collection;
+  const response = await apiClient.post('/api/v1/query', body);
   return response.data;
 };
 

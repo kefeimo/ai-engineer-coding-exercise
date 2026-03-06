@@ -38,23 +38,23 @@ function App() {
     setError(null);
     setResponse(null);
 
+    // Map toggle to collection name
+    const collection = ragSystem === 'fastapi' ? 'fastapi_docs' : 'vcc_docs';
+
     try {
-      // Check cache first
-      const cacheKey = `${query.trim().toLowerCase()}`;
+      // Cache key includes collection so FastAPI and VCC results don't collide
+      const cacheKey = `${collection}:${query.trim().toLowerCase()}`;
       if (queryCache[cacheKey]) {
-        console.log('✅ Cache HIT:', query);
+        console.log('✅ Cache HIT:', query, `(${collection})`);
         setResponse(queryCache[cacheKey]);
         setBackendStatus('connected');
         setIsLoading(false);
         return; // Return cached result immediately
       }
 
-      console.log('❌ Cache MISS:', query);
+      console.log('❌ Cache MISS:', query, `(${collection})`);
       
-      // TODO: Pass ragSystem to backend to filter by document source
-      // For now, backend returns all documents (FastAPI + VCC mixed)
-      // Future: Add `rag_system` parameter to API call
-      const data = await queryRAG(query);
+      const data = await queryRAG(query, 3, collection);
       setResponse(data);
       setBackendStatus('connected');
       
@@ -71,6 +71,7 @@ function App() {
           timestamp: new Date().toISOString(),
           confidence: data.confidence,
           ragSystem: ragSystem,
+          collection,
           responseTime: data.response_time
         }, ...prev];
         return newHistory.slice(0, 10); // Keep only last 10

@@ -16,10 +16,10 @@ logger = logging.getLogger(__name__)
 class Retriever:
     """Retrieve relevant documents from ChromaDB"""
     
-    def __init__(self):
+    def __init__(self, collection_name: str = None):
         """Initialize retriever with ChromaDB connection and embedding model"""
         self.persist_directory = settings.chroma_persist_directory
-        self.collection_name = settings.chroma_collection_name
+        self.collection_name = collection_name or settings.chroma_collection_name
         self.embedding_model_name = settings.embedding_model
         self.top_k = settings.top_k_results
         self.confidence_threshold = settings.confidence_threshold
