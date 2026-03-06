@@ -13,6 +13,7 @@ function App() {
   const [isLoadingDocs, setIsLoadingDocs] = useState(false);
   const [docsLoaded, setDocsLoaded] = useState({ fastapi: false, vcc: false });
   const [queryHistory, setQueryHistory] = useState([]); // Track query history
+  const [queryCache, setQueryCache] = useState({}); // Cache query results {query: responseData}
 
   // Check backend health on mount
   useEffect(() => {
@@ -28,41 +29,9 @@ function App() {
     checkBackend();
   }, []);
 
-  // Auto-load documents when RAG system changes
-  useEffect(() => {
-    const loadDocumentsForSystem = async () => {
-      // Skip if already loaded or backend not connected
-      if (backendStatus !== 'connected') return;
-      if (docsLoaded[ragSystem]) return;
-
-      setIsLoadingDocs(true);
-      try {
-        console.log(`Loading ${ragSystem} documents...`);
-        
-        if (ragSystem === 'vcc') {
-          // Load Visa Chart Components docs
-          const result = await ingestVisaDocs(false); // Don't force reingest
-          console.log('VCC docs loaded:', result);
-        } else {
-          // Load FastAPI docs
-          const result = await ingestDocuments('docs', false); // Don't force reingest
-          console.log('FastAPI docs loaded:', result);
-        }
-        
-        // Mark as loaded
-        setDocsLoaded(prev => ({ ...prev, [ragSystem]: true }));
-      } catch (err) {
-        console.error(`Error loading ${ragSystem} documents:`, err);
-        // Don't show error to user - documents might already be loaded
-        // Just mark as loaded to avoid repeated attempts
-        setDocsLoaded(prev => ({ ...prev, [ragSystem]: true }));
-      } finally {
-        setIsLoadingDocs(false);
-      }
-    };
-
-    loadDocumentsForSystem();
-  }, [ragSystem, backendStatus, docsLoaded]);
+  // Note: Auto-loading documents is disabled. Documents should be pre-ingested.
+  // The VCC documents are already loaded in ChromaDB from backend initialization.
+  // If you need to load documents, use the manual ingestion scripts.
 
   const handleQuery = async (query) => {
     setIsLoading(true);
@@ -70,12 +39,30 @@ function App() {
     setResponse(null);
 
     try {
+      // Check cache first
+      const cacheKey = `${query.trim().toLowerCase()}`;
+      if (queryCache[cacheKey]) {
+        console.log('✅ Cache HIT:', query);
+        setResponse(queryCache[cacheKey]);
+        setBackendStatus('connected');
+        setIsLoading(false);
+        return; // Return cached result immediately
+      }
+
+      console.log('❌ Cache MISS:', query);
+      
       // TODO: Pass ragSystem to backend to filter by document source
       // For now, backend returns all documents (FastAPI + VCC mixed)
       // Future: Add `rag_system` parameter to API call
       const data = await queryRAG(query);
       setResponse(data);
       setBackendStatus('connected');
+      
+      // Cache the result
+      setQueryCache(prev => ({
+        ...prev,
+        [cacheKey]: data
+      }));
       
       // Add to query history (keep last 10)
       setQueryHistory(prev => {
@@ -281,7 +268,11 @@ function App() {
               </button>
             </div>
             <div className="space-y-2 max-h-60 overflow-y-auto">
-              {queryHistory.map((item, index) => (
+              {queryHistory.map((item, index) => {
+                const cacheKey = `${item.query.trim().toLowerCase()}`;
+                const isCached = queryCache[cacheKey] !== undefined;
+                
+                return (
                 <div
                   key={index}
                   onClick={() => handleQuery(item.query)}
@@ -292,6 +283,16 @@ function App() {
                       {item.query}
                     </p>
                     <div className="flex items-center gap-1 flex-shrink-0">
+                      {isCached && (
+                        <span className="text-xs px-2 py-0.5 rounded-full bg-purple-100 text-purple-700 flex items-center gap-1" title="Cached - instant response">
+                          <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M3 12v3c0 1.657 3.134 3 7 3s7-1.343 7-3v-3c0 1.657-3.134 3-7 3s-7-1.343-7-3z" />
+                            <path d="M3 7v3c0 1.657 3.134 3 7 3s7-1.343 7-3V7c0 1.657-3.134 3-7 3S3 8.657 3 7z" />
+                            <path d="M17 5c0 1.657-3.134 3-7 3S3 6.657 3 5s3.134-3 7-3 7 1.343 7 3z" />
+                          </svg>
+                          Cached
+                        </span>
+                      )}
                       <span className={`text-xs px-2 py-0.5 rounded-full ${
                         item.ragSystem === 'vcc' 
                           ? 'bg-green-100 text-green-700' 
@@ -322,7 +323,8 @@ function App() {
                     </span>
                   </div>
                 </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         )}
