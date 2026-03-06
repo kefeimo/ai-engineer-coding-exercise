@@ -2,7 +2,7 @@
 
 This guide covers running the FastAPI RAG system using Docker Compose.
 
-> 📝 **Note:** For active development with hot reloading, see [DOCKER-COMPOSE.md](DOCKER-COMPOSE.md) for the difference between production and development modes.
+> 📝 **Note:** For active development with hot reloading, see [DOCKER-COMPOSE.md](docs/DOCKER-COMPOSE.md) for the difference between production and development modes.
 
 ## Prerequisites
 

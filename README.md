@@ -350,8 +350,9 @@ The frontend tracks your last 10 queries:
 
 **Evaluation & Improvements:**
 - **[TODO-PROMPT-IMPROVEMENT-NOTES](docs/TODO-PROMPT-IMPROVEMENT-NOTES.md)** - Typo/acronym handling analysis
-- **[Evaluation Report](docs/EVALUATION-REPORT.md)** - RAGAS metrics and improvements *(Coming Soon)*
-- **[Architecture](docs/ARCHITECTURE.md)** - System design and component descriptions *(Coming Soon)*
+- **[Evaluation Report](docs/EVALUATION-REPORT.md)** - RAGAS metrics and improvements ✅
+- **[Architecture](docs/ARCHITECTURE.md)** - System design and component descriptions ✅
+- **[Docker GPU Setup](docs/DOCKER-GPU.md)** - GPU acceleration in Docker containers ✅
 - **[Future Improvements](docs/FUTURE-IMPROVEMENTS.md)** - Production scaling plans *(Coming Soon)*
 
 **Additional Resources:**
