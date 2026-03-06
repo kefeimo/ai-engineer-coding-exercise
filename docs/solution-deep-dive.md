@@ -165,7 +165,7 @@ Do NOT infer or add details not present in the context."""
 
 ## 2. Hybrid Search: Case Study
 
-> **Full document:** [`HYBRID-SEARCH-CASE-STUDY.md`](./HYBRID-SEARCH-CASE-STUDY.md)
+*For the full implementation walkthrough, see [HYBRID-SEARCH-CASE-STUDY.md](./HYBRID-SEARCH-CASE-STUDY.md).*
 
 ### 2.1 The Problem
 
@@ -245,7 +245,7 @@ def get_search_weights(query_type):
 
 ## 3. Full RAGAS Evaluation
 
-> **Full document:** [`EVALUATION-REPORT.md`](./EVALUATION-REPORT.md)
+*For complete metric tables, per-query breakdown, and cost analysis, see [EVALUATION-REPORT.md](./EVALUATION-REPORT.md).*
 
 ### 3.1 Evaluation Framework
 
@@ -338,7 +338,7 @@ ROI: 97% faster · 36% higher quality · ~$60/month at 1,000 queries/day
 
 ## 4. Engineering Process & Lessons Learned
 
-> **Full document:** [`lesson-learned.md`](./lesson-learned.md)
+*For the full retrospective including dev timeline and transferable strategies, see [lesson-learned.md](./lesson-learned.md).*
 
 ### 4.1 Evaluation-Driven Development
 

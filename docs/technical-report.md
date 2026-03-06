@@ -40,7 +40,7 @@ Query → Embedding (all-MiniLM-L6-v2, 384-dim, GPU-accelerated)
 | Confidence threshold | 0.65 (empirically tuned) | Rejects unanswerable queries rather than hallucinating |
 | Hybrid search | BM25 + semantic | Catches exact-name lookups (API method names, props) that pure embedding misses |
 
-> 📖 Full architecture diagram and module breakdown: [ARCHITECTURE.md](ARCHITECTURE.md)
+*For the full architecture diagram and module breakdown, see [ARCHITECTURE.md](ARCHITECTURE.md).*
 
 ---
 
@@ -69,7 +69,7 @@ Answer ONLY from the context above."""
 }
 ```
 
-> 📖 Details and iteration history: [PROMPT-IMPROVEMENT.md](PROMPT-IMPROVEMENT.md)
+*For full details and iteration history, see [PROMPT-IMPROVEMENT.md](PROMPT-IMPROVEMENT.md).*
 
 ### Notable: Hybrid Search for API Queries
 
@@ -81,7 +81,7 @@ Semantic-only confidence: 0.61 (below threshold → would reject)
 Hybrid confidence:         0.78 (above threshold → answered correctly)
 ```
 
-> 📖 Case study and benchmarks: [HYBRID-SEARCH-CASE-STUDY.md](HYBRID-SEARCH-CASE-STUDY.md)
+*For the full case study and benchmarks, see [HYBRID-SEARCH-CASE-STUDY.md](HYBRID-SEARCH-CASE-STUDY.md).*
 
 ### Production-Readiness Features
 
@@ -91,7 +91,7 @@ Hybrid confidence:         0.78 (above threshold → answered correctly)
 - **Docker Compose stack** — single `docker compose up` brings up backend + frontend; GPU passthrough configured for NVIDIA runtime
 - **RAGAS evaluation pipeline** — three-stage automated evaluation (query → generate ground truth → score) reproducible via CLI scripts
 
-> 📖 UI cache design: [UI-QUERY-CACHE.md](UI-QUERY-CACHE.md) | Docker setup: [DOCKER.md](DOCKER.md)
+*For UI cache design details, see [UI-QUERY-CACHE.md](UI-QUERY-CACHE.md). For Docker setup, see [DOCKER.md](DOCKER.md).*
 
 ### Code Quality & Organization
 
@@ -106,7 +106,7 @@ Test coverage: **38 pytest tests** covering the core pipeline, with a dedicated 
 - **2-collection routing** — The UI exposes a toggle between `fastapi_docs` and `vcc_docs` collections, and the `collection` field in the API allows per-request targeting. This patterns toward a multi-tenant knowledge base rather than a single-purpose chatbot.
 - **Graceful degradation** — If retrieval confidence is below threshold, the system returns a structured "unable to answer" with a hint to rephrase, rather than silently hallucinating. This is a deliberate product decision, not just a technical guard.
 
-> 📖 Module layout: [ARCHITECTURE.md](ARCHITECTURE.md) | Data pipeline: [data-pipeline/README.md](../data-pipeline/README.md) | Tech stack rationale: [TECH-STACK-RATIONALE.md](TECH-STACK-RATIONALE.md)
+*For module layout, see [ARCHITECTURE.md](ARCHITECTURE.md). For the data pipeline, see [data-pipeline/README.md](../data-pipeline/README.md). For tech stack rationale, see [TECH-STACK-RATIONALE.md](TECH-STACK-RATIONALE.md).*
 
 ---
 
@@ -143,7 +143,7 @@ GPT-3.5-turbo:     $0.002/query, 2.3s, quality 0.87
 At 1000 queries/day → ~$60/month for production-grade answers
 ```
 
-> 📖 Full metric tables, per-query breakdown, and iteration log: [EVALUATION-REPORT.md](EVALUATION-REPORT.md)
+*For full metric tables, per-query breakdown, and iteration log, see [EVALUATION-REPORT.md](EVALUATION-REPORT.md).*
 
 ---
 
@@ -159,4 +159,4 @@ At 1000 queries/day → ~$60/month for production-grade answers
 
 5. **Evaluation pipeline is a force multiplier** — The 3-stage RAGAS CLI made it fast to quantify each change rather than relying on manual spot-checks.
 
-> 📖 Broader reflections: [lesson-learned.md](lesson-learned.md)
+*For broader reflections on the development process, see [lesson-learned.md](lesson-learned.md).*
