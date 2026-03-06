@@ -6,7 +6,7 @@
 
 ## 🎯 Project Overview
 
-A production-ready Retrieval-Augmented Generation (RAG) system built with FastAPI, ChromaDB, and OpenAI GPT-3.5-turbo, demonstrating enterprise-grade GenAI engineering with comprehensive evaluation framework and domain-aware prompt engineering.
+A Retrieval-Augmented Generation (RAG) system built with FastAPI, ChromaDB, and OpenAI GPT-3.5-turbo, featuring a comprehensive evaluation framework and domain-aware prompt engineering.
 
 **Dataset:** Visa Chart Components (VCC) technical documentation (161 markdown files, 2.14MB)
 
@@ -17,7 +17,7 @@ A production-ready Retrieval-Augmented Generation (RAG) system built with FastAP
 - ✅ **OpenAI GPT-3.5-turbo** with LangChain prompt templates and domain awareness
 - ✅ **React Frontend** (Vite + Tailwind CSS) with query history and confidence indicators
 - ✅ **LangChain** orchestration for RAG pipeline with domain-specific prompts
-- ✅ **RAGAS Evaluation** framework with 3 metrics (faithfulness, answer relevancy, context precision)
+- ✅ **RAGAS Evaluation** framework with up to 6 metrics (faithfulness, answer relevancy, context precision, context recall, context entity recall, answer correctness)
 - ✅ **Production Differentiation:**
   - Source attribution in all responses with document metadata
   - "Unknown" handling for out-of-scope queries (confidence threshold <0.65)
@@ -300,7 +300,7 @@ pytest tests/ -v
 
 ### RAGAS Evaluation
 
-Measures RAG quality across three metrics: **faithfulness**, **answer relevancy**, and **context precision**.
+Measures RAG quality across up to 6 metrics: **faithfulness**, **answer relevancy**, **context precision**, **context recall**, **context entity recall**, and **answer correctness** (last 4 require reference answers).
 
 ```bash
 # Step 1: Query the RAG system
