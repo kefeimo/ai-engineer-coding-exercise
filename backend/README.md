@@ -39,10 +39,23 @@ curl -X POST http://localhost:8000/api/v1/ingest \
 ```
 
 ### 2. Query the System
+
+The `collection` field selects which ChromaDB collection to search. If omitted, it defaults to the `CHROMA_COLLECTION_NAME` env var.
+
+Available collections:
+- `fastapi_docs` — FastAPI framework documentation
+- `vcc_docs` — Visa Chart Components documentation
+
 ```bash
+# Query FastAPI docs
 curl -X POST http://localhost:8000/api/v1/query \
   -H "Content-Type: application/json" \
-  -d '{"query": "What is FastAPI?", "top_k": 3}'
+  -d '{"query": "What is FastAPI?", "top_k": 3, "collection": "fastapi_docs"}'
+
+# Query VCC docs
+curl -X POST http://localhost:8000/api/v1/query \
+  -H "Content-Type: application/json" \
+  -d '{"query": "How do I use bar charts?", "top_k": 3, "collection": "vcc_docs"}'
 ```
 
 **Response:**
@@ -178,10 +191,10 @@ pytest -v
 # Health check
 curl http://localhost:8000/health
 
-# Query endpoint
+# Query endpoint (collection defaults to CHROMA_COLLECTION_NAME if omitted)
 curl -X POST http://localhost:8000/api/v1/query \
   -H "Content-Type: application/json" \
-  -d '{"query": "What is FastAPI?"}'
+  -d '{"query": "What is FastAPI?", "collection": "fastapi_docs"}'
 
 # Ingest documents
 curl -X POST http://localhost:8000/api/v1/ingest \

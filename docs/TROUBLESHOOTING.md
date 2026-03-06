@@ -72,6 +72,22 @@ docker compose -f docker-compose-dev.yml up --build --no-cache
 
 ---
 
+### 9. GPT4All GPU Not Working (Falls Back to CPU)
+**Symptom:** Logs show `GPU initialization failed ... Could not find any implementations for backend: cuda` → ~130s responses
+
+**Root cause:** GPT4All 2.8.2 (latest on PyPI as of 2025) bundles a CUDA plugin (`libllamamodel-mainline-cuda.so`) compiled against `libcudart.so.11.0`, but the container only has `libcudart.so.12`.
+
+**Workaround (symlink):** Add to `backend/Dockerfile` before the pip install step:
+```dockerfile
+RUN pip install gpt4all && \
+    ln -sf $(python -c "import nvidia.cuda_runtime; import os; print(os.path.dirname(nvidia.cuda_runtime.__file__))")/lib/libcudart.so.12 \
+    $(python -c "import nvidia.cuda_runtime; import os; print(os.path.dirname(nvidia.cuda_runtime.__file__))")/lib/libcudart.so.11.0
+```
+
+**Recommended:** Use `LLM_PROVIDER=openai` in `backend/.env` for Docker deployments — ~2s vs ~130s response time. GPT4All is best suited for fully offline/local environments where OpenAI access is unavailable.
+
+---
+
 ### 7. Low Confidence Scores (<0.65)
 - Re-ingest documents if collection is empty or stale
 - Rephrase queries: `"What is VCC?"` → `"What is Visa Chart Components?"`
