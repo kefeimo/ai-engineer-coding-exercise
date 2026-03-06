@@ -56,6 +56,7 @@ function App() {
         console.log('✅ Cache HIT:', query, `(${collection})`);
         setResponse(queryCache[cacheKey]);
         setBackendStatus('connected');
+        if (suggestRef.current) suggestRef.current(''); // clear textarea
         setIsLoading(false);
         return; // Return cached result immediately
       }
@@ -65,6 +66,7 @@ function App() {
       const data = await queryRAG(query, 3, collection);
       setResponse(data);
       setBackendStatus('connected');
+      if (suggestRef.current) suggestRef.current(''); // clear textarea
       
       // Cache the result
       setQueryCache(prev => ({
