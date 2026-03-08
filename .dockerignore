@@ -1,0 +1,44 @@
+# .dockerignore for Dockerfile.render (build context = project root)
+# Goal: keep the build context lean while including the things we need:
+#   backend/          — app code
+#   data/chroma_db/   — baked ChromaDB snapshot
+#   data-pipeline/data/raw/  — VCC raw JSONs
+
+# --- Version control ---
+.git
+.gitignore
+
+# --- Frontend (not part of backend image) ---
+frontend/
+
+# --- Python caches ---
+**/__pycache__
+**/*.pyc
+**/*.pyo
+**/*.pyd
+**/.pytest_cache
+**/*.egg-info
+**/.eggs
+
+# --- Virtual envs ---
+backend/venv*/
+backend/.env*
+!backend/.env.example
+
+# --- Large data we don't need in the image ---
+data/documents/
+data/results/
+data/test_queries/
+
+# --- Evaluation module (not needed at runtime) ---
+evaluation/
+
+# --- Docs (not needed in image) ---
+docs/
+
+# --- Node modules ---
+**/node_modules/
+
+# --- Misc ---
+*.md
+docker-compose*.yml
