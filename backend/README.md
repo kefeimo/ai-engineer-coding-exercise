@@ -260,17 +260,9 @@ import requests
 # Query
 response = requests.post(
     "http://localhost:8000/api/v1/query",
-## 🧪 Testing
-
-```bash
-# Health check
-curl http://localhost:8000/health
-
-# Python test script
-python test_rag.py
-
-# Unit tests
-pytest tests/
+    json={"query": "What is FastAPI?", "collection": "fastapi_docs"}
+)
+print(response.json())
 ```
 
 ## 🔧 Development
