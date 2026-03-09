@@ -6,6 +6,7 @@ RAG System API with health check and query endpoints
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from contextlib import asynccontextmanager
 import logging
 
 from app.config import settings
@@ -49,13 +50,36 @@ def get_help_text_for_collection() -> str:
         return "Please try rephrasing your question with more specific terms."
 
 
+# Known collections — extend this list if you add more
+KNOWN_COLLECTIONS = ["fastapi_docs", "vcc_docs"]
+
+# Per-collection HybridRetriever cache (building BM25 index is expensive)
+hybrid_retrievers: dict = {}
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Initialize hybrid retrievers for all known collections on startup"""
+    logger.info("Initializing hybrid retrievers for all collections...")
+    for cname in KNOWN_COLLECTIONS:
+        try:
+            hr = HybridRetriever(collection_name=cname, auto_classify=True)
+            hybrid_retrievers[cname] = hr
+            logger.info(f"✓ Hybrid retriever ready: {cname}")
+        except Exception as e:
+            logger.warning(f"Could not init hybrid retriever for '{cname}': {e} (collection may not exist yet)")
+    yield
+    # shutdown — nothing to release currently
+
+
 # Create FastAPI app
 app = FastAPI(
     title="RAG System API",
     description="Retrieval-Augmented Generation system for FastAPI documentation",
     version=__version__,
     docs_url="/docs",
-    redoc_url="/redoc"
+    redoc_url="/redoc",
+    lifespan=lifespan,
 )
 
 # Add CORS middleware
@@ -66,25 +90,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-# Known collections — extend this list if you add more
-KNOWN_COLLECTIONS = ["fastapi_docs", "vcc_docs"]
-
-# Per-collection HybridRetriever cache (building BM25 index is expensive)
-hybrid_retrievers: dict = {}
-
-@app.on_event("startup")
-async def startup_event():
-    """Initialize hybrid retrievers for all known collections on startup"""
-    global hybrid_retrievers
-    logger.info("Initializing hybrid retrievers for all collections...")
-    for cname in KNOWN_COLLECTIONS:
-        try:
-            hr = HybridRetriever(collection_name=cname, auto_classify=True)
-            hybrid_retrievers[cname] = hr
-            logger.info(f"✓ Hybrid retriever ready: {cname}")
-        except Exception as e:
-            logger.warning(f"Could not init hybrid retriever for '{cname}': {e} (collection may not exist yet)")
 
 
 @app.get("/health", response_model=HealthResponse, tags=["Health"])

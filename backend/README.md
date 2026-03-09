@@ -205,7 +205,6 @@ backend/
   "documents_processed": 12,
   "chunks_created": 245,
   "time_elapsed": "3.2s"
-}
 ```
 
 ### **Interactive API Documentation**

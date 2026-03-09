@@ -94,3 +94,5 @@ data/results/*.csv
 # Evaluation environment
 evaluation/venv-eval/
 evaluation/venv-ragas-gpt4all/
+
+backend/venv-slim
