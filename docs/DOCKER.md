@@ -188,7 +188,7 @@ environment:
   
   # RAG
   - CHUNK_SIZE=500
-  - CONFIDENCE_THRESHOLD=0.65
+  - RELEVANCE_THRESHOLD=0.65
   
   # CORS
   - CORS_ORIGINS=http://localhost:5173

@@ -65,7 +65,7 @@ docker push mynameismo/rag-backend:latest
 | `CHROMA_COLLECTION_NAME` | `vcc_docs` |
 | `CORS_ORIGINS` | `*` |
 | `LOG_LEVEL` | `INFO` |
-| `CONFIDENCE_THRESHOLD` | `0.65` |
+| `RELEVANCE_THRESHOLD` | `0.65` |
 | `TOP_K_RESULTS` | `5` |
 | `CHUNK_SIZE` | `500` |
 | `CHUNK_OVERLAP` | `50` |
