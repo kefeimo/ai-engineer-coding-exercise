@@ -25,7 +25,7 @@ def test_settings():
         chunk_size=200,  # Smaller for testing
         chunk_overlap=20,
         top_k_results=3,
-        confidence_threshold=0.65,
+        relevance_threshold=0.65,
         log_level="DEBUG"
     )
 

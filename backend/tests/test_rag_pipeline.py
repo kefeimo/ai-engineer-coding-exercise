@@ -125,16 +125,16 @@ def test_source_attribution_unique_sources():
 
 
 @pytest.mark.unit
-def test_confidence_threshold_configuration():
+def test_relevance_threshold_configuration():
     """Test that confidence threshold is configurable"""
     from app.config import settings
     
     # Default threshold should be defined
-    assert hasattr(settings, 'confidence_threshold')
-    assert 0.0 <= settings.confidence_threshold <= 1.0
+    assert hasattr(settings, 'relevance_threshold')
+    assert 0.0 <= settings.relevance_threshold <= 1.0
     
     # Default value should be reasonable (typically 0.65-0.75)
-    assert 0.5 <= settings.confidence_threshold <= 0.8
+    assert 0.5 <= settings.relevance_threshold <= 0.8
 
 
 @pytest.mark.unit
