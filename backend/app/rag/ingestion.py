@@ -13,7 +13,7 @@ import time
 
 from app.config import settings
 from app.rag.embeddings import EmbeddingProvider
-from app.rag.utils import get_chroma_client
+from app.rag.utils import get_chroma_client, HNSW_SPACE
 
 logger = logging.getLogger(__name__)
 
@@ -264,7 +264,9 @@ class ChromaDBIngestion:
         
         collection = self.client.get_or_create_collection(
             name=self.collection_name,
-            metadata={"hnsw:space": "cosine"}  # Use cosine similarity
+            # hnsw:space is index config smuggled through the metadata param (ChromaDB API quirk).
+            # Value must match HNSW_SPACE in utils.py — retrieval.py's distance formula depends on it.
+            metadata={"hnsw:space": HNSW_SPACE}
         )
         
         logger.info(f"Collection ready: {self.collection_name} (count: {collection.count()})")

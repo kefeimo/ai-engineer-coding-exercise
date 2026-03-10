@@ -7,7 +7,7 @@ import logging
 from typing import List, Dict, Any, Tuple
 from app.config import settings
 from app.rag.embeddings import EmbeddingProvider
-from app.rag.utils import get_chroma_client
+from app.rag.utils import get_chroma_client, HNSW_SPACE
 
 logger = logging.getLogger(__name__)
 
@@ -102,8 +102,13 @@ class Retriever:
                     results['metadatas'][0],
                     results['distances'][0]
                 )):
-                    # Convert distance to similarity score (cosine: 0=identical, 2=opposite)
-                    # relevance_score = 1 - (distance / 2)
+                    # Convert distance → relevance score.
+                    # Formula is only valid for cosine space: distance ∈ [0, 2], relevance ∈ [0, 1].
+                    # Guard against silent breakage if HNSW_SPACE is ever changed.
+                    assert HNSW_SPACE == "cosine", (
+                        f"Distance→relevance formula assumes cosine space but HNSW_SPACE={HNSW_SPACE!r}. "
+                        "Update the formula or revert HNSW_SPACE to 'cosine'."
+                    )
                     relevance_score = max(0.0, 1.0 - (distance / 2.0))
                     
                     documents.append({
