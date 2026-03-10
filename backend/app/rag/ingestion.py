@@ -8,12 +8,11 @@ import logging
 from typing import List, Dict, Any, Tuple
 from pathlib import Path
 import chromadb
-from chromadb.config import Settings as ChromaSettings
 import time
 
 from app.config import settings
 from app.rag.embeddings import EmbeddingProvider
-from app.rag.utils import get_chroma_client, HNSW_SPACE
+from app.rag.chromadb_store import ChromaDBStore
 
 logger = logging.getLogger(__name__)
 
@@ -233,14 +232,13 @@ class ChromaDBIngestion:
         """
         self.persist_directory = settings.chroma_persist_directory
         self.collection_name = collection_name or settings.chroma_collection_name
-        self.embedding_model_name = settings.embedding_model
-        
+
         # Create persist directory if it doesn't exist
         os.makedirs(self.persist_directory, exist_ok=True)
-        
-        # Use singleton ChromaDB client to avoid conflicts
-        self.client = get_chroma_client()
-        
+
+        # Vector store abstraction for this collection
+        self.store = ChromaDBStore(self.collection_name)
+
         # Load embedding model
         self.embedding_model = EmbeddingProvider()
         logger.info(f"ChromaDB initialized (persist_dir={self.persist_directory})")
@@ -255,22 +253,7 @@ class ChromaDBIngestion:
         Returns:
             ChromaDB collection
         """
-        if reset:
-            try:
-                self.client.delete_collection(name=self.collection_name)
-                logger.info(f"Deleted existing collection: {self.collection_name}")
-            except Exception as e:
-                logger.debug(f"No existing collection to delete: {str(e)}")
-        
-        collection = self.client.get_or_create_collection(
-            name=self.collection_name,
-            # hnsw:space is index config smuggled through the metadata param (ChromaDB API quirk).
-            # Value must match HNSW_SPACE in utils.py — retrieval.py's distance formula depends on it.
-            metadata={"hnsw:space": HNSW_SPACE}
-        )
-        
-        logger.info(f"Collection ready: {self.collection_name} (count: {collection.count()})")
-        return collection
+        return self.store.get_or_create_collection(reset=reset)
     
     def generate_embeddings(self, texts: List[str]) -> List[List[float]]:
         """
@@ -299,11 +282,11 @@ class ChromaDBIngestion:
         start_time = time.time()
         
         # Get or create collection
-        collection: chromadb.Collection = self.get_or_create_collection(reset=force_reingest)
-        
+        self.store.get_or_create_collection(reset=force_reingest)
+
         # Check if collection already has documents
-        if collection.count() > 0 and not force_reingest:
-            logger.info(f"Collection already contains {collection.count()} documents. Skipping ingestion.")
+        if self.store.count() > 0 and not force_reingest:
+            logger.info(f"Collection already contains {self.store.count()} documents. Skipping ingestion.")
             logger.info("Use force_reingest=True to re-ingest.")
             return 0, time.time() - start_time
         
@@ -314,23 +297,14 @@ class ChromaDBIngestion:
         
         # Generate embeddings
         embeddings = self.generate_embeddings(documents)
-        
-        # Batch insert into ChromaDB
+
+        # Insert into ChromaDB (batching handled inside ChromaDBStore.add)
         logger.info(f"Inserting {len(chunks)} chunks into ChromaDB...")
-        batch_size = 100
-        for i in range(0, len(chunks), batch_size):
-            batch_end = min(i + batch_size, len(chunks))
-            collection.add(
-                ids=ids[i:batch_end],
-                documents=documents[i:batch_end],
-                metadatas=metadatas[i:batch_end],
-                embeddings=embeddings[i:batch_end]
-            )
-            logger.debug(f"Inserted batch {i//batch_size + 1} ({batch_end}/{len(chunks)})")
-        
+        self.store.add(ids=ids, embeddings=embeddings, documents=documents, metadatas=metadatas)
+
         elapsed_time = time.time() - start_time
         logger.info(f"Ingestion complete: {len(chunks)} chunks in {elapsed_time:.2f}s")
-        
+
         return len(chunks), elapsed_time
 
 
@@ -432,13 +406,12 @@ def ingest_vcc_documents(
         chunks = loader.process_documents(documents)
         chunks_added, elapsed_time = ingestion.ingest_chunks(chunks, force_reingest)
 
-        collection = ingestion.get_or_create_collection()
         return {
             "status": "success",
             "documents_processed": len(documents),
             "chunks_created": len(chunks),
             "chunks_added": chunks_added,
-            "collection_count": collection.count(),
+                "collection_count": ingestion.store.count(),
             "time_elapsed": f"{elapsed_time:.2f}s",
         }
 

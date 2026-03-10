@@ -7,7 +7,7 @@ import logging
 from typing import List, Dict, Any, Tuple
 from app.config import settings
 from app.rag.embeddings import EmbeddingProvider
-from app.rag.utils import get_chroma_client, HNSW_SPACE
+from app.rag.chromadb_store import ChromaDBStore, HNSW_SPACE
 
 logger = logging.getLogger(__name__)
 
@@ -23,17 +23,17 @@ class Retriever:
         self.top_k = settings.top_k_results
         self.relevance_threshold = settings.relevance_threshold
         
-        # Use singleton ChromaDB client
-        self.client = get_chroma_client()
-        
+        # Vector store abstraction for this collection
+        self.store = ChromaDBStore(self.collection_name)
+
         # Load embedding model
         logger.info(f"Loading embedding model: {self.embedding_model_name}")
         self.embedding_model = EmbeddingProvider()
         
         # Get collection
         try:
-            self.collection = self.client.get_collection(name=self.collection_name)
-            logger.info(f"Retriever initialized (collection={self.collection_name}, count={self.collection.count()})")
+            self.collection = self.store.get_collection()
+            logger.info(f"Retriever initialized (collection={self.collection_name}, count={self.store.count()})")
         except Exception as e:
             logger.error(f"Failed to get collection {self.collection_name}: {str(e)}")
             self.collection = None
@@ -70,7 +70,7 @@ class Retriever:
                 "error": "Collection not initialized"
             }
         
-        if self.collection.count() == 0:
+        if self.store.count() == 0:
             logger.error("Collection is empty. Run document ingestion first.")
             return {
                 "documents": [],
@@ -86,12 +86,12 @@ class Retriever:
         try:
             # Generate query embedding
             query_embedding = self.embed_query(query)
-            
+
             # Query ChromaDB
-            results = self.collection.query(
-                query_embeddings=[query_embedding],
+            results = self.store.query(
+                query_embedding=query_embedding,
                 n_results=k,
-                include=["documents", "metadatas", "distances"]
+                include=["documents", "metadatas", "distances"],
             )
             
             # Process results
