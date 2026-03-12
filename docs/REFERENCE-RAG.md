@@ -478,10 +478,12 @@ This repo uses **both**: semantic for intent, BM25 for exact identifier precisio
 |---|---|---|
 | **Retrieval** | Reranking with a cross-encoder | BM25+semantic fusion improves recall; a cross-encoder improves precision by re-scoring top-k with full pair attention |
 | **Retrieval** | Query rewriting / HyDE | Rephrase ambiguous queries before embedding; HyDE generates a hypothetical answer and embeds that instead of the raw query |
+| **Retrieval** | Iterative retrieval (query refinement) | If initial confidence is low, let a planner agent rephrase and retry before falling back to BM25 |
 | **UX** | Automatic corpus routing | Remove the manual FastAPI/VCC toggle; classify the query and select the collection automatically |
 | **Evaluation** | Continuous eval pipeline | Run RAGAS on each deployment to catch regressions; dashboard to track metric trends over time |
 | **Scale** | Chunking strategy improvements | Sentence-aware splitting, semantic chunking (split at topic boundaries rather than character count) |
 | **Reliability** | `app/dependencies.py` with `Depends()` | Enable mock retrievers in tests; decouple startup from route handlers |
+| **Architecture** | Agent-based orchestration with LangGraph | Replace the fixed pipeline with a stateful, graph-routed workflow; enable planning, iterative reasoning, and tool use — see [`TODO-TOWARDS-AGENT-BASED-ARCHITECTURE-ORCHESTRATION.md`](./TODO-TOWARDS-AGENT-BASED-ARCHITECTURE-ORCHESTRATION.md) |
 
 ---
 
