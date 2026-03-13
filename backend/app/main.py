@@ -203,11 +203,19 @@ async def query_rag(request: QueryRequest):
 
 
 @app.get("/api/v1/rag/graph/mermaid", tags=["RAG"])
-async def rag_graph_mermaid():
-    """Return the current RAG LangGraph diagram as Mermaid source for demos."""
+async def rag_graph_mermaid(view: str = "enhanced"):
+    """
+    Return the RAG graph as Mermaid source for demos.
+
+    Query params:
+    - view=enhanced (default): custom, explicitly labeled branch diagram
+    - view=raw: direct LangGraph draw_mermaid() output
+    """
+    use_enhanced = view.lower() != "raw"
     return {
         "graph": "langgraph",
-        "mermaid": rag_pipeline.get_mermaid(),
+        "view": "enhanced" if use_enhanced else "raw",
+        "mermaid": rag_pipeline.get_mermaid_enhanced() if use_enhanced else rag_pipeline.get_mermaid(),
     }
 
 

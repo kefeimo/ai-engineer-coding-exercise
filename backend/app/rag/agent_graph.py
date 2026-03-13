@@ -66,6 +66,91 @@ class LangGraphRAGPipeline:
         """Return Mermaid diagram source for graph visualization/demo."""
         return self._compiled_graph.get_graph().draw_mermaid()
 
+    def get_mermaid_enhanced(self) -> str:
+        """
+        Return a custom Mermaid graph with explicit, human-readable branch labels.
+
+        Labels are generated from helper methods that also power routing decisions,
+        so visualization criteria stays aligned with execution logic.
+
+        TODO: Build full Mermaid topology from a declarative edge spec (single-rule DSL)
+        so node/edge structure, routing criteria, and labels are generated from one
+        source of truth.
+        """
+        labels = self._get_branch_labels()
+        planner_labels = labels["planner"]
+        semantic_labels = labels["semantic_retrieve"]
+        evaluate_labels = labels["evaluate"]
+
+        return f'''---
+config:
+  flowchart:
+    curve: linear
+---
+graph TD
+    __start__(__start__):::first
+    planner(planner)
+    semantic_retrieve(semantic_retrieve)
+    hybrid_retrieve(hybrid_retrieve)
+    evaluate(evaluate)
+    generate(generate)
+    __end__(__end__):::last
+
+    __start__ --> planner
+
+    planner -. "{planner_labels["hybrid_retrieve"]}" .-> hybrid_retrieve
+    planner -. "{planner_labels["semantic_retrieve"]}" .-> semantic_retrieve
+
+    semantic_retrieve -. "{semantic_labels["finish"]}" .-> __end__
+    semantic_retrieve -. "{semantic_labels["hybrid_retrieve"]}" .-> hybrid_retrieve
+    semantic_retrieve -. "{semantic_labels["evaluate"]}" .-> evaluate
+
+    hybrid_retrieve --> evaluate
+
+    evaluate -. "{evaluate_labels["generate"]}" .-> generate
+    evaluate -. "{evaluate_labels["finish"]}" .-> __end__
+
+    generate --> __end__
+
+    classDef default fill:#f2f0ff
+    classDef first fill-opacity:0
+    classDef last fill:#bfb6fc
+'''
+
+    def _get_branch_labels(self) -> Dict[str, Dict[str, str]]:
+        """Generate Mermaid branch labels from rule helpers/constants."""
+        return {
+            "planner": {
+                "hybrid_retrieve": "strategy == hybrid_first AND has_hybrid",
+                "semantic_retrieve": "otherwise",
+            },
+            "semantic_retrieve": {
+                "finish": "error exists",
+                "hybrid_retrieve": f"relevance < {HYBRID_GATE_THRESHOLD:.2f} AND has_hybrid",
+                "evaluate": "otherwise",
+            },
+            "evaluate": {
+                "generate": "is_relevant == true",
+                "finish": "is_relevant == false",
+            },
+        }
+
+    @staticmethod
+    def _planner_prefers_hybrid(strategy: str, has_hybrid: bool) -> bool:
+        return strategy == "hybrid_first" and has_hybrid
+
+    @staticmethod
+    def _semantic_has_error(state: RAGAgentState) -> bool:
+        return bool(state.get("error"))
+
+    @staticmethod
+    def _semantic_should_fallback_to_hybrid(relevance_score: float, has_hybrid: bool) -> bool:
+        return relevance_score < HYBRID_GATE_THRESHOLD and has_hybrid
+
+    @staticmethod
+    def _evaluate_should_generate(state: RAGAgentState) -> bool:
+        return state.get("is_relevant", False)
+
     def _build_graph(self) -> StateGraph:
         graph = StateGraph(RAGAgentState)
 
@@ -283,18 +368,18 @@ class LangGraphRAGPipeline:
     def _route_after_planner(self, state: RAGAgentState) -> str:
         strategy = state.get("planned_strategy", "semantic_first")
         has_hybrid = self.hybrid_retrievers.get(state["collection"]) is not None
-        if strategy == "hybrid_first" and has_hybrid:
+        if self._planner_prefers_hybrid(strategy, has_hybrid):
             return "hybrid_retrieve"
         return "semantic_retrieve"
 
     def _route_after_semantic(self, state: RAGAgentState) -> str:
-        if state.get("error"):
+        if self._semantic_has_error(state):
             return "finish"
 
         relevance_score = state.get("relevance_score", 0.0)
         has_hybrid = self.hybrid_retrievers.get(state["collection"]) is not None
 
-        if relevance_score < HYBRID_GATE_THRESHOLD and has_hybrid:
+        if self._semantic_should_fallback_to_hybrid(relevance_score, has_hybrid):
             logger.info(
                 "Semantic relevance %.3f < %.2f, routing to hybrid retrieval",
                 relevance_score,
@@ -305,4 +390,4 @@ class LangGraphRAGPipeline:
         return "evaluate"
 
     def _route_after_evaluate(self, state: RAGAgentState) -> str:
-        return "generate" if state.get("is_relevant", False) else "finish"
+        return "generate" if self._evaluate_should_generate(state) else "finish"
