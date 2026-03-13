@@ -68,6 +68,43 @@ _NODE_THINKING: dict[str, str] = {
     "generate": "Generating answer",
 }
 
+_NODE_THINKING_START: dict[str, str] = {
+    "planner": "Inspecting query shape and collection capabilities to choose retrieval flow.",
+    "semantic_retrieve": "Running semantic similarity search over embedded documentation chunks.",
+    "hybrid_retrieve": "Combining semantic similarity and keyword/BM25 matching to improve recall.",
+    "evaluate": "Checking document support strength against the configured relevance threshold.",
+    "generate": "Synthesizing a grounded answer from selected evidence and source snippets.",
+}
+
+
+def _summarize_node_thought(node_name: str, output: dict, state: dict) -> str:
+    """Create concise, user-visible reasoning summary for a completed graph node."""
+    if node_name == "planner":
+        query_type = output.get("query_type", "unknown")
+        strategy = output.get("planned_strategy", "unknown").replace("_", "-")
+        return f"Classified query as {query_type}; selected {strategy} retrieval path."
+
+    if node_name in {"semantic_retrieve", "hybrid_retrieve"}:
+        method = output.get("retrieval_method") or state.get("retrieval_method") or "retrieval"
+        docs = output.get("documents", state.get("documents", [])) or []
+        score = output.get("relevance_score", state.get("relevance_score", 0.0))
+        if output.get("error"):
+            return f"{method.capitalize()} encountered an error; proceeding with available fallback behavior."
+        return f"{method.capitalize()} found {len(docs)} candidate chunks with relevance {float(score):.2f}."
+
+    if node_name == "evaluate":
+        score = output.get("relevance_score", state.get("relevance_score", 0.0))
+        is_relevant = output.get("is_relevant", state.get("is_relevant", False))
+        decision = "sufficient support; proceed to answer generation" if is_relevant else "support too weak; return insufficient-context response"
+        return f"Evidence score {float(score):.2f} vs threshold {settings.relevance_threshold:.2f}; {decision}."
+
+    if node_name == "generate":
+        answer = output.get("answer", state.get("answer", ""))
+        sources = output.get("sources", state.get("sources", [])) or []
+        return f"Generated grounded response ({len(str(answer))} chars) using {len(sources)} source snippet(s)."
+
+    return "Completed pipeline stage."
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -237,23 +274,28 @@ async def query_rag_stream(request: QueryRequest):
             }
 
             accumulated: dict = {}
-            seen_thinking: set = set()
+            seen_start_events: set = set()
 
             async for event in rag_pipeline._compiled_graph.astream_events(initial_state, version="v2"):
                 etype = event.get("event", "")
                 ename = event.get("name", "")
                 edata = event.get("data", {})
 
-                # Emit one thinking step per node the first time it starts
-                if etype == "on_chain_start" and ename in _NODE_THINKING and ename not in seen_thinking:
-                    seen_thinking.add(ename)
-                    yield f"data: {json.dumps({'type': 'thinking', 'step': _NODE_THINKING[ename]})}\n\n"
+                # Emit one thought item per node when it starts
+                if etype == "on_chain_start" and ename in _NODE_THINKING and ename not in seen_start_events:
+                    seen_start_events.add(ename)
+                    yield f"data: {json.dumps({'type': 'thinking', 'step': _NODE_THINKING[ename], 'thought': _NODE_THINKING_START.get(ename, '')})}\n\n"
 
                 # Accumulate each node's output so we can reconstruct final state
                 elif etype == "on_chain_end" and ename in _NODE_THINKING:
                     output = edata.get("output", {})
                     if isinstance(output, dict):
                         accumulated.update(output)
+                        thought = _summarize_node_thought(ename, output, {**initial_state, **accumulated})
+                        yield f"data: {json.dumps({'type': 'thinking', 'step': _NODE_THINKING[ename], 'thought': thought})}\n\n"
+                        # Emit visible CoT reasoning from generate node (demo)
+                        if ename == "generate" and output.get("cot_reasoning"):
+                            yield f"data: {json.dumps({'type': 'cot', 'content': output['cot_reasoning']})}\n\n"
 
                 # Prefer the graph-level final state when available
                 elif etype == "on_chain_end" and ename == "LangGraph":

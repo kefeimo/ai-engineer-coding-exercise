@@ -95,22 +95,28 @@ Add short examples inside prompt template:
 - Example 1: API term question -> concise grounded answer + source mention
 - Example 2: unrelated query -> explicit insufficient-context response
 
-### C) Chain-of-thought-style (recommended extension)
+### C) Chain-of-thought-style (implemented)
 
-Add internal structure instructions:
+Instruct the model to reason step-by-step inside `<thinking>...</thinking>` tags before the final answer:
 
-1. Identify relevant context chunks
-2. Extract answer-supporting facts
-3. Respond directly and concisely
-4. If support is weak, state insufficient context
+```
+<thinking>
+1. The context mentions X...
+2. The relevant facts are...
+3. Therefore the answer is...
+</thinking>
+Final answer here.
+```
 
-Then require final output as concise answer only.
+The backend parses the tags — reasoning goes to `cot_reasoning` in state, clean answer goes to `answer`. Reasoning is streamed to the frontend as a separate `{"type": "cot"}` SSE event and displayed in the ThinkingPanel as a **Model Reasoning** block.
+
+**Important:** Do not add hard output-length constraints (`concise answer only`) — this caused quality regression on `gpt-3.5-turbo` by truncating complete prop listings. Let the model decide response depth based on context richness.
 
 ---
 
 ## 6) Implementation Summary
 
-This project currently uses role-based prompting with domain-specific scope and explicit behavior constraints. It can be extended with few-shot examples for output consistency and chain-of-thought-style structure for improved reasoning reliability while keeping final answers concise and grounded.
+This project uses role-based prompting with domain-specific scope and explicit behavior constraints, plus chain-of-thought-style reasoning via visible `<thinking>` tags. CoT is controlled by the `prompt_cot_enabled` feature flag (default: `True`). The model's reasoning is surfaced in the ThinkingPanel as a **Model Reasoning · CoT · demo** block. It can be further extended with few-shot examples for output consistency.
 
 ---
 
@@ -144,20 +150,36 @@ The frontend `ThinkingPanel` shows **live pipeline observability** -- not prompt
 - The frontend reads these via `fetch` + `ReadableStream` (`queryRAGStream` in [frontend/src/utils/api.js](frontend/src/utils/api.js)).
 - `ThinkingPanel` ([frontend/src/components/ThinkingPanel.jsx](frontend/src/components/ThinkingPanel.jsx)) renders steps as they arrive, auto-collapses after the final answer lands, and exposes expand/dismiss controls -- the same UX pattern as Copilot agent's "Thinking..." display.
 
-### Why this is not CoT
+### CoT blueprint vs orchestration steps
+
+A key architectural reflection: **CoT and orchestration steps are independent layers**, but they are conceptually aligned:
+
+- **CoT** is the reasoning blueprint inside the prompt — it shapes how the `generate` node reasons over retrieved context within a single LLM call.
+- **Orchestration steps** (planner → retrieve → evaluate → generate) are the pipeline execution path — they are emitted as SSE events and shown as pipeline observability in the ThinkingPanel.
+
+CoT does not drive orchestration, and orchestration does not expose CoT. But they mirror the same underlying intent: structured, disciplined reasoning from evidence.
 
 | | Live Thinking UI | Chain-of-Thought |
 |---|---|---|
 | Layer | UX / observability | Prompt / generation |
-| Happens | While graph nodes execute | Inside single LLM call |
-| Purpose | Show user the pipeline is working | Improve answer reasoning quality |
+| Happens | While graph nodes execute | Inside single LLM call (`generate`) |
+| Purpose | Show pipeline progress + state summaries | Improve reasoning quality over context |
+| User-visible? | ✅ Yes — orchestration steps + state summaries | ✅ Yes (demo) — `<thinking>` block in Model Reasoning panel |
 | Affects answer quality? | No | Yes (when effective) |
+
+The panel shows two distinct things:
+1. **Orchestration thoughts** — state-derived summaries per node (e.g. relevance score, retrieval strategy chosen)
+2. **Model Reasoning** — the model's own `<thinking>` output from the CoT-prompted `generate` call
 
 ### What does affect quality
 
 - Prompt changes: role, few-shot examples, CoT-style structure
 - Retrieval changes: hybrid strategy, HyDE, re-ranking
 - Model changes
+
+### Lesson learned: avoid hard output constraints with CoT
+
+Adding `Return concise final answer only` alongside CoT instructions caused `gpt-3.5-turbo` to truncate complete prop listings to 4 lines (125 chars). The model obeyed the constraint literally, ignoring evidence richness. Removing the constraint restored full answers. **Let the model decide response depth based on context.**
 
 ---
 

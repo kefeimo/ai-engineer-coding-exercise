@@ -298,6 +298,22 @@ def extract_sources(retrieved_documents: List[Dict[str, Any]]) -> List[Dict[str,
     return sources
 
 
+def parse_cot_response(text: str) -> tuple:
+    """
+    Parse <thinking>...</thinking> block from model output.
+
+    Returns:
+        (cot_text, answer_text) — cot_text is empty string if no tags found.
+    """
+    import re
+    match = re.search(r'<thinking>(.*?)</thinking>', text, re.DOTALL)
+    if match:
+        cot = match.group(1).strip()
+        answer = text[match.end():].strip()
+        return cot, answer
+    return "", text
+
+
 class PromptBuilder:
     """
     Builder class for constructing prompts for LLM generation
@@ -335,7 +351,30 @@ class PromptBuilder:
         """
         self.domain = domain
         self.domain_config = self.DOMAIN_CONFIGS.get(domain, self.DOMAIN_CONFIGS["general"])
+        self.prompt_partials = {
+            **self.domain_config,
+            "cot_guidance": self._get_cot_guidance(),
+        }
         self.prompt_template = self._create_prompt_template()
+
+    @staticmethod
+    def _get_cot_guidance() -> str:
+        """Return optional CoT-style internal guidance block based on config flag."""
+        if not settings.prompt_cot_enabled:
+            return ""
+
+        return (
+            "\nREASONING FORMAT:\n"
+            "Think through the question step by step before answering.\n"
+            "Output your reasoning inside <thinking>...</thinking> tags, then provide your final answer after the closing tag.\n"
+            "Example:\n"
+            "<thinking>\n"
+            "1. The context mentions X...\n"
+            "2. The relevant facts are...\n"
+            "3. Therefore the answer is...\n"
+            "</thinking>\n"
+            "Final answer here.\n"
+        )
     
     def _create_prompt_template(self) -> PromptTemplate:
         """
@@ -352,7 +391,7 @@ IMPORTANT RULES:
 3. Code snippets may contain placeholders like {{...}} or {{data}} - these are intentional and show where users should insert their own values
 4. Cite sources when possible (e.g., "According to the documentation...")
 5. Be helpful and provide actionable information when the context contains relevant examples or descriptions
-6. Only say you don't have enough information if the context is truly unrelated to the question
+6. Only say you don't have enough information if the context is truly unrelated to the question. When you do, suggest the user rephrase with more specific terms in their next query, since no conversation history is stored between queries.
 
 QUERY UNDERSTANDING:
 - If the query contains minor spelling variations or typos, try to understand the intent from context
@@ -362,7 +401,7 @@ QUERY UNDERSTANDING:
 
 DOMAIN-SPECIFIC GUIDANCE:
 {domain_guidance}
-
+{cot_guidance}
 {context}
 
 QUESTION:
@@ -373,7 +412,7 @@ ANSWER:"""
         return PromptTemplate(
             template=template,
             input_variables=["context", "query"],
-            partial_variables=self.domain_config
+            partial_variables=self.prompt_partials
         )
     
     def build_prompt(self, query: str, context: str) -> str:

@@ -14,7 +14,7 @@ from typing import Any, Dict, List, Optional, TypedDict
 from langgraph.graph import END, START, StateGraph
 
 from app.config import settings
-from app.rag.generation import extract_sources, generate_answer, get_llm_client
+from app.rag.generation import extract_sources, generate_answer, get_llm_client, parse_cot_response
 from app.rag.retrieval import Retriever
 
 logger = logging.getLogger(__name__)
@@ -41,6 +41,7 @@ class RAGAgentState(TypedDict, total=False):
     is_relevant: bool
 
     answer: str
+    cot_reasoning: str
     sources: List[Dict[str, Any]]
     error: str
 
@@ -346,15 +347,17 @@ graph TD
             llm_client = get_llm_client()
             documents = state.get("documents", [])
 
-            answer = generate_answer(
+            raw_answer = generate_answer(
                 query=state["query"],
                 retrieved_documents=documents,
                 llm_client=llm_client,
             )
+            cot_reasoning, answer = parse_cot_response(raw_answer)
             sources = extract_sources(documents)
 
             return {
                 "answer": answer,
+                "cot_reasoning": cot_reasoning,
                 "sources": sources,
                 "decision_path": decision_path,
             }

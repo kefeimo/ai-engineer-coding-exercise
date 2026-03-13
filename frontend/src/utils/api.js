@@ -53,11 +53,11 @@ export const queryRAG = async (query, topK = 3, collection = null) => {
  * @param {string} query
  * @param {number} topK
  * @param {string|null} collection
- * @param {{ onThinking?: (step: string) => void, onResult?: (data: Object) => void, onError?: (msg: string) => void }} callbacks
+ * @param {{ onThinking?: (thinking: {step?: string, thought?: string} | string) => void, onCot?: (content: string) => void, onResult?: (data: Object) => void, onError?: (msg: string) => void }} callbacks
  * @returns {Promise<void>} Resolves when the stream is fully consumed.
  */
 export const queryRAGStream = async (query, topK = 3, collection = null, callbacks = {}) => {
-  const { onThinking, onResult, onError } = callbacks;
+  const { onThinking, onCot, onResult, onError } = callbacks;
   const body = { query, top_k: topK };
   if (collection) body.collection = collection;
 
@@ -90,7 +90,8 @@ export const queryRAGStream = async (query, topK = 3, collection = null, callbac
       if (raw === '[DONE]') return;
       try {
         const msg = JSON.parse(raw);
-        if (msg.type === 'thinking') onThinking?.(msg.step);
+        if (msg.type === 'thinking') onThinking?.(msg.thought ? { step: msg.step, thought: msg.thought } : msg.step);
+        else if (msg.type === 'cot') onCot?.(msg.content);
         else if (msg.type === 'result') onResult?.(msg.data);
         else if (msg.type === 'error') onError?.(msg.message);
       } catch (_) {

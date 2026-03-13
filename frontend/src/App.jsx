@@ -17,7 +17,8 @@ function App() {
   const [docsLoaded, setDocsLoaded] = useState({ fastapi: false, vcc: false });
   const [queryHistory, setQueryHistory] = useState([]); // Track query history
   const [queryCache, setQueryCache] = useState({}); // Cache query results {query: responseData}
-  const [thinkingSteps, setThinkingSteps] = useState([]); // Live SSE thinking steps
+  const [thinkingSteps, setThinkingSteps] = useState([]); // Live SSE reasoning items ({step, thought})
+  const [cotReasoning, setCotReasoning] = useState('');   // Visible model CoT reasoning (demo)
   const [isThinking, setIsThinking] = useState(false);   // True while SSE stream is open
   const suggestRef = useRef(null); // Ref to pre-fill QueryInput textarea
 
@@ -51,6 +52,7 @@ function App() {
     setResponse(null);
     setThinkingSteps([]);
     setIsThinking(false);
+    setCotReasoning('');
 
     // Map toggle to collection name
     const collection = ragSystem === 'fastapi' ? 'fastapi_docs' : 'vcc_docs';
@@ -71,7 +73,16 @@ function App() {
       setIsThinking(true);
 
       await queryRAGStream(query, 3, collection, {
-        onThinking: (step) => setThinkingSteps((prev) => [...prev, step]),
+        onThinking: (thinking) => {
+          const normalized = typeof thinking === 'string'
+            ? { step: thinking, thought: thinking }
+            : {
+                step: thinking?.step || 'Reasoning step',
+                thought: thinking?.thought || thinking?.step || 'Processing...',
+              };
+          setThinkingSteps((prev) => [...prev, normalized]);
+        },
+        onCot: (content) => setCotReasoning(content),
         onResult: (data) => {
           setIsThinking(false);
           setResponse(data);
@@ -199,7 +210,8 @@ function App() {
             <ThinkingPanel
               steps={thinkingSteps}
               isThinking={isThinking}
-              onDismiss={() => setThinkingSteps([])}
+              cotReasoning={cotReasoning}
+              onDismiss={() => { setThinkingSteps([]); setCotReasoning(''); }}
             />
           )}
 
