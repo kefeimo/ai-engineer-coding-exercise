@@ -96,3 +96,5 @@ evaluation/venv-eval/
 evaluation/venv-ragas-gpt4all/
 
 backend/venv-slim
+
+tmp/
