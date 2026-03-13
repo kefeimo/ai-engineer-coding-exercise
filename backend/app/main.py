@@ -5,8 +5,9 @@ RAG System API with health check and query endpoints
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 from contextlib import asynccontextmanager
+import json
 import logging
 
 from app.config import settings
@@ -22,7 +23,7 @@ from app.models import (
 from app import __version__
 from app.rag.ingestion import ingest_documents, ingest_vcc_documents
 from app.rag.hybrid_retrieval import HybridRetriever
-from app.rag.agent_graph import LangGraphRAGPipeline
+from app.rag.agent_graph import HYBRID_GATE_THRESHOLD, LangGraphRAGPipeline
 
 # Configure logging
 logging.basicConfig(
@@ -57,6 +58,15 @@ hybrid_retrievers: dict = {}
 
 # Minimal LangGraph orchestration wrapper around current RAG flow
 rag_pipeline = LangGraphRAGPipeline(hybrid_retrievers=hybrid_retrievers)
+
+# Human-readable labels for each graph node — used by the SSE streaming endpoint
+_NODE_THINKING: dict[str, str] = {
+    "planner": "Planning retrieval strategy",
+    "semantic_retrieve": "Searching vector index",
+    "hybrid_retrieve": "Running hybrid search",
+    "evaluate": "Evaluating document relevance",
+    "generate": "Generating answer",
+}
 
 
 @asynccontextmanager
@@ -153,7 +163,7 @@ async def query_rag(request: QueryRequest):
                 relevance_score=0.0,
                 model=settings.llm_provider,
                 response_time=response_time,
-                api_version=__version__
+                api_version=__version__,
             )
 
         documents = pipeline_state.get("documents", [])
@@ -179,7 +189,7 @@ async def query_rag(request: QueryRequest):
                 relevance_score=overall_relevance,
                 model=settings.llm_provider,
                 response_time=response_time,
-                api_version=__version__
+                api_version=__version__,
             )
         
         answer = pipeline_state.get("answer", "")
@@ -194,12 +204,130 @@ async def query_rag(request: QueryRequest):
             relevance_score=overall_relevance,
             model=settings.llm_provider,
             response_time=response_time,
-            api_version=__version__
+            api_version=__version__,
         )
         
     except Exception as e:
         logger.error(f"Error processing query: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Error processing query: {str(e)}")
+
+
+@app.post("/api/v1/query/stream", tags=["RAG"])
+async def query_rag_stream(request: QueryRequest):
+    """
+    Streaming SSE query endpoint.
+
+    Emits server-sent events as LangGraph nodes run so the frontend can show a
+    live "thinking" panel.  Each event is a JSON object:
+      {"type": "thinking", "step": "<human-readable label>"}   — one per node
+      {"type": "result",   "data": <QueryResponse as dict>}    — final answer
+      {"type": "error",    "message": "<error text>"}          — on failure
+    """
+    import time
+    start_time = time.time()
+    collection = request.collection or settings.chroma_collection_name
+
+    async def event_stream():
+        try:
+            initial_state = {
+                "query": request.query,
+                "top_k": request.top_k or 5,
+                "collection": collection,
+                "decision_path": [],
+            }
+
+            accumulated: dict = {}
+            seen_thinking: set = set()
+
+            async for event in rag_pipeline._compiled_graph.astream_events(initial_state, version="v2"):
+                etype = event.get("event", "")
+                ename = event.get("name", "")
+                edata = event.get("data", {})
+
+                # Emit one thinking step per node the first time it starts
+                if etype == "on_chain_start" and ename in _NODE_THINKING and ename not in seen_thinking:
+                    seen_thinking.add(ename)
+                    yield f"data: {json.dumps({'type': 'thinking', 'step': _NODE_THINKING[ename]})}\n\n"
+
+                # Accumulate each node's output so we can reconstruct final state
+                elif etype == "on_chain_end" and ename in _NODE_THINKING:
+                    output = edata.get("output", {})
+                    if isinstance(output, dict):
+                        accumulated.update(output)
+
+                # Prefer the graph-level final state when available
+                elif etype == "on_chain_end" and ename == "LangGraph":
+                    graph_out = edata.get("output", {})
+                    if isinstance(graph_out, dict) and graph_out:
+                        accumulated.update(graph_out)
+
+            final_state = {**initial_state, **accumulated}
+            response_time = time.time() - start_time
+
+            error_text = final_state.get("error")
+            if error_text:
+                resp = {
+                    "query": request.query,
+                    "answer": f"Error retrieving documents: {error_text}. Please ensure documents have been ingested first.",
+                    "sources": [],
+                    "relevance_score": 0.0,
+                    "model": settings.llm_provider,
+                    "response_time": response_time,
+                    "api_version": __version__,
+                }
+                yield f"data: {json.dumps({'type': 'result', 'data': resp})}\n\n"
+                yield "data: [DONE]\n\n"
+                return
+
+            documents = final_state.get("documents", [])
+            overall_relevance = final_state.get("relevance_score", 0.0)
+            is_relevant = final_state.get("is_relevant", False)
+
+            if not documents or not is_relevant:
+                help_text = get_help_text_for_collection()
+                resp = {
+                    "query": request.query,
+                    "answer": f"I don't have enough information to answer that question based on the provided documentation. {help_text}",
+                    "sources": [],
+                    "relevance_score": overall_relevance,
+                    "model": settings.llm_provider,
+                    "response_time": response_time,
+                    "api_version": __version__,
+                }
+                yield f"data: {json.dumps({'type': 'result', 'data': resp})}\n\n"
+                yield "data: [DONE]\n\n"
+                return
+
+            sources = [
+                {
+                    "content": s.get("content", "") if isinstance(s, dict) else "",
+                    "metadata": s.get("metadata", {}) if isinstance(s, dict) else {},
+                    "relevance_score": float(s.get("relevance_score", 0.0)) if isinstance(s, dict) else 0.0,
+                }
+                for s in final_state.get("sources", [])
+            ]
+
+            resp = {
+                "query": request.query,
+                "answer": final_state.get("answer", ""),
+                "sources": sources,
+                "relevance_score": overall_relevance,
+                "model": settings.llm_provider,
+                "response_time": response_time,
+                "api_version": __version__,
+            }
+            yield f"data: {json.dumps({'type': 'result', 'data': resp})}\n\n"
+            yield "data: [DONE]\n\n"
+
+        except Exception as exc:
+            logger.error("Streaming query error: %s", str(exc), exc_info=True)
+            yield f"data: {json.dumps({'type': 'error', 'message': str(exc)})}\n\n"
+
+    return StreamingResponse(
+        event_stream(),
+        media_type="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    )
 
 
 @app.get("/api/v1/rag/graph/mermaid", tags=["RAG"])

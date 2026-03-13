@@ -48,6 +48,59 @@ export const queryRAG = async (query, topK = 3, collection = null) => {
 };
 
 /**
+ * Submit a query and receive live thinking steps + final answer via SSE stream.
+ *
+ * @param {string} query
+ * @param {number} topK
+ * @param {string|null} collection
+ * @param {{ onThinking?: (step: string) => void, onResult?: (data: Object) => void, onError?: (msg: string) => void }} callbacks
+ * @returns {Promise<void>} Resolves when the stream is fully consumed.
+ */
+export const queryRAGStream = async (query, topK = 3, collection = null, callbacks = {}) => {
+  const { onThinking, onResult, onError } = callbacks;
+  const body = { query, top_k: topK };
+  if (collection) body.collection = collection;
+
+  const res = await fetch(`${API_BASE_URL}/api/v1/query/stream`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`HTTP ${res.status}: ${text}`);
+  }
+
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = '';
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    buffer += decoder.decode(value, { stream: true });
+    const parts = buffer.split('\n\n');
+    buffer = parts.pop() ?? '';
+
+    for (const part of parts) {
+      const line = part.trim();
+      if (!line.startsWith('data: ')) continue;
+      const raw = line.slice(6).trim();
+      if (raw === '[DONE]') return;
+      try {
+        const msg = JSON.parse(raw);
+        if (msg.type === 'thinking') onThinking?.(msg.step);
+        else if (msg.type === 'result') onResult?.(msg.data);
+        else if (msg.type === 'error') onError?.(msg.message);
+      } catch (_) {
+        // ignore malformed SSE frames
+      }
+    }
+  }
+};
+
+/**
  * Ingest FastAPI documents into the RAG system
  * @param {string} documentPath - Path to documents to ingest
  * @param {boolean} forceReingest - Whether to force re-ingestion

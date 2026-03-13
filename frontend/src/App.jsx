@@ -3,7 +3,8 @@ import QueryInput from './components/QueryInput';
 import ResponseDisplay from './components/ResponseDisplay';
 import ErrorDisplay from './components/ErrorDisplay';
 import GraphViewer from './components/GraphViewer';
-import { queryRAG, checkHealth, ingestDocuments, ingestVisaDocs } from './utils/api';
+import ThinkingPanel from './components/ThinkingPanel';
+import { queryRAGStream, checkHealth, ingestDocuments, ingestVisaDocs } from './utils/api';
 
 function App() {
   const [isLoading, setIsLoading] = useState(false);
@@ -16,6 +17,8 @@ function App() {
   const [docsLoaded, setDocsLoaded] = useState({ fastapi: false, vcc: false });
   const [queryHistory, setQueryHistory] = useState([]); // Track query history
   const [queryCache, setQueryCache] = useState({}); // Cache query results {query: responseData}
+  const [thinkingSteps, setThinkingSteps] = useState([]); // Live SSE thinking steps
+  const [isThinking, setIsThinking] = useState(false);   // True while SSE stream is open
   const suggestRef = useRef(null); // Ref to pre-fill QueryInput textarea
 
   // Pre-fill the textarea without submitting
@@ -46,6 +49,8 @@ function App() {
     setIsLoading(true);
     setError(null);
     setResponse(null);
+    setThinkingSteps([]);
+    setIsThinking(false);
 
     // Map toggle to collection name
     const collection = ragSystem === 'fastapi' ? 'fastapi_docs' : 'vcc_docs';
@@ -63,36 +68,43 @@ function App() {
       }
 
       console.log('❌ Cache MISS:', query, `(${collection})`);
-      
-      const data = await queryRAG(query, 3, collection);
-      setResponse(data);
-      setBackendStatus('connected');
-      if (suggestRef.current) suggestRef.current(''); // clear textarea
-      
-      // Cache the result
-      setQueryCache(prev => ({
-        ...prev,
-        [cacheKey]: data
-      }));
-      
-      // Add to query history (keep last 10)
-      setQueryHistory(prev => {
-        const newHistory = [{
-          query: data.query,
-          timestamp: new Date().toISOString(),
-          relevance_score: data.relevance_score,
-          ragSystem: ragSystem,
-          collection,
-          responseTime: data.response_time
-        }, ...prev];
-        return newHistory.slice(0, 10); // Keep only last 10
+      setIsThinking(true);
+
+      await queryRAGStream(query, 3, collection, {
+        onThinking: (step) => setThinkingSteps((prev) => [...prev, step]),
+        onResult: (data) => {
+          setIsThinking(false);
+          setResponse(data);
+          setBackendStatus('connected');
+          if (suggestRef.current) suggestRef.current(''); // clear textarea
+
+          // Cache the result
+          setQueryCache((prev) => ({ ...prev, [cacheKey]: data }));
+
+          // Add to query history (keep last 10)
+          setQueryHistory((prev) => {
+            const newHistory = [{
+              query: data.query,
+              timestamp: new Date().toISOString(),
+              relevance_score: data.relevance_score,
+              ragSystem: ragSystem,
+              collection,
+              responseTime: data.response_time
+            }, ...prev];
+            return newHistory.slice(0, 10);
+          });
+        },
+        onError: (msg) => {
+          setIsThinking(false);
+          setError(msg);
+        },
       });
     } catch (err) {
+      setIsThinking(false);
       console.error('Query error:', err);
-      const errorMessage = err.response?.data?.detail || err.message || 'Failed to get response from server';
+      const errorMessage = err.message || 'Failed to get response from server';
       setError(errorMessage);
-      
-      // Update backend status if it's a connection error
+
       if (err.code === 'ECONNREFUSED' || err.code === 'ERR_NETWORK') {
         setBackendStatus('disconnected');
       }
@@ -181,6 +193,15 @@ function App() {
           <div className="bg-white rounded-lg shadow-md p-6">
             <QueryInput onSubmit={handleQuery} onSuggest={suggestRef} isLoading={isLoading} ragSystem={ragSystem} />
           </div>
+
+          {/* Live thinking panel — appears while SSE stream is active */}
+          {(isThinking || thinkingSteps.length > 0) && (
+            <ThinkingPanel
+              steps={thinkingSteps}
+              isThinking={isThinking}
+              onDismiss={() => setThinkingSteps([])}
+            />
+          )}
 
           {/* Error Display */}
           {error && (

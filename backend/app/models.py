@@ -20,6 +20,7 @@ class Source(BaseModel):
     relevance_score: float = Field(..., description="Retrieval relevance score (cosine similarity, computed before LLM generation)", ge=0.0, le=1.0)
 
 
+
 class QueryResponse(BaseModel):
     """Response model for RAG query endpoint"""
     query: str = Field(..., description="Original user query")
